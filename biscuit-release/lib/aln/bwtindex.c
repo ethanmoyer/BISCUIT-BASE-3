@@ -171,7 +171,7 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 
 //Where the occurrence is generated every OCC_INTERVAL
 //(I think that’s 128 bases) and write to the new bwt (which is buf)
-void bwt_bwtupdate_core_new_index(bwt_t *bwt)
+void bwt_bwtupdate_core(bwt_t *bwt)
 {
 
 	bwtint_t i, k;
