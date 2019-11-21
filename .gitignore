@@ -4,3 +4,6 @@
 *.pac
 *.sa
 *.a
+*.ann
+*.bwt
+*.amb
