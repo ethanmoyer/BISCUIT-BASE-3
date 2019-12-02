@@ -1,60 +1,10 @@
-else if (algo_type == 1 || algo_type == 3) {
-        bwt_t *bwt;
+L2[0]: 0
+L2[1]: 33
+L2[2]: 33
+L2[3]: 129
+L2[4]: 257
 
-        //generate bwt
-        bwt = bwt_pac2bwt(str, algo_type == 3);
-
-        //generate occurrences array
-        bwt_bwtupdate_core(bwt);
-
-        bwtint_t k = 165;
-
-        //find occurrences at a given position k
-        bwt_occ4_new_index(bwt, k);
-
-        //suffix array
-        bwt_cal_sa(bwt, 128);
-
-        fprintf(stderr, "t %d\n", 1);
-
-        k = 127;
-        bwtint_t t = bwt_sa(bwt, k);
-
-        fprintf(stderr, "t %llu\n", t);
-
-        // bwtc is the bwt on the comp. strand --> bi directional search
-        // q -> base sequence; base-3?
-        // ik -> input interval for iteration
-        // ok -> output interval for iteration
-
-        strcpy(str, prefix); strcat(str, ".dau.pac");
-        bwt_t *bwtc;
-        bwtc = bwt_pac2bwt(str, algo_type == 3);
-
-        //A..., C..., G..., T.... and $
-        uint8_t q = 0; //AAGG? nope 0 through 4
-        bwtintv_t ik, ok[4];
-
-        fprintf(stderr, "L2: %llu\n", bwt->L2[4]);
-
-        bwt_set_intv(bwt, bwtc, q, ik); // the initial interval of a single base
-
-        /**
-         * x[0] - forward index location;
-         * x[1] - reverse complement index location;
-         * x[2] - occurrence number (number of substrings);
-         * info>>32 - beg;
-         * (uint32_t) info - end;
-         */
-
-        fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
-
-        bwt_extend(bwt, &ik, ok, 2);
-
-        //bwt_extend(bwt, &ik, ok, 0);
-
-        exit(0);
-
-        bwt_dump_bwt(str2, bwt);
-        bwt_destroy(bwt);
-    }
+L2[1] - L2[0] = 33      //#A
+L2[2] - L2[1] = 0       //#C
+L2[3] - L2[2] = 96      //#G
+L2[3] - L2[4] = 128     //#T

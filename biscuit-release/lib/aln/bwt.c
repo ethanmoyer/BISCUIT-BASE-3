@@ -196,7 +196,7 @@ void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4])
 	cnt[0] += x&0xff; cnt[1] += x>>8&0xff; cnt[2] += x>>16&0xff; cnt[3] += x>>24;
 }
 //k ranking will start at 1; can be changed later to start at 0
-void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k )
+uint64_t bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, int x)
 {
 //fix to take into value of k
     int64_t total_G = 0;
@@ -207,9 +207,9 @@ void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k )
 
     //total values
     if ((double) k / 128 > 1) {
-        total_G = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 0];
+        total_A = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 0];
         total_T = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 1];
-        total_A = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 2];
+        total_G = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 2];
     }
 
     if ((double) (k % 128) / 128 > 1)
@@ -246,18 +246,26 @@ void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k )
         //A
         total_A += partial_A;
         //G
-        total_G += __builtin_popcountll(bwt_k->bwt_all.bwt1[i]) - partial_A;
+        total_G += __builtin_popcountll(bwt_k->bwt_all.bwt0[i]) - partial_A;
         //T
-        total_T += __builtin_popcountll(bwt_k->bwt_all.bwt0[i]) - partial_A;
+        total_T += __builtin_popcountll(bwt_k->bwt_all.bwt1[i]) - partial_A;
 
     }
 
     fprintf(stderr, "Up to position %llu -->\nG: %llu T: %llu A: %llu\n", k, total_G, total_T, total_A);
 
-
     free(bwt_k);
-    free(bwt_k->bwt_all.bwt0);
-    free(bwt_k->bwt_all.bwt1);
+    //free(bwt_k->bwt_all.bwt0);
+    //free(bwt_k->bwt_all.bwt1);
+
+    if (x == 0)
+        return total_A;
+    else if (x == 1)
+        return total_T;
+    else if (x == 2)
+        return total_G;
+    else
+        return -1;
 
 }
 
@@ -339,7 +347,14 @@ void bwt_extend(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_b
 {
 	bwtint_t tk[4], tl[4];
 	int i;
+
+	fprintf(stderr, "ik->x[!is_back] - 1: %llu\n", ik->x[!is_back] - 1);
+    fprintf(stderr, "ik->x[!is_back] - 1 + ik->x[2]: %llu\n", ik->x[!is_back] - 1 +  ik->x[2]);
+
 	bwt_2occ4(bwt, ik->x[!is_back] - 1, ik->x[!is_back] - 1 + ik->x[2], tk, tl);
+
+	
+
 	for (i = 0; i != 4; ++i) {
 		ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
 		ok[i].x[2] = tl[i] - tk[i];
@@ -348,6 +363,12 @@ void bwt_extend(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_b
 	ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
 	ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
 	ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
+
+	fprintf(stderr, "ok[3].x[is_back]: %llu\n", ok[3].x[is_back]);
+	fprintf(stderr, "ok[2].x[is_back]: %llu\n", ok[2].x[is_back]);
+	fprintf(stderr, "ok[1].x[is_back]: %llu\n", ok[1].x[is_back]);
+	fprintf(stderr, "ok[0].x[is_back]: %llu\n", ok[0].x[is_back]);
+
 }
 
 static void bwt_reverse_intvs(bwtintv_v *p) {

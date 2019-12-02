@@ -63,7 +63,6 @@ int64_t bwa_seq_len(const char *fn_pac)
 	return (pac_len - 1) * 4 + (int)c;
 }
 
-
 //return array of two bwt_t
 bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 {
@@ -85,20 +84,22 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	err_fread_noeof(buf2, 1, pac_size, fp);
 	err_fclose(fp);
 	memset(bwt->L2, 0, 5 * 4);
-	buf = (ubyte_t*)calloc(bwt->seq_len + 1, 1);
-	for (i = 0; i < bwt->seq_len; ++i) {
+	buf = (ubyte_t*)calloc((bwt->seq_len + 1)/2, 1);
+	for (i = 0; i < bwt->seq_len/2; ++i) {
 		buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
-		++bwt->L2[1+buf[i]];
+		++bwt->L2[1+(buf2[i>>2] >> ((3 - (i&3)) << 1) & 3)];
 	}
 	for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
-	free(buf2);
 
+	free(buf2);
+    //for (i = 0; i < bwt->seq_len/2; i++)
+    //    fprintf(stderr, "buf: %d\n", buf[i]);
 	// Burrows-Wheeler Transform
 	if (use_is) {
-		bwt->primary = is_bwt(buf, bwt->seq_len);
-
+		bwt->primary = is_bwt(buf, bwt->seq_len/2);
+    fprintf(stderr, "\n");
 	//for (i = 0; i < bwt->seq_len/2; i++)
-		//fprintf(stderr, "buf: %d\n", buf[i]);
+	//	fprintf(stderr, "buf: %d\n", buf[i]);
 
 	} else {
 #ifdef _DIVBWT
@@ -134,7 +135,6 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
             bwt->bwt_all.bwt1[(int)ceil(i/64)] ^= x;
         }
     }
-
 
     bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
     for (i = 0; i < bwt->seq_len; ++i)
@@ -172,7 +172,6 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 //(I think that’s 128 bases) and write to the new bwt (which is buf)
 void bwt_bwtupdate_core(bwt_t *bwt)
 {
-
     bwtint_t i, k, c[4], n_occ;
 	uint32_t *buf;
 
@@ -205,10 +204,10 @@ void bwt_bwtupdate_core(bwt_t *bwt)
     bwt->bwt_occ_matrix0.occurrences = (uint64_t*)
     calloc(bwt->bwt_occ_matrix0.rows * bwt->bwt_occ_matrix0.cols, 8);
 
-    /*for (i = 0; i < bwt->bwt_all.size; i++) {
+    for (i = 0; i < bwt->bwt_all.size; i++) {
         fprintf(stderr, "bwt0: %llu \n", bwt->bwt_all.bwt0[i]);
         fprintf(stderr, "bwt1: %llu \n", bwt->bwt_all.bwt1[i]);
-    }*/
+    }
 
     i = 0;
     j = 1;
@@ -238,7 +237,7 @@ void bwt_bwtupdate_core(bwt_t *bwt)
                  bwt->bwt_occ_matrix0.occurrences[(k - 1) * 3 + 2];
         }
 
-        fprintf(stderr, "k: %llu occurances: G: %llu T: %llu A: %llu \n", k,
+        fprintf(stderr, "k: %llu occurances: A: %llu T: %llu G: %llu \n", k,
         bwt->bwt_occ_matrix0.occurrences[k * 3 + 0],
         bwt->bwt_occ_matrix0.occurrences[k * 3 + 1],
         bwt->bwt_occ_matrix0.occurrences[k * 3 + 2]);
@@ -365,13 +364,19 @@ int main_biscuit_index(int argc, char *argv[]) {
 
         bwtint_t k = 165;
 
+        //A = 0
+        //T = 1
+        //G = 2
         //find occurrences at a given position k
-        bwt_occ4_new_index(bwt, k);
+
+        //fprintf(stderr, "TEST %d\n", bwt_occ4_new_index(bwt, k, 0));
+
+        bwt_occ4_new_index(bwt, bwt->seq_len/2, 0);
 
 
         //suffix array
         bwt_cal_sa(bwt, 128);
-exit(0);
+
         fprintf(stderr, "primary %llu\n", bwt->primary);
 
         k = 128;
@@ -389,12 +394,14 @@ exit(0);
         bwtc = bwt_pac2bwt(str, algo_type == 3);
 
         //A..., C..., G..., T.... and $
-        uint8_t q = 0; //AAGG? nope 0 through 4
+        uint8_t q = 1; //AAGG? nope 0 through 4
         bwtintv_t ik, ok[4];
 
-        fprintf(stderr, "L2: %llu\n", bwt->L2[0]);
-
-        bwt_set_intv(bwt, bwtc, q, ik); // the initial interval of a single base
+        fprintf(stderr, "L2[0]: %llu\n", bwt->L2[0]);
+        fprintf(stderr, "L2[1]: %llu\n", bwt->L2[1]);
+        fprintf(stderr, "L2[2]: %llu\n", bwt->L2[2]);
+        fprintf(stderr, "L2[3]: %llu\n", bwt->L2[3]);
+        fprintf(stderr, "L2[4]: %llu\n", bwt->L2[4]);
 
         /**
          * x[0] - forward index location;
@@ -404,9 +411,26 @@ exit(0);
          * (uint32_t) info - end;
          */
 
-        fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
+         /*     0 = A
+          *     2 = G
+          *     3 = T
+          */
+
+        bwt_set_intv(bwt, bwtc, 0, ik); // the initial interval of a single base
+        fprintf(stderr, "index: %llu occ: %llu\n", ik.x[0], ik.x[2]);
+
+        //bwt_set_intv(bwt, bwtc, 1, ik); // the initial interval of a single base
+        //fprintf(stderr, "index: %llu occ: %llu\n", ik.x[0], ik.x[2]);
+
+        //bwt_set_intv(bwt, bwtc, 2, ik); // the initial interval of a single base
+        //fprintf(stderr, "index: %llu occ: %llu\n", ik.x[0], ik.x[2]);
+
+        //bwt_set_intv(bwt, bwtc, 3, ik); // the initial interval of a single base
+        //fprintf(stderr, "index: %llu occ: %llu\n", ik.x[0], ik.x[2]);
 
         bwt_extend(bwt, &ik, ok, 2);
+
+
 
         //bwt_extend(bwt, &ik, ok, 0);
 
