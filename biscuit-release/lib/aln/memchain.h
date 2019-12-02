@@ -49,7 +49,10 @@ typedef struct {
   int score;
 } mem_seed_t; // unaligned memory
 
-typedef struct { size_t n, m; mem_seed_t *a;  } mem_seed_v;
+typedef struct {
+    size_t n, m;
+    mem_seed_t *a;
+} mem_seed_v;
 
 /***************
  * mem_chain_t *
@@ -67,7 +70,10 @@ typedef struct {
    mem_seed_v seeds_extra;          // backup seeds
 } mem_chain_t;
 
-typedef struct { size_t n, m; mem_chain_t *a;  } mem_chain_v;
+typedef struct {
+    size_t n, m;
+    mem_chain_t *a;
+ } mem_chain_v;
 
 
 /********************************************

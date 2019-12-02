@@ -52,9 +52,15 @@ void bwt_gen_cnt_table(bwt_t *bwt) {
 
 static inline bwtint_t bwt_invPsi(const bwt_t *bwt, bwtint_t k) // compute inverse CSA
 {
+	//fprintf(stderr, "k: %llu\n", k);
 	bwtint_t x = k - (k > bwt->primary);
+	//fprintf(stderr, "x: %llu\n", x);
 	x = bwt_B0(bwt, x);
+	//fprintf(stderr, "x: %llu\n", x);
+	//fprintf(stderr, "bwt->L2[x]: %llu\n", bwt->L2[x]);
+	//fprintf(stderr, "bwt_occ(bwt, k, x): %llu\n", bwt_occ(bwt, k, x));
 	x = bwt->L2[x] + bwt_occ(bwt, k, x);
+	//fprintf(stderr, "x: %llu\n", x);
 	return k == bwt->primary? 0 : x;
 }
 
@@ -70,12 +76,16 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 
 	if (bwt->sa) free(bwt->sa);
 	bwt->sa_intv = intv;
-	bwt->n_sa = (bwt->seq_len + intv) / intv;
+	bwt->n_sa = (bwt->seq_len/2 + intv) / intv;
 	bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
 	// calculate SA value
-	isa = 0; sa = bwt->seq_len;
-	for (i = 0; i < bwt->seq_len; ++i) {
-		if (isa % intv == 0) bwt->sa[isa/intv] = sa;
+	isa = 0; sa = bwt->seq_len/2;
+	for (i = 0; i < bwt->seq_len/2; ++i) {
+
+		if (isa % intv == 0) {
+		    bwt->sa[isa/intv] = sa;
+		    fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
+		}
 		--sa;
 		isa = bwt_invPsi(bwt, isa);
 	}

@@ -1,321 +1,60 @@
-Test file
+else if (algo_type == 1 || algo_type == 3) {
+        bwt_t *bwt;
 
-#2
-AGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGTAGGTTTGT
+        //generate bwt
+        bwt = bwt_pac2bwt(str, algo_type == 3);
 
-0000000000000000011111111111111110000000000000000000000000000000
-1111111111111111100000000000000001111111111111111111111111111111
+        //generate occurrences array
+        bwt_bwtupdate_core(bwt);
 
-1111111111111111111111111111111100000000000000000000000000000000
-0000000000000000000000000000000011111111111111110000000000000000
+        bwtint_t k = 165;
 
+        //find occurrences at a given position k
+        bwt_occ4_new_index(bwt, k);
 
-1111110000000000000000000000000000000000000000000000000000000000
-0000001111111111111111111111111111111110000000000000000000000000
-0000000011111111111111111111111111111111111111111111111111111111
-0000000011111111111111111111111111111111111111111111111111111111
-01 -> T
-00 -> A should be 10
-10 -> G should be 00
+        //suffix array
+        bwt_cal_sa(bwt, 128);
 
-AGGTTTGT
+        fprintf(stderr, "t %d\n", 1);
 
-1 A
-3 G
-4 T
+        k = 127;
+        bwtint_t t = bwt_sa(bwt, k);
 
-0000000000000000011111111111111110000000000000000000000000000000
-1111111111111111100000000000000001111111111111111111111111111111
+        fprintf(stderr, "t %llu\n", t);
 
-1111111111111111111111111111111100000000000000000000000000000000
-0000000000000000000000000000000011111111111111110000000000000000
+        // bwtc is the bwt on the comp. strand --> bi directional search
+        // q -> base sequence; base-3?
+        // ik -> input interval for iteration
+        // ok -> output interval for iteration
 
-0000000011111111111111111111111111111111111111111111111111111111
-0000000011111111111111111111111111111111111111111111111111111111
---
-0000000000000000000000000000000000111111111111111111111111111111
-1111111111111111111111111111111111000000000000000000000000000000
+        strcpy(str, prefix); strcat(str, ".dau.pac");
+        bwt_t *bwtc;
+        bwtc = bwt_pac2bwt(str, algo_type == 3);
 
-1110000000000000000000000000000000000000000000000000000000000000
-0001111111111111111111111111111111111111111111111111111111111111
+        //A..., C..., G..., T.... and $
+        uint8_t q = 0; //AAGG? nope 0 through 4
+        bwtintv_t ik, ok[4];
 
-0000111111111111111111111111111111111111111111111111111 111111111
-1111000000000000000000000000000000000000000000000000000 000000000
+        fprintf(stderr, "L2: %llu\n", bwt->L2[4]);
 
-1111110000000000000000000000000000000000000000000000000000000000
-0000001111111111111111111111111111111110000000000000000000000000
+        bwt_set_intv(bwt, bwtc, q, ik); // the initial interval of a single base
 
-0000000011111111111111111111111111111111111111111111111111111111
-0000000011111111111111111111111111111111111111111111111111111111
+        /**
+         * x[0] - forward index location;
+         * x[1] - reverse complement index location;
+         * x[2] - occurrence number (number of substrings);
+         * info>>32 - beg;
+         * (uint32_t) info - end;
+         */
 
-0000111111111111111111111111111111111111111111111111111111111111
-1111000000000000000000000000000000000000000000000000000000000000
+        fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
 
-0000000001111000000000000000000000000000000000000000000000000000
-0000000000000111111111111111111111111111111111111111111111111111
-=>
+        bwt_extend(bwt, &ik, ok, 2);
 
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3 34 2
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0 33 0
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3 65
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 0
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 3
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
-buf: 2
+        //bwt_extend(bwt, &ik, ok, 0);
+
+        exit(0);
+
+        bwt_dump_bwt(str2, bwt);
+        bwt_destroy(bwt);
+    }

@@ -58,6 +58,7 @@ typedef uint64_t bwtint_t; //unsigned long long 2^64
 //gives name to user defined data type --> bwt_t
 typedef struct {
 	bwtint_t primary; // S^{-1}(0), or the primary index of BWT
+	//irst occurrence of A..., C..., G..., T.... and $
 	bwtint_t L2[5]; // C(), cumulative count
 	bwtint_t seq_len; // sequence length
 	bwtint_t bwt_size; // size of bwt, about seq_len/4
@@ -71,7 +72,6 @@ typedef struct {
     uint64_t occurrence[3][0];
 
     //store as poitner
-    //uint64_t **occurrence;
     bwt_occ_matrix bwt_occ_matrix0;
 
 	// suffix array
@@ -94,7 +94,10 @@ typedef struct {
 	bwtint_t x[3], info;
 } bwtintv_t;
 
-typedef struct { size_t n, m; bwtintv_t *a; } bwtintv_v;
+typedef struct {
+    size_t n, m;
+    bwtintv_t *a;
+} bwtintv_v;
 
 /* For general OCC_INTERVAL, the following is correct:
 #define bwt_bwt(b, k) ((b)->bwt[(k)/OCC_INTERVAL * (OCC_INTERVAL/(sizeof(uint32_t)*8/2) + sizeof(bwtint_t)/4*4) + sizeof(bwtint_t)/4*4 + (k)%OCC_INTERVAL/16])
@@ -111,7 +114,7 @@ typedef struct { size_t n, m; bwtintv_t *a; } bwtintv_v;
 #define bwt_B0(b, k) (bwt_bwt(b, k)>>((~(k)&0xf)<<1)&3)
 
 /* #define bwt_set_intv(bwt, c, ik) ((ik).x[0] = (bwt)->L2[(int)(c)]+1, (ik).x[2] = (bwt)->L2[(int)(c)+1]-(bwt)->L2[(int)(c)], (ik).x[1] = (bwt)->L2[3-(c)]+1, (ik).info = 0) */
-
+// interval for the first base
 #define bwt_set_intv(bwt, bwtc, c, ik) ((ik).x[0] = (bwt)->L2[(int)(c)]+1, (ik).x[2] = (bwt)->L2[(int)(c)+1]-(bwt)->L2[(int)(c)], (ik).x[1] = (bwtc)->L2[3-(c)]+1, (ik).info = 0)
 
 #ifdef __cplusplus

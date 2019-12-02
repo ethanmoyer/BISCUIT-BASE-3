@@ -93,6 +93,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
           x = bwt_seed_strategy1(bwt, bwtc, len, seq, x, opt->min_seed_len, opt->max_mem_intv, &m);
           if (m.x[2] > 0) kv_push(bwtintv_t, *mem, m);
         } else { // for now, we never come to this block which is slower
+            //we are making this faster
           x = bwt_smem1a(bwt, bwtc, len, seq, x, start_width, opt->max_mem_intv, _mem, tmpv);
           for (i = 0; i < _mem->n; ++i)
             kv_push(bwtintv_t, *mem, _mem->a[i]);

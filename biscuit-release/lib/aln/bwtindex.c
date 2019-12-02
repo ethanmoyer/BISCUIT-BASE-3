@@ -63,6 +63,7 @@ int64_t bwa_seq_len(const char *fn_pac)
 	return (pac_len - 1) * 4 + (int)c;
 }
 
+
 //return array of two bwt_t
 bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 {
@@ -73,10 +74,9 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 
 	// initialization
 	bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
-
 	bwt->seq_len = bwa_seq_len(fn_pac);
-	//fprintf(stderr, "New BWT size: %llu\n", bwt->seq_len);
-	bwt->bwt_size = bwt->seq_len;
+	bwt->bwt_size = (bwt->seq_len + 15) >> 4;
+	fprintf(stderr, "BWT size: %llu\n", bwt->bwt_size);
 	fp = xopen(fn_pac, "rb");
 
 	// prepare sequence
@@ -88,7 +88,6 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	buf = (ubyte_t*)calloc(bwt->seq_len + 1, 1);
 	for (i = 0; i < bwt->seq_len; ++i) {
 		buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
-
 		++bwt->L2[1+buf[i]];
 	}
 	for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
@@ -136,11 +135,11 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
         }
     }
 
-    /*
+
     bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
     for (i = 0; i < bwt->seq_len; ++i)
     	bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
-    	*/
+
     free(buf);
     return bwt;
 
@@ -174,7 +173,29 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 void bwt_bwtupdate_core(bwt_t *bwt)
 {
 
-	bwtint_t i, k;
+    bwtint_t i, k, c[4], n_occ;
+	uint32_t *buf;
+
+	n_occ = (bwt->seq_len + OCC_INTERVAL - 1) / OCC_INTERVAL + 1;
+	//fprintf(stderr, "n_occ: %llu\n", n_occ);
+	//exit(0);
+
+	bwt->bwt_size += n_occ * sizeof(bwtint_t); // the new size
+	buf = (uint32_t*)calloc(bwt->bwt_size, 4); // will be the new bwt
+	c[0] = c[1] = c[2] = c[3] = 0;
+	for (i = k = 0; i < bwt->seq_len; ++i) {
+		if (i % OCC_INTERVAL == 0) {
+			memcpy(buf + k, c, sizeof(bwtint_t) * 4);
+			k += sizeof(bwtint_t); // in fact: sizeof(bwtint_t)=4*(sizeof(bwtint_t)/4)
+		}
+		if (i % 16 == 0) buf[k++] = bwt->bwt[i/16]; // 16 == sizeof(uint32_t)/2
+		++c[bwt_B00(bwt, i)];
+	}
+	// the last element
+	memcpy(buf + k, c, sizeof(bwtint_t) * 4);
+	xassert(k + sizeof(bwtint_t) == bwt->bwt_size, "inconsistent bwt_size");
+	// update bwt
+	free(bwt->bwt); bwt->bwt = buf;
 
     bwt->bwt_occ_matrix0.rows = floor(bwt->seq_len / 256);
     fprintf(stderr, "\nCheckpoints!\n");
@@ -334,14 +355,64 @@ int main_biscuit_index(int argc, char *argv[]) {
     strcpy(str2, prefix); strcat(str2, ".par.bwt");
     if (algo_type == 2) bwt_bwtgen(str, str2);
     else if (algo_type == 1 || algo_type == 3) {
-      bwt_t *bwt;
-      bwt = bwt_pac2bwt(str, algo_type == 3);
-      bwt_bwtupdate_core(bwt);
-      //bwtint_t k = bwt->seq_len / 2;
-      bwtint_t k = 200;
-      bwt_occ4_new_index(bwt, k);
-      bwt_dump_bwt(str2, bwt);
-      bwt_destroy(bwt);
+        bwt_t *bwt;
+
+        //generate bwt
+        bwt = bwt_pac2bwt(str, algo_type == 3);
+
+        //generate occurrences array
+        bwt_bwtupdate_core(bwt);
+
+        bwtint_t k = 165;
+
+        //find occurrences at a given position k
+        bwt_occ4_new_index(bwt, k);
+
+
+        //suffix array
+        bwt_cal_sa(bwt, 128);
+exit(0);
+        fprintf(stderr, "primary %llu\n", bwt->primary);
+
+        k = 128;
+        bwtint_t t = bwt_sa(bwt, 128);
+
+        fprintf(stderr, "t %llu\n", t);
+
+        // bwtc is the bwt on the comp. strand --> bi directional search
+        // q -> base sequence; base-3?
+        // ik -> input interval for iteration
+        // ok -> output interval for iteration
+
+        strcpy(str, prefix); strcat(str, ".dau.pac");
+        bwt_t *bwtc;
+        bwtc = bwt_pac2bwt(str, algo_type == 3);
+
+        //A..., C..., G..., T.... and $
+        uint8_t q = 0; //AAGG? nope 0 through 4
+        bwtintv_t ik, ok[4];
+
+        fprintf(stderr, "L2: %llu\n", bwt->L2[0]);
+
+        bwt_set_intv(bwt, bwtc, q, ik); // the initial interval of a single base
+
+        /**
+         * x[0] - forward index location;
+         * x[1] - reverse complement index location;
+         * x[2] - occurrence number (number of substrings);
+         * info>>32 - beg;
+         * (uint32_t) info - end;
+         */
+
+        fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
+
+        bwt_extend(bwt, &ik, ok, 2);
+
+        //bwt_extend(bwt, &ik, ok, 0);
+
+        bwt_dump_bwt(str2, bwt);
+        bwt_destroy(bwt);
+        exit(0);
     }
     fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
   }
