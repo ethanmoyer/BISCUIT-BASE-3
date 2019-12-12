@@ -378,10 +378,13 @@ int main_biscuit_index(int argc, char *argv[]) {
     else if (algo_type == 1 || algo_type == 3) {
         bwt_t *bwt;
 
+        // this is the subsequence that we're searching with old index
+        // 00 = A, 10 = G, 11 = T
         uint64_t s = 2814;
+        // the length var below is to counteract the missing data from the 00 of As
         int s_len = 16;
+
         //store subseq with new index
-        //maybe use it for the bwt in bwt_pac2bwt to make the code more efficient
         uint64_t *subseq = newIndex(s, s_len);
 
         fprintf(stderr, "subseq0: %llu subseq1: %llu\n", subseq[0], subseq[1]);
@@ -398,9 +401,6 @@ int main_biscuit_index(int argc, char *argv[]) {
         //A = 0
         //T = 1
         //G = 2
-        //find occurrences at a given position k
-
-        //fprintf(stderr, "TEST\n");
 
         bwtint_t cntk[4];
 
