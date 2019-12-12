@@ -81,7 +81,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 	// calculate SA value
 	isa = 0; sa = bwt->seq_len/2;
 	for (i = 0; i < bwt->seq_len/2; ++i) {
-
+        //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
 		if (isa % intv == 0) {
 		    bwt->sa[isa/intv] = sa;
 		    fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
@@ -90,7 +90,8 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 		isa = bwt_invPsi(bwt, isa);
 	}
 	if (isa % intv == 0) bwt->sa[isa/intv] = sa;
-	bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
+	bwt->sa[0] = 0; //might change back later
+	//bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }
 
 bwtint_t bwt_sa(const bwt_t *bwt, bwtint_t k)
@@ -367,10 +368,11 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
 
 
     uint64_t *sub_ = (uint64_t*)calloc(2, 8);
-    bwtint_t cntk_old[3];
-    bwtint_t cntk_new[3];
+    bwtint_t cntk_old[3], cntk_new[3], cntk_last[3];
     int first;
-    cntk_old[0] = cntk_new[0] = 0;    cntk_old[1] = cntk_new[1] = 0;    cntk_old[2] = cntk_new[2] = 0;
+    cntk_old[0] = cntk_new[0] = cntk_last[0] = 0;
+    cntk_old[1] = cntk_new[1] = cntk_last[0] = 0;
+    cntk_old[2] = cntk_new[2] = cntk_last[0] = 0;
 
     //pre adjustment for __builtin_popcountll_inv_occ
     sub[0] ^= ULLONG_MAX;
@@ -410,11 +412,7 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
     //set the first value
     for (int j = 1; j < size + 1; j++) {
 
-        fprintf(stderr, "k: %d l: %d\n", k, l);
-
-        if (j == size) {
-            break;
-        }
+        fprintf(stderr, "k: %llu l: %llu\n", k, l);
 
         bwt_2occ4(bwt, k, l, tk, tl);
 
@@ -440,9 +438,11 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
             //cntk_new[0], cntk_new[1] = cntk_new[2] = 0;
             //this needs to be the output of the function
             //work on this next
-            fprintf(stderr, "k: %d l: %d\n", k, l);
+            fprintf(stderr, "k: %llu l: %llu\n", k, l);
             //fprintf(stderr);
         }
+
+
 
         fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j - 1,
             cntk_new[0], cntk_new[1], cntk_new[2]);
@@ -451,7 +451,7 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
             size - 1 - j, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
 
         //cnt 0 = A     1 = T       2 = G
-
+        //cntk_last[0] = cntk_old[0];
         if (cntk_old[0] - cntk_new[0] == 1) {
             k = tk[0];
             l = tl[0];
@@ -462,12 +462,62 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
         } else if (cntk_old[2] - cntk_new[2] == 1) {
             k = total_A + tk[2];
             l = total_A + tl[2];
-        } else if (cntk_old[0] == cntk_new[0] && cntk_old[1] == cntk_new[1] &&
-            cntk_old[2] == cntk_new[2]) {
+        } else if (cntk_new[0] == 0 && cntk_new[1] == 0 &&
+            cntk_new[2] == 0) {
+            //break;
+        }
+        if (j == size - 1) {
             break;
         }
+
         //tk[0] = tk[1] = tk[2] = 0;
         //tl[0] = tl[1] = tk[2] = 0;
+    }
+
+
+    uint64_t n_occ = (int) (l - k);
+    uint64_t *pos = (uint64_t*) calloc(n_occ, sizeof(uint64_t));
+    int intv = 32;
+
+    fprintf(stderr, "\n");
+
+    for (i = 0; i < (int) n_occ; i++) {
+        uint64_t end = bwt->sa[k / intv];
+        uint64_t k0 = k + i;
+        uint64_t l0 = k + i + 1;
+        int step = 0;
+        fprintf(stderr, "\nk: %llu l: %llu\n\n", k0, l0);
+        // some statement relative for
+        while (k0 % 32 != 0) {
+            step++;
+            bwt_2occ4(bwt, k0, l0, tk, tl);
+
+            //A
+            fprintf(stderr, "tk[0]: %llu tl[0]: %llu\n", tk[0], tl[0]);
+            //T
+            fprintf(stderr, "tk[1]: %llu tl[1]: %llu\n", tk[1], tl[1]);
+            //G
+            fprintf(stderr, "tk[2]: %llu tl[2]: %llu\n", tk[2], tl[2]);
+
+            //cnt 0 = A     1 = T       2 = G
+
+            if (tl[0] - tk[0] == 1) {
+                k0 = tk[0];
+                l0 = tl[0];
+                fprintf(stderr, "A\n");
+            } else if (tl[1] - tk[1] == 1) {
+                k0 = total_A + total_G + tk[1];
+                l0 = total_A + total_G + tl[1];
+            } else if (tl[2] - tk[2] == 1) {
+                k0 = total_A + tk[2];
+                l0 = total_A + tl[2];
+            }
+
+        }
+        fprintf(stderr, "index: %llu\n", bwt->sa[k/32] + step);
+        // we need to make this
+        //pos[0] = k + i;
+
     }
 
 exit(0);

@@ -136,7 +136,7 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
     }
 
     bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
-    for (i = 0; i < bwt->seq_len; ++i)
+    for (i = 0; i < bwt->seq_len/2; ++i)
     	bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
 
     free(buf);
@@ -396,11 +396,6 @@ int main_biscuit_index(int argc, char *argv[]) {
         //generates new occurrences array
         bwt_bwtupdate_core(bwt);
 
-        bwtint_t k = 165;
-
-        //A = 0
-        //T = 1
-        //G = 2
 
         bwtint_t cntk[4];
 
@@ -408,7 +403,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         bwt_occ4_new_index(bwt, bwt->seq_len/2, cntk);
 
         //suffix array
-        bwt_cal_sa(bwt, 128);
+        bwt_cal_sa(bwt, 32);
 
         fprintf(stderr, "primary %llu\n", bwt->primary);
 
@@ -416,17 +411,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         bwtint_t t = bwt_sa(bwt, 128);
 
         fprintf(stderr, "t %llu\n", t);
-
-        // bwtc is the bwt on the comp. strand --> bi directional search
-        // q -> base sequence; base-3?
-        // ik -> input interval for iteration
-        // ok -> output interval for iteration
-
         strcpy(str, prefix); strcat(str, ".dau.pac");
-/*
-        bwt_t *bwtc;
-        bwtc = bwt_pac2bwt(str, algo_type == 3);
-*/
+
         //A..., C..., G..., T.... and $
         uint8_t q = 1; //AAGG? nope 0 through 4
         bwtintv_t ik, ok[3];
@@ -436,34 +422,11 @@ int main_biscuit_index(int argc, char *argv[]) {
         fprintf(stderr, "L2[3]: %llu\n", bwt->L2[3]);
         fprintf(stderr, "L2[4]: %llu\n", bwt->L2[4]);
 
-        //L2[1] - L2[0] = 33      //#A
-        //L2[2] - L2[1] = 0       //#C
-        //L2[3] - L2[2] = 96      //#G
-        //L2[3] - L2[4] = 128     //#T
-
-        /**
-         * x[0] - forward index location;
-         * x[1] - reverse complement index location;
-         * x[2] - occurrence number (number of substrings);
-         * info>>32 - beg;
-         * (uint32_t) info - end;
-         */
-
-         /*     0 = A
-          *     2 = G
-          *     3 = T
-          */
-        //bwt_set_intv(bwt, bwt, 2, ik);
-        //bwt_set_intv(bwt, bwt, 3, ik); // the initial interval of a single base
         fprintf(stderr, "index: %llu occ: %llu\n", ik.x[0], ik.x[2]);
 
         //const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back
         bwt_extend(bwt, &ik, ok, 1, subseq, s_len/2);
-exit(0);
-        //bwt_extend(bwt, &ik, ok, 2);
-
-
-        //bwt_extend(bwt, &ik, ok, 0);
+//exit(0);
 
         bwt_dump_bwt(str2, bwt);
         bwt_destroy(bwt);
