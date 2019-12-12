@@ -71,6 +71,8 @@ typedef struct {
 	//new occurance array
     uint64_t occurrence[3][0];
 
+    bwt_vector subseq;
+
     //store as poitner
     bwt_occ_matrix bwt_occ_matrix0;
 
@@ -151,7 +153,7 @@ extern "C" {
 	/**
 	 * Extend bi-SA-interval _ik_
 	 */
-	void bwt_extend(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back);
+	void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[4], int is_back, uint64_t *sub, int size);
 
 	/**
 	 * Given a query _q_, collect potential SMEMs covering position _x_ and store them in _mem_.

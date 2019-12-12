@@ -195,27 +195,45 @@ void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4])
 	x += __occ_aux4(bwt, tmp) - (~k&15);
 	cnt[0] += x&0xff; cnt[1] += x>>8&0xff; cnt[2] += x>>16&0xff; cnt[3] += x>>24;
 }
+//for inverse, when seq0 and seq1 ^= ULLONG_MAX
+//after adjusted for k
+void __builtin_popcountll_inv_occ(uint64_t seq0, uint64_t seq1, bwtint_t counts[3]) {
+
+    //fprintf(stderr,"bwt0: %llu bwt1: %llu\n", seq0, seq1);
+    //fprintf(stderr,"counts[0]: %llu counts[1]: %llu counts[2]: %llu\n", counts[0], counts[1], counts[2]);
+
+    uint64_t partial_G = __builtin_popcountll(seq0 & seq1);
+    //G
+    counts[2] += partial_G;
+    //A
+    counts[0] += __builtin_popcountll(seq1) - partial_G;
+    //T
+    counts[1] += __builtin_popcountll(seq0) - partial_G;
+
+    //fprintf(stderr,"counts[0]: %llu counts[1]: %llu counts[2]: %llu\n", counts[0], counts[1], counts[2]);
+}
+
 //k ranking will start at 1; can be changed later to start at 0
-uint64_t bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, int x)
+void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[3])
 {
 //fix to take into value of k
-    int64_t total_G = 0;
-    uint64_t total_T = 0;
-    uint64_t total_A = 0;
 
-    int fix = -1;
+    int fix = 0;
 
     //total values
     if ((double) k / 128 > 1) {
-        total_A = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 0];
-        total_T = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 1];
-        total_G = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 2];
+        cnt[0] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 0];
+        cnt[1] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 1];
+        cnt[2] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 2];
+    } else {
+        cnt[0] = cnt[1] = cnt[2] = 0;
     }
 
-    if ((double) (k % 128) / 128 > 1)
-        fix = 0;
+    //we might need this again
+    if ((double) (k % 128) / 64 > 1)
+        fix = 1;
 
-    fprintf(stderr, "At last checkpoint ->\nG: %llu T: %llu A: %llu\n", total_G, total_T, total_A);
+    //fprintf(stderr, "At last checkpoint ->\nA: %llu T: %llu G: %llu\n", cnt[0], cnt[1], cnt[2]);
 
     bwt_t *bwt_k;
 
@@ -229,55 +247,46 @@ uint64_t bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, int x)
 
     for (int i = 0; i < l; i++) {
 
-        bwt_k->bwt_all.bwt0[i] = bwt->bwt_all.bwt0[(int)floor(k/64) + i + fix];
-        bwt_k->bwt_all.bwt1[i] = bwt->bwt_all.bwt1[(int)floor(k/64) + i + fix];
+        bwt_k->bwt_all.bwt0[i] = bwt->bwt_all.bwt0[(int)floor(k/64) + i - fix];
+        bwt_k->bwt_all.bwt1[i] = bwt->bwt_all.bwt1[(int)floor(k/64) + i - fix];
+
+        //fprintf(stderr, "BWT0: %llu BWT1: %llu\n", bwt_k->bwt_all.bwt0[0], bwt_k->bwt_all.bwt1[i]);
 
         bwt_k->bwt_all.bwt0[i] ^= ULLONG_MAX;
         bwt_k->bwt_all.bwt1[i] ^= ULLONG_MAX;
 
+        //this k adjustment needs to be done before calling __builtin_popcountll_inv_occ
         if (i == l - 1) {
             bwt_k->bwt_all.bwt0[i] = bwt_k->bwt_all.bwt0[i] >> (64 - k % 64);
             bwt_k->bwt_all.bwt1[i] = bwt_k->bwt_all.bwt1[i] >> (64 - k % 64);
         }
 
-        //partial A
-        uint8_t partial_A = __builtin_popcountll(bwt_k->bwt_all.bwt0[i] &
-        bwt_k->bwt_all.bwt1[i]);
-        //A
-        total_A += partial_A;
-        //G
-        total_G += __builtin_popcountll(bwt_k->bwt_all.bwt0[i]) - partial_A;
-        //T
-        total_T += __builtin_popcountll(bwt_k->bwt_all.bwt1[i]) - partial_A;
+        __builtin_popcountll_inv_occ(bwt_k->bwt_all.bwt0[i], bwt_k->bwt_all.bwt1[i], cnt);
 
     }
 
-    fprintf(stderr, "Up to position %llu -->\nG: %llu T: %llu A: %llu\n", k, total_G, total_T, total_A);
+    fprintf(stderr, "Up to position %llu -->\nA: %llu T: %llu G: %llu\n", k, cnt[0], cnt[1], cnt[2]);
 
-    free(bwt_k);
+    //free(bwt_k);
     //free(bwt_k->bwt_all.bwt0);
     //free(bwt_k->bwt_all.bwt1);
-
-    if (x == 0)
-        return total_A;
-    else if (x == 1)
-        return total_T;
-    else if (x == 2)
-        return total_G;
-    else
-        return -1;
 
 }
 
 // an analogy to bwt_occ4() but more efficient, requiring k <= l
 void bwt_2occ4(const bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t cntk[4], bwtint_t cntl[4])
 {
-	bwtint_t _k, _l;
-	_k = k - (k >= bwt->primary);
-	_l = l - (l >= bwt->primary);
+	//bwtint_t _k, _l;
+	//_k = k - (k >= bwt->primary);
+	//_l = l - (l >= bwt->primary);
+
+    bwt_occ4_new_index(bwt, k, cntk);
+    bwt_occ4_new_index(bwt, l, cntl);
+	/*
 	if (_l>>OCC_INTV_SHIFT != _k>>OCC_INTV_SHIFT || k == (bwtint_t)(-1) || l == (bwtint_t)(-1)) {
-		bwt_occ4(bwt, k, cntk);
-		bwt_occ4(bwt, l, cntl);
+		bwt_occ4_new_index(bwt, k, cntk);
+		bwt_occ4_new_index(bwt, l, cntl);
+		fprintf(stderr, "TEST\n");
 	} else {
 		bwtint_t x, y;
 		uint32_t *p, tmp, *endk, *endl;
@@ -289,7 +298,11 @@ void bwt_2occ4(const bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t cntk[4], bwtin
 		// prepare cntk[]
 		endk = p + ((k>>4) - ((k&~OCC_INTV_MASK)>>4));
 		endl = p + ((l>>4) - ((l&~OCC_INTV_MASK)>>4));
-		for (x = 0; p < endk; ++p) x += __occ_aux4(bwt, *p);
+
+		//is it okay to replace this with the new index? not sure what __occ_aux4
+		//or how the cnt_table array is formatted
+		for (x = 0; p < endk; ++p)
+		    x += __occ_aux4(bwt, *p);
 		y = x;
 		tmp = *p & ~((1U<<((~k&15)<<1)) - 1);
 		x += __occ_aux4(bwt, tmp) - (~k&15);
@@ -301,6 +314,7 @@ void bwt_2occ4(const bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t cntk[4], bwtin
 		cntk[0] += x&0xff; cntk[1] += x>>8&0xff; cntk[2] += x>>16&0xff; cntk[3] += x>>24;
 		cntl[0] += y&0xff; cntl[1] += y>>8&0xff; cntl[2] += y>>16&0xff; cntl[3] += y>>24;
 	}
+	*/
 }
 
 int bwt_match_exact(const bwt_t *bwt, int len, const ubyte_t *str, bwtint_t *sa_begin, bwtint_t *sa_end)
@@ -343,22 +357,128 @@ int bwt_match_exact_alt(const bwt_t *bwt, int len, const ubyte_t *str, bwtint_t 
  * Bidirectional BWT *
  *********************/
 
-void bwt_extend(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back)
+void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, uint64_t *sub, int size) //add argument for the sequence
 {
-	bwtint_t tk[4], tl[4];
+    bwtint_t total[3];
+    bwt_occ4_new_index(bwt, bwt->seq_len/2, total);
+
+    uint64_t total_A = total[0];
+    uint64_t total_G = total[2];
+
+
+    uint64_t *sub_ = (uint64_t*)calloc(2, 8);
+    bwtint_t cntk_old[3];
+    bwtint_t cntk_new[3];
+    int first;
+    cntk_old[0] = cntk_new[0] = 0;    cntk_old[1] = cntk_new[1] = 0;    cntk_old[2] = cntk_new[2] = 0;
+
+    //pre adjustment for __builtin_popcountll_inv_occ
+    sub[0] ^= ULLONG_MAX;
+    sub[1] ^= ULLONG_MAX;
+    sub_[0] = sub[0] >> (64 - size);
+    sub_[1] = sub[1] >> (64 - size);
+
+    __builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_old);
+    fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - 1,
+        cntk_old[0], cntk_old[1], cntk_old[2]);
+    sub_[0] = sub[0] >> (64 - size + 1);
+    sub_[1] = sub[1] >> (64 - size + 1);
+    __builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_new);
+    fprintf(stderr, "Nucleotide at pos %d -->\nA: %llu T: %llu G: %llu\n\n",
+        size - 1, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
+
+    /*     0 = A
+    *     2 = G
+    *     3 = T
+    */
+
+    if (cntk_old[0] - cntk_new[0] == 1)
+        first = 0;
+    else if (cntk_old[1] - cntk_new[1] == 1)
+        first = 3;
+    else if (cntk_old[2] - cntk_new[2])
+        first = 2;
+
+    bwt_set_intv(bwt, bwt, first, *ik);
+
+	bwtint_t tk[3], tl[3];
 	int i;
 
-	fprintf(stderr, "ik->x[!is_back] - 1: %llu\n", ik->x[!is_back] - 1);
-    fprintf(stderr, "ik->x[!is_back] - 1 + ik->x[2]: %llu\n", ik->x[!is_back] - 1 +  ik->x[2]);
+    uint64_t k = ik->x[!is_back] - 1;
+    uint64_t l = ik->x[!is_back] - 1 + ik->x[2];
 
-	bwt_2occ4(bwt, ik->x[!is_back] - 1, ik->x[!is_back] - 1 + ik->x[2], tk, tl);
+    //set the first value
+    for (int j = 1; j < size + 1; j++) {
 
-	
+        fprintf(stderr, "k: %d l: %d\n", k, l);
 
-	for (i = 0; i != 4; ++i) {
+        if (j == size) {
+            break;
+        }
+
+        bwt_2occ4(bwt, k, l, tk, tl);
+
+        //A
+        fprintf(stderr, "tk[0]: %llu tl[0]: %llu\n", tk[0], tl[0]);
+        //T
+        fprintf(stderr, "tk[1]: %llu tl[1]: %llu\n", tk[1], tl[1]);
+        //G
+        fprintf(stderr, "tk[2]: %llu tl[2]: %llu\n", tk[2], tl[2]);
+
+        cntk_old[0] = cntk_new[0];  cntk_old[1] = cntk_new[1];  cntk_old[2] = cntk_new[2];
+
+        fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j,
+            cntk_old[0], cntk_old[1], cntk_old[2]);
+
+        cntk_new[0] = cntk_new[1] = cntk_new[2] = 0;
+
+        sub_[0] = sub[0] >> (64 - size + 1 + j);
+        sub_[1] = sub[1] >> (64 - size + 1 + j);
+        if (j != size - 1) {
+                __builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_new);
+        } else {
+            //cntk_new[0], cntk_new[1] = cntk_new[2] = 0;
+            //this needs to be the output of the function
+            //work on this next
+            fprintf(stderr, "k: %d l: %d\n", k, l);
+            //fprintf(stderr);
+        }
+
+        fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j - 1,
+            cntk_new[0], cntk_new[1], cntk_new[2]);
+
+        fprintf(stderr, "Nucleotide at pos %d -->\nA: %llu T: %llu G: %llu\n\n",
+            size - 1 - j, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
+
+        //cnt 0 = A     1 = T       2 = G
+
+        if (cntk_old[0] - cntk_new[0] == 1) {
+            k = tk[0];
+            l = tl[0];
+            fprintf(stderr, "A\n");
+        } else if (cntk_old[1] - cntk_new[1] == 1) {
+            k = total_A + total_G + tk[1];
+            l = total_A + total_G + tl[1];
+        } else if (cntk_old[2] - cntk_new[2] == 1) {
+            k = total_A + tk[2];
+            l = total_A + tl[2];
+        } else if (cntk_old[0] == cntk_new[0] && cntk_old[1] == cntk_new[1] &&
+            cntk_old[2] == cntk_new[2]) {
+            break;
+        }
+        //tk[0] = tk[1] = tk[2] = 0;
+        //tl[0] = tl[1] = tk[2] = 0;
+    }
+
+exit(0);
+    //change so that
+	for (i = 0; i != 3; ++i) {
 		ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
 		ok[i].x[2] = tl[i] - tk[i];
 	}
+
+
+
 	ok[3].x[is_back] = ik->x[is_back] + (ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
 	ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
 	ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
@@ -403,7 +523,7 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
       break;
     } else if (q[i] < 4) { // an A/C/G/T base
       c = 3 - q[i]; // complement of q[i]
-      bwt_extend(bwtc, &ik, ok, 0);
+      //bwt_extend(bwtc, &ik, ok, 0);
       if (ok[c].x[2] != ik.x[2]) { // change of the interval size
         kv_push(bwtintv_t, *curr, ik);
         if (ok[c].x[2] < (unsigned) min_intv) break; // the interval size is too small to be extended further
@@ -423,7 +543,7 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
     c = i < 0? -1 : q[i] < 4? q[i] : -1; // c==-1 if i<0 or q[i] is an ambiguous base
     for (j = 0, curr->n = 0; (unsigned) j < prev->n; ++j) {
       bwtintv_t *p = &prev->a[j];
-      if (c >= 0 && ik.x[2] >= max_intv) bwt_extend(bwt, p, ok, 1);
+      //if (c >= 0 && ik.x[2] >= max_intv) bwt_extend(bwt, p, ok, 1);
       if (c < 0 || ik.x[2] < (unsigned) max_intv || ok[c].x[2] < (unsigned) min_intv) { // keep the hit if reaching the beginning or an ambiguous base or the intv is small enough
         if (curr->n == 0) { // test curr->n>0 to make sure there are no longer matches
           if (mem->n == 0 || (unsigned) i + 1 < mem->a[mem->n-1].info>>32) { // skip contained matches
@@ -460,7 +580,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
   for (i = x + 1; i < len; ++i) { // forward search
     if (q[i] < 4) { // an A/C/G/T base
       c = 3 - q[i]; // complement of q[i]
-      bwt_extend(bwtc, &ik, ok, 0);
+      //bwt_extend(bwtc, &ik, ok, 0);
       if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
         *mem = ok[c];
         mem->info = (uint64_t)x<<32 | (i + 1);
