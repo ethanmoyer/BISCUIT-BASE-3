@@ -40,6 +40,24 @@
 #  include "malloc_wrap.h"
 #endif
 
+//for inverse, when seq0 and seq1 ^= ULLONG_MAX
+//after adjusted for k
+void builtin_popcountll_inv_occ(uint64_t seq0, uint64_t seq1, bwtint_t counts[3]) {
+
+    //fprintf(stderr,"bwt0: %llu bwt1: %llu\n", seq0, seq1);
+    //fprintf(stderr,"counts[0]: %llu counts[1]: %llu counts[2]: %llu\n", counts[0], counts[1], counts[2]);
+
+    uint64_t partial_G = __builtin_popcountll(seq0 & seq1);
+    //G
+    counts[2] += partial_G;
+    //A
+    counts[0] += __builtin_popcountll(seq1) - partial_G;
+    //T
+    counts[1] += __builtin_popcountll(seq0) - partial_G;
+
+    //fprintf(stderr,"counts[0]: %llu counts[1]: %llu counts[2]: %llu\n", counts[0], counts[1], counts[2]);
+}
+
 void bwt_gen_cnt_table(bwt_t *bwt) {
 	int i, j;
 	for (i = 0; i != 256; ++i) {
@@ -50,19 +68,153 @@ void bwt_gen_cnt_table(bwt_t *bwt) {
 	}
 }
 
+//k ranking will start at 1; can be changed later to start at 0
+void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[3])
+{
+//fix to take into value of k
+
+    int fix = 0;
+    int fix1 = 0;
+
+    //total values
+    if ((double) k / 128 >= 1) {
+        //fprintf(stderr, "k: %llu\n", k);
+        cnt[0] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 0];
+        cnt[1] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 1];
+        cnt[2] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 2];
+        //fprintf(stderr, "cnt[0]: %llu cnt[1]: %llu cnt[2]: %llu\n", cnt[0], cnt[1], cnt[2]);
+    } else {
+        cnt[0] = cnt[1] = cnt[2] = 0;
+    }
+
+    //we might need this again
+    if ((double) (k % 128) / 64 >= 1)
+        fix = 1;
+
+    //fprintf(stderr, "fix: %d\n", fix);
+
+    //fprintf(stderr, "At last checkpoint ->\nA: %llu T: %llu G: %llu\n", cnt[0], cnt[1], cnt[2]);
+
+    bwt_t *bwt_k;
+
+    bwt_k = (bwt_t*)calloc(1, sizeof(bwt_t));
+
+    uint8_t l = ceil((double)(k % 128)/64);
+
+    // intialize space of vector
+    bwt_k->bwt_all.bwt0 = (uint64_t*)calloc(l, 8);
+    bwt_k->bwt_all.bwt1 = (uint64_t*)calloc(l, 8);
+
+    for (int i = 0; i < l; i++) {
+
+        bwt_k->bwt_all.bwt0[i] = bwt->bwt_all.bwt0[(int)floor(k/64) + i - fix];
+        bwt_k->bwt_all.bwt1[i] = bwt->bwt_all.bwt1[(int)floor(k/64) + i - fix];
+
+        //fprintf(stderr, "BWT0: %llu BWT1: %llu\n", bwt_k->bwt_all.bwt0[0], bwt_k->bwt_all.bwt1[i]);
+
+        bwt_k->bwt_all.bwt0[i] ^= ULLONG_MAX;
+        bwt_k->bwt_all.bwt1[i] ^= ULLONG_MAX;
+
+        //this k adjustment needs to be done before calling builtin_popcountll_inv_occ
+        if (i == l - 1) {
+            bwt_k->bwt_all.bwt0[i] = bwt_k->bwt_all.bwt0[i] >> (64 - k % 64);
+            bwt_k->bwt_all.bwt1[i] = bwt_k->bwt_all.bwt1[i] >> (64 - k % 64);
+        }
+
+        builtin_popcountll_inv_occ(bwt_k->bwt_all.bwt0[i], bwt_k->bwt_all.bwt1[i], cnt);
+
+    }
+
+    //fprintf(stderr, "Up to position %llu -->\nA: %llu T: %llu G: %llu\n", k, cnt[0], cnt[1], cnt[2]);
+
+    //free(bwt_k);
+    //free(bwt_k->bwt_all.bwt0);
+    //free(bwt_k->bwt_all.bwt1);
+
+}
+
+/*
 static inline bwtint_t bwt_invPsi(const bwt_t *bwt, bwtint_t k) // compute inverse CSA
 {
+    //fprintf(stderr, "primary: %llu\n", bwt->primary);
 	//fprintf(stderr, "k: %llu\n", k);
 	bwtint_t x = k - (k > bwt->primary);
 	//fprintf(stderr, "x: %llu\n", x);
+
+	//gives nucleotide at that position using bwt->bwt
 	x = bwt_B0(bwt, x);
+
+
+
 	//fprintf(stderr, "x: %llu\n", x);
 	//fprintf(stderr, "bwt->L2[x]: %llu\n", bwt->L2[x]);
 	//fprintf(stderr, "bwt_occ(bwt, k, x): %llu\n", bwt_occ(bwt, k, x));
 	x = bwt->L2[x] + bwt_occ(bwt, k, x);
-	//fprintf(stderr, "x: %llu\n", x);
+	fprintf(stderr, "x: %llu\n", x);
 	return k == bwt->primary? 0 : x;
 }
+*/
+
+// where is this rotation in L2
+static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) // compute inverse CSA
+{
+    bwtint_t x = k - (k > bwt->primary);
+    x = bwt_B0(bwt, x);
+    //fprintf(stderr, "k: %llu\n\n", k);
+	x = bwt->L2[x] + bwt_occ(bwt, k, x);
+    //fprintf(stderr, "x: %llu\n\n", x);
+
+    //L2[2] = A
+    //L2[3] = A + G
+
+    //fprintf(stderr, "L2[0]: %llu L2[1]: %llu L2[2]: %llu L2[3]: %llu L2[4]: %llu\n",bwt->L2[0], bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
+
+    bwtint_t cntk[4], cntl[4];
+    //cntk/l[0] = A     cntk/l[1] = T       cntk/l[2] = G
+    if (k == 0)
+        bwt_2occ4(bwt, 0, 1, cntk, cntl);
+    else
+        bwt_2occ4(bwt, k - 1, k, cntk, cntl);
+    //fprintf(stderr, "cntk[0]: %llu cntk[1]: %llu cntk[2]: %llu\n", cntk[0], cntk[1], cntk[2]);
+    //fprintf(stderr, "cntl[0]: %llu cntl[1]: %llu cntl[2]: %llu\n\n", cntl[0], cntl[1], cntl[2]);
+
+    int i = 0;
+    int j = 0;
+
+    //add this to the bwt_2occ4 function
+    if (cntl[0] - cntk[0]) {
+          j = 0; // A
+          i = cntl[0];
+    } else if (cntl[1] - cntk[1]) {
+          j = 3; // T
+          i = cntl[1];
+    } else if (cntl[2] - cntk[2]) {
+          j = 2; // G
+          i = cntl[2];
+    }
+
+    int p = 0;
+    bwtint_t cnt[3];
+
+    //k = k + 1;
+    //bwt_occ4_new_index(bwt, k, cnt);
+    //k = k - 1;
+
+    p = bwt->L2[j] + i;
+    x = p;
+    //fprintf(stderr, "p: %llu\n\n", p);
+    //fprintf(stderr, "x: %llu\n\n", x);
+
+    if (p != x) {
+        exit(0);
+    }
+
+    x = p;
+
+	return k == bwt->primary? 0 : x;
+
+}
+
 
 // bwt->bwt and bwt->occ must be precalculated
 void bwt_cal_sa(bwt_t *bwt, int intv)
@@ -80,6 +232,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 	bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
 	// calculate SA value
 	isa = 0; sa = bwt->seq_len/2;
+
 	for (i = 0; i < bwt->seq_len/2; ++i) {
         //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
 		if (isa % intv == 0) {
@@ -88,25 +241,32 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 		}
 		--sa;
 		isa = bwt_invPsi(bwt, isa);
+
 	}
+
 	if (isa % intv == 0) bwt->sa[isa/intv] = sa;
 	bwt->sa[0] = 0; //might change back later
 	//bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }
 
-bwtint_t bwt_sa(const bwt_t *bwt, bwtint_t k)
+//what does this do?
+bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k)
 {
-	bwtint_t sa = 0, mask = bwt->sa_intv - 1;
-	while (k & mask) {
+	bwtint_t sa = 0;
+	int mask = bwt->sa_intv;
+    fprintf(stderr, "k %llu mask: %d\n", k, mask);
+	while (k % mask != 0) {
 		++sa;
-		k = bwt_invPsi(bwt, k);
+		//k = bwt_invPsi(bwt, k);
+	    fprintf(stderr, "k: %llu\n", k);
 	}
+
 	/* without setting bwt->sa[0] = -1, the following line should be
 	   changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
 	return sa + bwt->sa[k/bwt->sa_intv];
 }
 
-static inline int __occ_aux(uint64_t y, int c)
+static inline int occ_aux(uint64_t y, int c)
 {
 	// reduce nucleotide counting to bits counting
 	y = ((c&2)? y : ~y) >> 1 & ((c&1)? y : ~y) & 0x5555555555555555ull;
@@ -115,7 +275,7 @@ static inline int __occ_aux(uint64_t y, int c)
 	return ((y + (y >> 4)) & 0xf0f0f0f0f0f0f0full) * 0x101010101010101ull >> 56;
 }
 
-bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, ubyte_t c)
+bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c)
 {
 	bwtint_t n;
 	uint32_t *p, *end;
@@ -130,10 +290,10 @@ bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, ubyte_t c)
 
 	// calculate Occ up to the last k/32
 	end = p + (((k>>5) - ((k&~OCC_INTV_MASK)>>5))<<1);
-	for (; p < end; p += 2) n += __occ_aux((uint64_t)p[0]<<32 | p[1], c);
+	for (; p < end; p += 2) n += occ_aux((uint64_t)p[0]<<32 | p[1], c);
 
 	// calculate Occ
-	n += __occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~k&31)<<1)) - 1), c);
+	n += occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~k&31)<<1)) - 1), c);
 	if (c == 0) n -= ~k&31; // corrected for the masked bits
 
 	return n;
@@ -158,22 +318,22 @@ void bwt_2occ(const bwt_t *bwt, bwtint_t k, bwtint_t l, ubyte_t c, bwtint_t *ok,
 		// calculate *ok
 		j = k >> 5 << 5;
 		for (i = k/OCC_INTERVAL*OCC_INTERVAL; i < j; i += 32, p += 2)
-			n += __occ_aux((uint64_t)p[0]<<32 | p[1], c);
+			n += occ_aux((uint64_t)p[0]<<32 | p[1], c);
 		m = n;
-		n += __occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~k&31)<<1)) - 1), c);
+		n += occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~k&31)<<1)) - 1), c);
 		if (c == 0) n -= ~k&31; // corrected for the masked bits
 		*ok = n;
 		// calculate *ol
 		j = l >> 5 << 5;
 		for (; i < j; i += 32, p += 2)
-			m += __occ_aux((uint64_t)p[0]<<32 | p[1], c);
-		m += __occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~l&31)<<1)) - 1), c);
+			m += occ_aux((uint64_t)p[0]<<32 | p[1], c);
+		m += occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~l&31)<<1)) - 1), c);
 		if (c == 0) m -= ~l&31; // corrected for the masked bits
 		*ol = m;
 	}
 }
 
-#define __occ_aux4(bwt, b)											\
+#define occ_aux4(bwt, b)											\
 	((bwt)->cnt_table[(b)&0xff] + (bwt)->cnt_table[(b)>>8&0xff]		\
 	 + (bwt)->cnt_table[(b)>>16&0xff] + (bwt)->cnt_table[(b)>>24])
 
@@ -191,87 +351,10 @@ void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4])
 	memcpy(cnt, p, 4 * sizeof(bwtint_t));
 	p += sizeof(bwtint_t); // sizeof(bwtint_t) = 4*(sizeof(bwtint_t)/sizeof(uint32_t))
 	end = p + ((k>>4) - ((k&~OCC_INTV_MASK)>>4)); // this is the end point of the following loop
-	for (x = 0; p < end; ++p) x += __occ_aux4(bwt, *p);
+	for (x = 0; p < end; ++p) x += occ_aux4(bwt, *p);
 	tmp = *p & ~((1U<<((~k&15)<<1)) - 1);
-	x += __occ_aux4(bwt, tmp) - (~k&15);
+	x += occ_aux4(bwt, tmp) - (~k&15);
 	cnt[0] += x&0xff; cnt[1] += x>>8&0xff; cnt[2] += x>>16&0xff; cnt[3] += x>>24;
-}
-//for inverse, when seq0 and seq1 ^= ULLONG_MAX
-//after adjusted for k
-void __builtin_popcountll_inv_occ(uint64_t seq0, uint64_t seq1, bwtint_t counts[3]) {
-
-    //fprintf(stderr,"bwt0: %llu bwt1: %llu\n", seq0, seq1);
-    //fprintf(stderr,"counts[0]: %llu counts[1]: %llu counts[2]: %llu\n", counts[0], counts[1], counts[2]);
-
-    uint64_t partial_G = __builtin_popcountll(seq0 & seq1);
-    //G
-    counts[2] += partial_G;
-    //A
-    counts[0] += __builtin_popcountll(seq1) - partial_G;
-    //T
-    counts[1] += __builtin_popcountll(seq0) - partial_G;
-
-    //fprintf(stderr,"counts[0]: %llu counts[1]: %llu counts[2]: %llu\n", counts[0], counts[1], counts[2]);
-}
-
-//k ranking will start at 1; can be changed later to start at 0
-void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[3])
-{
-//fix to take into value of k
-
-    int fix = 0;
-
-    //total values
-    if ((double) k / 128 > 1) {
-        cnt[0] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 0];
-        cnt[1] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 1];
-        cnt[2] = bwt->bwt_occ_matrix0.occurrences[(k/128 - 1) * 3 + 2];
-    } else {
-        cnt[0] = cnt[1] = cnt[2] = 0;
-    }
-
-    //we might need this again
-    if ((double) (k % 128) / 64 > 1)
-        fix = 1;
-
-    //fprintf(stderr, "At last checkpoint ->\nA: %llu T: %llu G: %llu\n", cnt[0], cnt[1], cnt[2]);
-
-    bwt_t *bwt_k;
-
-    bwt_k = (bwt_t*)calloc(1, sizeof(bwt_t));
-
-    uint8_t l = ceil((double)(k % 128)/64);
-
-    // intialize space of vector
-    bwt_k->bwt_all.bwt0 = (uint64_t*)calloc(l, 8);
-    bwt_k->bwt_all.bwt1 = (uint64_t*)calloc(l, 8);
-
-    for (int i = 0; i < l; i++) {
-
-        bwt_k->bwt_all.bwt0[i] = bwt->bwt_all.bwt0[(int)floor(k/64) + i - fix];
-        bwt_k->bwt_all.bwt1[i] = bwt->bwt_all.bwt1[(int)floor(k/64) + i - fix];
-
-        //fprintf(stderr, "BWT0: %llu BWT1: %llu\n", bwt_k->bwt_all.bwt0[0], bwt_k->bwt_all.bwt1[i]);
-
-        bwt_k->bwt_all.bwt0[i] ^= ULLONG_MAX;
-        bwt_k->bwt_all.bwt1[i] ^= ULLONG_MAX;
-
-        //this k adjustment needs to be done before calling __builtin_popcountll_inv_occ
-        if (i == l - 1) {
-            bwt_k->bwt_all.bwt0[i] = bwt_k->bwt_all.bwt0[i] >> (64 - k % 64);
-            bwt_k->bwt_all.bwt1[i] = bwt_k->bwt_all.bwt1[i] >> (64 - k % 64);
-        }
-
-        __builtin_popcountll_inv_occ(bwt_k->bwt_all.bwt0[i], bwt_k->bwt_all.bwt1[i], cnt);
-
-    }
-
-    fprintf(stderr, "Up to position %llu -->\nA: %llu T: %llu G: %llu\n", k, cnt[0], cnt[1], cnt[2]);
-
-    //free(bwt_k);
-    //free(bwt_k->bwt_all.bwt0);
-    //free(bwt_k->bwt_all.bwt1);
-
 }
 
 // an analogy to bwt_occ4() but more efficient, requiring k <= l
@@ -300,17 +383,17 @@ void bwt_2occ4(const bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t cntk[4], bwtin
 		endk = p + ((k>>4) - ((k&~OCC_INTV_MASK)>>4));
 		endl = p + ((l>>4) - ((l&~OCC_INTV_MASK)>>4));
 
-		//is it okay to replace this with the new index? not sure what __occ_aux4
+		//is it okay to replace this with the new index? not sure what occ_aux4
 		//or how the cnt_table array is formatted
 		for (x = 0; p < endk; ++p)
-		    x += __occ_aux4(bwt, *p);
+		    x += occ_aux4(bwt, *p);
 		y = x;
 		tmp = *p & ~((1U<<((~k&15)<<1)) - 1);
-		x += __occ_aux4(bwt, tmp) - (~k&15);
+		x += occ_aux4(bwt, tmp) - (~k&15);
 		// calculate cntl[] and finalize cntk[]
-		for (; p < endl; ++p) y += __occ_aux4(bwt, *p);
+		for (; p < endl; ++p) y += occ_aux4(bwt, *p);
 		tmp = *p & ~((1U<<((~l&15)<<1)) - 1);
-		y += __occ_aux4(bwt, tmp) - (~l&15);
+		y += occ_aux4(bwt, tmp) - (~l&15);
 		memcpy(cntl, cntk, 4 * sizeof(bwtint_t));
 		cntk[0] += x&0xff; cntk[1] += x>>8&0xff; cntk[2] += x>>16&0xff; cntk[3] += x>>24;
 		cntl[0] += y&0xff; cntl[1] += y>>8&0xff; cntl[2] += y>>16&0xff; cntl[3] += y>>24;
@@ -366,40 +449,31 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
     uint64_t total_A = total[0];
     uint64_t total_G = total[2];
 
-
     uint64_t *sub_ = (uint64_t*)calloc(2, 8);
-    bwtint_t cntk_old[3], cntk_new[3], cntk_last[3];
-    int first;
-    cntk_old[0] = cntk_new[0] = cntk_last[0] = 0;
-    cntk_old[1] = cntk_new[1] = cntk_last[0] = 0;
-    cntk_old[2] = cntk_new[2] = cntk_last[0] = 0;
+    bwtint_t cntk_old[3], cntk_new[3];
 
-    //pre adjustment for __builtin_popcountll_inv_occ
-    sub[0] ^= ULLONG_MAX;
-    sub[1] ^= ULLONG_MAX;
-    sub_[0] = sub[0] >> (64 - size);
-    sub_[1] = sub[1] >> (64 - size);
+    int first = 0;
+    cntk_old[0] = cntk_new[0] = cntk_old[1] = cntk_new[1] = cntk_old[2] = cntk_new[2] = 0;
 
-    __builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_old);
-    fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - 1,
-        cntk_old[0], cntk_old[1], cntk_old[2]);
+    //pre adjustment for builtin_popcountll_inv_occ
+    sub[0] ^= ULLONG_MAX;   sub_[0] = sub[0] >> (64 - size);
+    sub[1] ^= ULLONG_MAX;   sub_[1] = sub[1] >> (64 - size);
+
+    builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_old);
+    //fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - 1,
+        //cntk_old[0], cntk_old[1], cntk_old[2]);
     sub_[0] = sub[0] >> (64 - size + 1);
     sub_[1] = sub[1] >> (64 - size + 1);
-    __builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_new);
-    fprintf(stderr, "Nucleotide at pos %d -->\nA: %llu T: %llu G: %llu\n\n",
-        size - 1, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
-
-    /*     0 = A
-    *     2 = G
-    *     3 = T
-    */
+    builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_new);
+    //fprintf(stderr, "Nucleotide at pos %d -->\nA: %llu T: %llu G: %llu\n\n",
+    //    size - 1, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
 
     if (cntk_old[0] - cntk_new[0] == 1)
-        first = 0;
+        first = 0; // A
     else if (cntk_old[1] - cntk_new[1] == 1)
-        first = 3;
+        first = 3; // T
     else if (cntk_old[2] - cntk_new[2])
-        first = 2;
+        first = 2; // G
 
     bwt_set_intv(bwt, bwt, first, *ik);
 
@@ -409,53 +483,40 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
     uint64_t k = ik->x[!is_back] - 1;
     uint64_t l = ik->x[!is_back] - 1 + ik->x[2];
 
-    //set the first value
-    for (int j = 1; j < size + 1; j++) {
-
-        fprintf(stderr, "k: %llu l: %llu\n", k, l);
+    for (int j = 1; j < size; j++) {
 
         bwt_2occ4(bwt, k, l, tk, tl);
 
         //A
-        fprintf(stderr, "tk[0]: %llu tl[0]: %llu\n", tk[0], tl[0]);
+        //fprintf(stderr, "tk[0]: %llu tl[0]: %llu\n", tk[0], tl[0]);
         //T
-        fprintf(stderr, "tk[1]: %llu tl[1]: %llu\n", tk[1], tl[1]);
+        //fprintf(stderr, "tk[1]: %llu tl[1]: %llu\n", tk[1], tl[1]);
         //G
-        fprintf(stderr, "tk[2]: %llu tl[2]: %llu\n", tk[2], tl[2]);
+        //fprintf(stderr, "tk[2]: %llu tl[2]: %llu\n", tk[2], tl[2]);
 
         cntk_old[0] = cntk_new[0];  cntk_old[1] = cntk_new[1];  cntk_old[2] = cntk_new[2];
 
-        fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j,
-            cntk_old[0], cntk_old[1], cntk_old[2]);
+        //fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j,
+        //    cntk_old[0], cntk_old[1], cntk_old[2]);
 
         cntk_new[0] = cntk_new[1] = cntk_new[2] = 0;
 
         sub_[0] = sub[0] >> (64 - size + 1 + j);
         sub_[1] = sub[1] >> (64 - size + 1 + j);
         if (j != size - 1) {
-                __builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_new);
-        } else {
-            //cntk_new[0], cntk_new[1] = cntk_new[2] = 0;
-            //this needs to be the output of the function
-            //work on this next
-            fprintf(stderr, "k: %llu l: %llu\n", k, l);
-            //fprintf(stderr);
+                builtin_popcountll_inv_occ(sub_[0], sub_[1], cntk_new);
         }
 
+        //fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j - 1,
+        //    cntk_new[0], cntk_new[1], cntk_new[2]);
 
-
-        fprintf(stderr, "Composition at pos %d -->\nA: %llu T: %llu G: %llu\n", size - j - 1,
-            cntk_new[0], cntk_new[1], cntk_new[2]);
-
-        fprintf(stderr, "Nucleotide at pos %d -->\nA: %llu T: %llu G: %llu\n\n",
-            size - 1 - j, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
+        //fprintf(stderr, "Nucleotide at pos %d -->\nA: %llu T: %llu G: %llu\n\n",
+        //    size - 1 - j, cntk_old[0] - cntk_new[0], cntk_old[1] - cntk_new[1], cntk_old[2] - cntk_new[2]);
 
         //cnt 0 = A     1 = T       2 = G
-        //cntk_last[0] = cntk_old[0];
         if (cntk_old[0] - cntk_new[0] == 1) {
             k = tk[0];
             l = tl[0];
-            fprintf(stderr, "A\n");
         } else if (cntk_old[1] - cntk_new[1] == 1) {
             k = total_A + total_G + tk[1];
             l = total_A + total_G + tl[1];
@@ -469,42 +530,37 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
         if (j == size - 1) {
             break;
         }
-
-        //tk[0] = tk[1] = tk[2] = 0;
-        //tl[0] = tl[1] = tk[2] = 0;
     }
 
+    //fprintf(stderr, "\nk: %llu l: %llu\n", k, l);
 
     uint64_t n_occ = (int) (l - k);
-    uint64_t *pos = (uint64_t*) calloc(n_occ, sizeof(uint64_t));
-    int intv = 32;
-
-    fprintf(stderr, "\n");
+    //uint64_t *pos = (uint64_t*) calloc(n_occ, sizeof(uint64_t));
+    //int intv = 32;
 
     for (i = 0; i < (int) n_occ; i++) {
-        uint64_t end = bwt->sa[k / intv];
+        //uint64_t end = bwt->sa[k / intv];
         uint64_t k0 = k + i;
         uint64_t l0 = k + i + 1;
         int step = 0;
-        fprintf(stderr, "\nk: %llu l: %llu\n\n", k0, l0);
-        // some statement relative for
+        //fprintf(stderr, "\nk: %llu l: %llu\n\n", k0, l0);
+
         while (k0 % 32 != 0) {
             step++;
             bwt_2occ4(bwt, k0, l0, tk, tl);
 
             //A
-            fprintf(stderr, "tk[0]: %llu tl[0]: %llu\n", tk[0], tl[0]);
+            //fprintf(stderr, "tk[0]: %llu tl[0]: %llu\n", tk[0], tl[0]);
             //T
-            fprintf(stderr, "tk[1]: %llu tl[1]: %llu\n", tk[1], tl[1]);
+            //fprintf(stderr, "tk[1]: %llu tl[1]: %llu\n", tk[1], tl[1]);
             //G
-            fprintf(stderr, "tk[2]: %llu tl[2]: %llu\n", tk[2], tl[2]);
+            //fprintf(stderr, "tk[2]: %llu tl[2]: %llu\n", tk[2], tl[2]);
 
             //cnt 0 = A     1 = T       2 = G
 
             if (tl[0] - tk[0] == 1) {
                 k0 = tk[0];
                 l0 = tl[0];
-                fprintf(stderr, "A\n");
             } else if (tl[1] - tk[1] == 1) {
                 k0 = total_A + total_G + tk[1];
                 l0 = total_A + total_G + tl[1];
@@ -514,30 +570,15 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
             }
 
         }
-        fprintf(stderr, "index: %llu\n", bwt->sa[k/32] + step);
+        fprintf(stderr, "i: %d index: %llu\n", i, bwt->sa[k/32] + step);
+
+
+
+        //fprintf(stderr, "Look after this! ------\n%llu\n", bwt_sa(bwt, k + i));
         // we need to make this
         //pos[0] = k + i;
 
     }
-
-exit(0);
-    //change so that
-	for (i = 0; i != 3; ++i) {
-		ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
-		ok[i].x[2] = tl[i] - tk[i];
-	}
-
-
-
-	ok[3].x[is_back] = ik->x[is_back] + (ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-	ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
-	ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
-	ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
-
-	fprintf(stderr, "ok[3].x[is_back]: %llu\n", ok[3].x[is_back]);
-	fprintf(stderr, "ok[2].x[is_back]: %llu\n", ok[2].x[is_back]);
-	fprintf(stderr, "ok[1].x[is_back]: %llu\n", ok[1].x[is_back]);
-	fprintf(stderr, "ok[0].x[is_back]: %llu\n", ok[0].x[is_back]);
 
 }
 

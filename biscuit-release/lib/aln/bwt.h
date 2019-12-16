@@ -138,9 +138,9 @@ extern "C" {
 
 	void bwt_bwtupdate_core(bwt_t *bwt);
 
-	bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, ubyte_t c);
+	bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c);
 	void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4]);
-	bwtint_t bwt_sa(const bwt_t *bwt, bwtint_t k);
+	bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k);
 
 	// more efficient version of bwt_occ/bwt_occ4 for retrieving two close Occ values
 	void bwt_gen_cnt_table(bwt_t *bwt);

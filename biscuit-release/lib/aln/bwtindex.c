@@ -76,7 +76,7 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
 	bwt->seq_len = bwa_seq_len(fn_pac);
 	bwt->bwt_size = (bwt->seq_len + 15) >> 4;
-	fprintf(stderr, "BWT size: %llu\n", bwt->bwt_size);
+	//fprintf(stderr, "BWT size: %llu\n", bwt->bwt_size);
 	fp = xopen(fn_pac, "rb");
 
 	// prepare sequence
@@ -135,9 +135,13 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
         }
     }
 
+    //----- may remove
+
     bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
     for (i = 0; i < bwt->seq_len/2; ++i)
     	bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
+
+    //-----
 
     free(buf);
     return bwt;
@@ -201,6 +205,8 @@ void bwt_bwtupdate_core(bwt_t *bwt)
 	//fprintf(stderr, "n_occ: %llu\n", n_occ);
 	//exit(0);
 
+    //----- may remove
+
 	bwt->bwt_size += n_occ * sizeof(bwtint_t); // the new size
 	buf = (uint32_t*)calloc(bwt->bwt_size, 4); // will be the new bwt
 	c[0] = c[1] = c[2] = c[3] = 0;
@@ -215,6 +221,9 @@ void bwt_bwtupdate_core(bwt_t *bwt)
 	// the last element
 	memcpy(buf + k, c, sizeof(bwtint_t) * 4);
 	xassert(k + sizeof(bwtint_t) == bwt->bwt_size, "inconsistent bwt_size");
+
+	//------
+
 	// update bwt
 	free(bwt->bwt); bwt->bwt = buf;
 
@@ -311,8 +320,6 @@ int bwa_bwt2sa(int argc, char *argv[]) // the "bwt2sa" command
 	return 0;
 }
 
-
-
 int main_biscuit_index(int argc, char *argv[]) {
 
   extern void bwa_pac_rev_core(const char *fn, const char *fn_rev);
@@ -383,6 +390,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         uint64_t s = 2814;
         // the length var below is to counteract the missing data from the 00 of As
         int s_len = 16;
+        int k = 0;
 
         //store subseq with new index
         uint64_t *subseq = newIndex(s, s_len);
@@ -396,37 +404,20 @@ int main_biscuit_index(int argc, char *argv[]) {
         //generates new occurrences array
         bwt_bwtupdate_core(bwt);
 
-
         bwtint_t cntk[4];
 
-        //this changes bwt.. why?
         bwt_occ4_new_index(bwt, bwt->seq_len/2, cntk);
-
         //suffix array
         bwt_cal_sa(bwt, 32);
 
-        fprintf(stderr, "primary %llu\n", bwt->primary);
-
-        k = 128;
-        bwtint_t t = bwt_sa(bwt, 128);
-
-        fprintf(stderr, "t %llu\n", t);
         strcpy(str, prefix); strcat(str, ".dau.pac");
 
         //A..., C..., G..., T.... and $
-        uint8_t q = 1; //AAGG? nope 0 through 4
         bwtintv_t ik, ok[3];
-
-        fprintf(stderr, "L2[0]: %llu\n", bwt->L2[0]);
-        fprintf(stderr, "L2[1]: %llu\n", bwt->L2[1]);
-        fprintf(stderr, "L2[3]: %llu\n", bwt->L2[3]);
-        fprintf(stderr, "L2[4]: %llu\n", bwt->L2[4]);
-
-        fprintf(stderr, "index: %llu occ: %llu\n", ik.x[0], ik.x[2]);
 
         //const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back
         bwt_extend(bwt, &ik, ok, 1, subseq, s_len/2);
-//exit(0);
+        exit(0);
 
         bwt_dump_bwt(str2, bwt);
         bwt_destroy(bwt);
