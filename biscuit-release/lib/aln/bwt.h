@@ -68,9 +68,6 @@ typedef struct {
 	// occurrence array, separated to two parts
 	uint32_t cnt_table[256];
 
-	//new occurance array
-    uint64_t occurrence[3][0];
-
     bwt_vector subseq;
 
     //store as poitner
@@ -81,6 +78,16 @@ typedef struct {
 	bwtint_t n_sa;
 	bwtint_t *sa;
     uint8_t parent;               /* parent or daughter */
+
+    //char before $
+    int c;
+
+    //new data structure
+    bwtint_t *bwt0;
+    bwtint_t *bwt1;
+    uint64_t *occurrences;
+    bwtint_t bwt0_size;
+
 } bwt_t;
 
 /**
