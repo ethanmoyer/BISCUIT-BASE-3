@@ -64,7 +64,6 @@ int64_t bwa_seq_len(const char *fn_pac)
 	return (pac_len - 1) * 4 + (int)c;
 }
 
-//return array of two bwt_t
 bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 {
 	bwt_t *bwt;
@@ -85,26 +84,31 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	err_fclose(fp);
 	memset(bwt->L2, 0, 5 * 4);
 	buf = (ubyte_t*)calloc((bwt->seq_len + 1)/2, 1);
+
+	//for (i = 0; i < bwt->seq_len/2; ++i) {
+    //    fprintf(stderr, "%llu\n", buf2[i>>2] >> ((3 - (i&3)) << 1) & 3);
+  //  }
+//	exit(0);
+
 	for (i = 0; i < bwt->seq_len/2; ++i) {
 		buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
 		++bwt->L2[1+buf[i]];
 	}
 	for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
-	free(buf2);
+    free(buf2);
 
     //for (i = 0; i < bwt->seq_len/2; i++)
-    //    fprintf(stderr, "buf: %d\n", buf[i]);
+     //   fprintf(stderr, "buf: %d\n", buf[i]);
 	// Burrows-Wheeler Transform
 	if (use_is) {
 		bwt->primary = is_bwt(buf, bwt->seq_len/2);
-    fprintf(stderr, "\n");
+    fprintf(stderr,"primary: %llu\n", bwt->primary);
 	//for (i = 0; i < bwt->seq_len/2; i++)
 	//	fprintf(stderr, "buf: %d\n", buf[i]);
 
 	} else {
 #ifdef _DIVBWT
 		bwt->primary = divbwt(buf, buf, 0, bwt->seq_len);
-
 #else
 		err_fatal_simple("libdivsufsort is not compiled in.");
 #endif
@@ -114,23 +118,18 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
     bwt->bwt0_size = n;
 
     // intialize space of vector
-    bwt->bwt0 = (uint64_t*)calloc(n, 8);
-    bwt->bwt1 = (uint64_t*)calloc(n, 8);
+    bwt->bwt_new = (uint64_t*) calloc(16 * n, 8);
 
-
-    for (i = 0; i < n; i++) {
-        bwt->bwt0[i] = ULLONG_MAX;
-        bwt->bwt1[i] = ULLONG_MAX;
-    }
+    fprintf(stderr, "n: %llu\n", n);
 
     for (i = 0; i < bwt->seq_len/2; ++i) {
         x = j << (63 - (i % 64));
-        if (buf[i] > 1) {
-            bwt->bwt0[(int)ceil(i/64)] ^= x;
+        if (!(buf[i] > 1)) {
+            bwt->bwt_new[i/128 * n + (i % 128 < 64 ? 4 : 5)] ^= x;
         }
 
-        if (buf[i] % 2 == 0) {
-            bwt->bwt1[(int)ceil(i/64)] ^= x;
+        if (!(buf[i] % 2 == 0)) {
+            bwt->bwt_new[i/128 * n + (i % 128 < 64 ? 6 : 7)] ^= x;
         }
     }
 
@@ -140,8 +139,7 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
     	bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
     free(buf);
     //-----
-    //free(bwt->bwt0);
-    //free(bwt->bwt1);
+
     return bwt;
 
 }
@@ -185,13 +183,13 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 //(I think that’s 128 bases) and write to the new bwt (which is buf)
 void bwt_bwtupdate_core(bwt_t *bwt)
 {
+fprintf(stderr, "here\n");
     bwtint_t i, k, c[4], n_occ;
 	uint32_t *buf;
 
 	n_occ = (bwt->seq_len + OCC_INTERVAL - 1) / OCC_INTERVAL + 1;
 	//fprintf(stderr, "n_occ: %llu\n", n_occ);
 	//exit(0);
-
 
     //----- may remove
 
@@ -215,56 +213,41 @@ void bwt_bwtupdate_core(bwt_t *bwt)
 	// update bwt
 	free(bwt->bwt); bwt->bwt = buf;
     //free(buf);
-    int n = floor(bwt->seq_len / 256);
-    fprintf(stderr, "\nCheckpoints!\n");
+    int n = bwt->bwt0_size;
+    bwtint_t unallocated = n * 64 - bwt->seq_len/2;
 
-    bwt->occurrences = (uint64_t*) calloc(n * 3, 8);
-
-    for (i = 0; i < bwt->bwt0_size; i++)  {
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt0[i]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt1[i]);
-    }
-
-    i = 0;
-    j = 1;
-	for (k = 0; k < n; ) {
+    for (i = 0; i < n / 2; i++)  {
+        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * n + 4]);
+        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * n + 6]);
+        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * n + 5]);
+        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * n + 7]);
 
         //A
-        bwt->occurrences[k * 3 + 0] =
-            __builtin_popcountll(bwt->bwt0[i]) +
-            __builtin_popcountll(bwt->bwt0[j]);
+        bwt->bwt_new[i * n + 0] =
+            __builtin_popcountll(bwt->bwt_new[i * n + 4]) +
+            __builtin_popcountll(bwt->bwt_new[i * n + 5]);
         //T
-        bwt->occurrences[k * 3 + 2] =
-            __builtin_popcountll(bwt->bwt1[i]) +
-            __builtin_popcountll(bwt->bwt1[j]);
+        bwt->bwt_new[i * n + 3] =
+            __builtin_popcountll(bwt->bwt_new[i * n + 6]) +
+            __builtin_popcountll(bwt->bwt_new[i * n + 7]);
         //G
-        bwt->occurrences[k * 3 + 1] =
-            __builtin_popcountll(~(bwt->bwt1[i] ^
-                    bwt->bwt0[i])) +
-            __builtin_popcountll(~(bwt->bwt1[j] ^
-                    bwt->bwt0[j]));
+        bwt->bwt_new[i * n + 2] =
+            __builtin_popcountll(~(bwt->bwt_new[i * n + 4] ^
+                    bwt->bwt_new[i * n + 6])) +
+            __builtin_popcountll(~(bwt->bwt_new[i * n + 5] ^
+                    bwt->bwt_new[i * n + 7]));
 
-        if (k != 0) {
-            bwt->occurrences[k * 3 + 0] += bwt->occurrences[(k - 1) * 3 + 0];
-            bwt->occurrences[k * 3 + 1] += bwt->occurrences[(k - 1) * 3 + 1];
-            bwt->occurrences[k * 3 + 2] += bwt->occurrences[(k - 1) * 3 + 2];
+        if (i != 0) {
+            bwt->bwt_new[i * n + 0] += bwt->bwt_new[(i - 1) * n + 0];
+            bwt->bwt_new[i * n + 2] += bwt->bwt_new[(i - 1) * n + 2];
+            bwt->bwt_new[i * n + 3] += bwt->bwt_new[(i - 1) * n + 3];
         }
-
-        fprintf(stderr, "k: %llu occurances: A: %llu G: %llu T: %llu \n", k,
-        bwt->occurrences[k * 3 + 0],
-        bwt->occurrences[k * 3 + 1],
-        bwt->occurrences[k * 3 + 2]);
-
-        k++;
-        i+=2;
-        j+=2;
-	}
-
-    //bwt->occurance = o;
-    fprintf(stderr, "\n");
-
-    //free(bwt->occurrences);
-
+        if (i == n/2 - 1)   bwt->bwt_new[i * n + 2] -= unallocated;
+        fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu \n\n", i,
+        bwt->bwt_new[i * n + 0],
+        bwt->bwt_new[i * n + 2],
+        bwt->bwt_new[i * n + 3]);
+    }
 }
 
 int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
@@ -377,13 +360,9 @@ int main_biscuit_index(int argc, char *argv[]) {
         //store subseq with new index
         uint64_t *subseq = newIndex(s, s_len);
 
-        //fprintf(stderr, "subseq0: %llu subseq1: %llu\n", subseq[0], subseq[1]);
-
         //generate bwt
         bwt = bwt_pac2bwt(str, algo_type == 3);
-        //generates old occurrences array
 
-        bwt_gen_cnt_table(bwt);
         //generates new occurrences array
         bwt_bwtupdate_core(bwt);
 
@@ -391,7 +370,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         fprintf(stderr, "L2[0]: %llu L2[1]: %llu L2[2]: %llu L2[3]: %llu L2[4]: %llu\n", bwt->L2[0], bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
 
 
-        bwt_occ4_new_index(bwt, bwt->seq_len/2, cntk);
+        //bwt_occ4_new_index(bwt, bwt->seq_len/2, cntk);
         //suffix array
         bwt_cal_sa(bwt, 32);
 
@@ -406,9 +385,9 @@ int main_biscuit_index(int argc, char *argv[]) {
         bwt_dump_bwt(str2, bwt);
         bwt_destroy(bwt);
 
+        free(bwt->bwt_new);
     }
     fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
-    exit(0);
   }
   {
     t = clock();
@@ -429,8 +408,13 @@ int main_biscuit_index(int argc, char *argv[]) {
     strcpy(str, prefix); strcat(str, ".par.bwt");
     t = clock();
     fprintf(stderr, "[%s] Update parent BWT... \n", __func__);
+
+    //error exists here... why?
+
     bwt = bwt_restore_bwt(str);
+
     bwt_bwtupdate_core(bwt);
+
     bwt_dump_bwt(str, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
@@ -439,9 +423,13 @@ int main_biscuit_index(int argc, char *argv[]) {
     bwt_t *bwt;
     strcpy(str, prefix); strcat(str, ".dau.bwt");
     t = clock();
+
     fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
+
     bwt = bwt_restore_bwt(str);
+
     bwt_bwtupdate_core(bwt);
+
     bwt_dump_bwt(str, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);

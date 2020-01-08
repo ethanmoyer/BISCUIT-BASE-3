@@ -63,8 +63,11 @@ typedef struct {
 	bwtint_t seq_len; // sequence length
 	bwtint_t bwt_size; // size of bwt, about seq_len/4
 	uint32_t *bwt; // BWT
+	uint64_t *bwt_new;
 	// initialize bwt_vector struct
 	bwt_vector bwt_all;
+
+	// keep this constant
 	// occurrence array, separated to two parts
 	uint32_t cnt_table[256];
 

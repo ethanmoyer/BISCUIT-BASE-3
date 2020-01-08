@@ -40,166 +40,78 @@
 #  include "malloc_wrap.h"
 #endif
 
-//for inverse, when seq0 and seq1 ^= ULLONG_MAX
-//after adjusted for k
-//make so that it returns specificed characters
-//getting the occ of all three would require three different calls
-bwtint_t builtin_popcountll_inv_occ(uint64_t seq0, uint64_t seq1, int c) {
-    uint64_t partial_G = __builtin_popcountll(seq0 & seq1);
-    switch(c) {
-        case 0:
-            return __builtin_popcountll(seq1) - partial_G; //A
-        case 2:
-            return partial_G; //G
-        case 3:
-            return __builtin_popcountll(seq0) - partial_G; //T
-
-    }
-}
+bwtint_t int_temp = 18446744073709551615;
 
 //returns individual counts given c
 //0 = A     2 = G   3 = T
-bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, int k) {
+//k is accepted as ranks
+
+bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
     uint64_t partial_G = 0;
     switch(c) {
         case 0:
-            return __builtin_popcountll(seq0); //A
+            return __builtin_popcountll(seq0 >> (64 - k)); //A
+            break;
         case 2:
-            partial_G = __builtin_popcountll(~(seq0 ^ seq1));
-            return k != 0 ? partial_G - 64 + k : partial_G; //G
+            partial_G = __builtin_popcountll(~(seq0 >> (64 - k) ^ seq1 >> (64 - k)));
+            //return partial_G;
+            return k % 128 != 0 ? partial_G - 64 + k % 128 : partial_G; //G
+            break;
         case 3:
-            return __builtin_popcountll(seq1); //T
+            //fprintf(stderr, "k now: %llu\n", k);
+            //fprintf(stderr, "seq: %llu\n", seq1 >> (64 - k));
+            return __builtin_popcountll(seq1 >> (64 - k)); //T
 
     }
-}
-
-
-void bwt_gen_cnt_table(bwt_t *bwt) {
-	int i, j;
-	for (i = 0; i != 256; ++i) {
-		uint32_t x = 0;
-		for (j = 0; j != 4; ++j)
-			x |= (((i&3) == j) + ((i>>2&3) == j) + ((i>>4&3) == j) + (i>>6 == j)) << (j<<3);
-		bwt->cnt_table[i] = x;
-	}
-}
-
-//this functin will return the occurances of a specificed char
-void bwt_occ4_new_index(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[3])
-{
-//fix to take into value of k
-
-    int fix = 0;
-
-    //total values
-    if ((double) k / 128 >= 1) {
-        cnt[0] = bwt->occurrences[(k/128 - 1) * 3 + 0];
-        cnt[1] = bwt->occurrences[(k/128 - 1) * 3 + 1];
-        cnt[2] = bwt->occurrences[(k/128 - 1) * 3 + 2];
-    } else {
-        cnt[0] = cnt[1] = cnt[2] = 0;
-    }
-
-    //we might need this again
-    if ((double) (k % 128) / 64 >= 1)
-        fix = 1;
-
-    bwt_t *bwt_k;
-    bwt_k = (bwt_t*)calloc(1, sizeof(bwt_t));
-
-    uint8_t l = ceil((double)(k % 128)/64);
-
-    // intialize space of vector
-    bwt_k->bwt0 = (uint64_t*)calloc(l, 8);
-    bwt_k->bwt1 = (uint64_t*)calloc(l, 8);
-
-    bwtint_t count = 0;
-
-    for (int i = 0; i < l; i++) {
-
-        bwt_k->bwt0[i] = bwt->bwt0[(int)floor(k/64) + i - fix];
-        bwt_k->bwt1[i] = bwt->bwt1[(int)floor(k/64) + i - fix];
-
-        bwt_k->bwt0[i] ^= ULLONG_MAX;
-        bwt_k->bwt1[i] ^= ULLONG_MAX;
-
-        //this k adjustment needs to be done before calling builtin_popcountll_inv_occ
-        if (i == l - 1) {
-            bwt_k->bwt0[i] = bwt_k->bwt0[i] >> (64 - k % 64);
-            bwt_k->bwt1[i] = bwt_k->bwt1[i] >> (64 - k % 64);
-        }
-
-        //count += builtin_popcountll_inv_occ(bwt_k->bwt0[i], bwt_k->bwt1[i], c);
-
-    }
-    //return count;
-    free(bwt_k);
-    free(bwt_k->bwt0);
-    free(bwt_k->bwt1);
-
 }
 
 //$ and T are counting as the same character
 //k ranking will start at 1; can be changed later to start at 0
+//all of this math is using position counting
+
 bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c)
 {
+//currently k is in terms of position, starting at 0
+    int n = bwt->bwt0_size;
 
-
-//fix to take into value of k
-    if (k < bwt->primary)
-        k++;
+    k -= (k >= bwt->primary);
 
     bwtint_t count = 0;
-    int fix = 0;
-    int pos = 0;
+    //    fprintf(stderr, "k: %llu\n", k);
+    if ((k + 1) / 128)
+        count = bwt->bwt_new[((k + 1)/128 - 1) * n + c];
+  //      fprintf(stderr, "count: %llu\n", count);
+//    fprintf(stderr, "primary: %llu\n", bwt->primary);
 
-    switch (c) {
-        case 0:     pos = 0;    break;
-        case 2:     pos = 1;    break;
-        case 3:     pos = 2;
+    if ((k + 1) % 128 == 0) return count;
+
+
+    if (k % 128 < 64) {
+        count += builtin_popcountll(bwt->bwt_new[k/128 * n + 4], bwt->bwt_new[k/128 * n + 6], c, (k % 128) + 1);
+        //fprintf(stderr, "count: %llu\n", count);
+   } else {
+        count += builtin_popcountll(bwt->bwt_new[k/128 * n + 4], bwt->bwt_new[k/128 * n + 6], c, 64);
+        if ((k + 1)% 64 == 0) return count;
+        count += builtin_popcountll(bwt->bwt_new[k/128 * n + 5], bwt->bwt_new[k/128 * n + 7], c, (k % 64) + 1);
     }
 
-    //total values
-    if ((double) k / 128 >= 1)
-        count = bwt->occurrences[(k/128 - 1) * 3 + pos];
-    //fprintf(stderr, "count: %llu\n", count);
-    uint8_t l = ceil((double)(k % 128)/64);
-    //collapse these into one if else statement
-
-    if (k % 128 == 0) return count;
-    if (l == 1 & k % 64 == 0 & k % 128 != 0) { l = 2; fix = 1;}
-
-    count += builtin_popcountll(bwt->bwt0[(int) ceil(k/64) - l + 1] >> (1 - (k % 128 / 64)) * (63 - (k - 1) % 64),
-        bwt->bwt1[(int) ceil(k/64) - l + 1] >> (1 - (k % 128 / 64)) * (63 - (k - 1) % 64), c, l == 2 ? 0 : k % 64);
-
-    //fprintf(stderr, "count: %llu\n", count);
-    if (fix == 1)
-        return count;
-
-    //fprintf(stderr, "count: %llu\n", count);
-
-    if (l == 2)
-         count += builtin_popcountll(bwt->bwt0[(int) ceil(k/64) - fix] >> (63 - (k - 1) % 64),
-             bwt->bwt1[(int) ceil(k/64) - fix] >> (63 - (k - 1) % 64), c, k % 64);
     //fprintf(stderr, "count: %llu\n", count);
     return count;
 }
-
-/*
-static inline bwtint_t bwt_invPsi(const bwt_t *bwt, bwtint_t k) // compute inverse CSA
-{
-	bwtint_t x = k - (k > bwt->primary);
-	x = bwt_B0(bwt, x);
-	x = bwt->L2[x] + bwt_occ(bwt, k, x);
-	return k == bwt->primary? 0 : x;
-}
-*/
-
+//not sure that llu >> 64 is allowed
+//what happens here at multiples of 128, k needs to be taken in as position indexing (0 to 63)
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    bwtint_t p = (bwt->bwt0[k/64] >> (63 - k % 64) & 1) | (bwt->bwt1[k/64] >> (63 - k % 64) & 1);
+    int n = bwt->bwt0_size;
+
+    //fprintf(stderr, "nuc k: %llu\n", k);
+    //fprintf(stderr, "bwt0: %llu\n", (bwt->bwt_new[k/128 * n + (k % 128 < 64 ? 4 : 5)] >> (63 - k % 64)) & 1);
+    //fprintf(stderr, "bwt1: %llu\n", (bwt->bwt_new[k/128 * n + (k % 128 < 64 ? 6 : 7)] >> (63 - k % 64)) & 1);
+
+    bwtint_t p = ((bwt->bwt_new[k/128 * n + (k % 128 < 64 ? 4 : 5)] >> (63 - k % 64)) & 1) |
+        ((bwt->bwt_new[k/128 * n + (k % 128 < 64 ? 6 : 7)] >> (63 - k % 64)) & 1);
 	if (p == 0)
 	    p = 2;
-    else if (p == 1 & bwt->bwt1[k/64] >> (63 - k % 64))
+    else if ((p == 1) & bwt->bwt_new[k/128 * n + (k % 128 < 64 ? 6 : 7)] >> (63 - k % 64))
 	    p = 3;
 	else
 	    p = 0;
@@ -210,13 +122,25 @@ int nucAtSubinv(bwtint_t *sub, bwtint_t k) {
     bwtint_t p = (sub[0] >> (63 - k % 64) & 1) | (sub[1] >> (63 - k % 64) & 1);
 	if (p == 0)
 	    p = 2;
-    else if (p == 1 & sub[1] >> (63 - k % 64))
+    else if ((p == 1) & sub[1] >> (63 - k % 64))
 	    p = 3;
 	else
 	    p = 0;
     return p;
 }
+/*
 
+static inline bwtint_t bwt_invPsi(const bwt_t *bwt, bwtint_t k) // compute inverse CSA
+{
+	bwtint_t x = k - (k > bwt->primary);
+	x = bwt_B0(bwt, x);
+	fprintf(stderr, "x: %llu\n", x);
+	fprintf(stderr, "bwt_occ: %llu\n", bwt_occ(bwt, k, x));
+	x = bwt->L2[x] + bwt_occ(bwt, k, x);
+	return k == bwt->primary? 0 : x;
+}
+
+*/
 
 // where is this rotation in L2
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) // compute inverse CSA
@@ -224,11 +148,9 @@ static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) // compute inverse CSA
     bwtint_t x = k - (k > bwt->primary);
     //replicate bwt_B0 for constant time look up so we can use bwt_occ_new_index instead
 	//x = bwt_B0(bwt, x);
+	//fprintf(stderr, "x: %llu\n", x);
     x = nucAtBWTinv(bwt, x);
     //fprintf(stderr, "x: %llu\n", x);
-
-	//fprintf(stderr, "bwt->L2[x]: %llu\n", bwt->L2[x]);
-	//fprintf(stderr, "bwt_occ_new_index(bwt, k, x): %llu\n", bwt_occ_new_index(bwt, k, x));
 	x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x);
 	return k == bwt->primary? 0 : x;
 }
@@ -269,6 +191,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 //what does this do?
 bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k)
 {
+    k++;
 	bwtint_t sa = 0;
 	int mask = bwt->sa_intv;
     //fprintf(stderr, "k %llu mask: %d\n", k, mask);
@@ -281,6 +204,16 @@ bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k)
 	/* without setting bwt->sa[0] = -1, the following line should be
 	   changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
 	return sa + bwt->sa[k/bwt->sa_intv];
+}
+
+void bwt_gen_cnt_table(bwt_t *bwt) {
+	int i, j;
+	for (i = 0; i != 256; ++i) {
+		uint32_t x = 0;
+		for (j = 0; j != 4; ++j)
+			x |= (((i&3) == j) + ((i>>2&3) == j) + ((i>>4&3) == j) + (i>>6 == j)) << (j<<3);
+		bwt->cnt_table[i] = x;
+	}
 }
 
 static inline int occ_aux(uint64_t y, int c)
@@ -296,7 +229,7 @@ bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c)
 {
 	bwtint_t n;
 	uint32_t *p, *end;
-
+fprintf(stderr, "k: %llu\n", k);
 	if (k == bwt->seq_len) return bwt->L2[c+1] - bwt->L2[c];
 	if (k == (bwtint_t)(-1)) return 0;
 	k -= (k >= bwt->primary); // because $ is not in bwt
@@ -427,35 +360,39 @@ int bwt_match_exact_alt(const bwt_t *bwt, int len, const ubyte_t *str, bwtint_t 
 // we need to fix this code; make it smaller
 void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, uint64_t *sub, int size) //add argument for the sequence
 {
+    //replace with L2 sizes
     bwtint_t total_A = bwt_occ_new_index(bwt, bwt->seq_len/2, 0);
     bwtint_t total_G = bwt_occ_new_index(bwt, bwt->seq_len/2, 2);
     bwtint_t total_T = bwt_occ_new_index(bwt, bwt->seq_len/2, 3);
 
     fprintf(stderr, "\nA: %llu G: %llu T: %llu\n", total_A, total_G, total_T);
 
-    uint64_t *sub_ = (uint64_t*)calloc(2, 8);
-    uint64_t *sub__ = (uint64_t*)calloc(2, 8);
-
     int c = nucAtSubinv(sub, size - 1);
-    fprintf(stderr, "c: %llu\n", c);
+    fprintf(stderr, "c: %d\n", c);
 
     bwt_set_intv(bwt, bwt, c, *ik);
 
-	bwtint_t tk[3], tl[3];
-
     uint64_t k = ik->x[!is_back] - 1;
-    uint64_t l = ik->x[!is_back] - 1 + ik->x[2] - 1;
+    uint64_t l = ik->x[!is_back] + ik->x[2] - 2;
 
-    if (c == 3)
-        l--;
+    //this is for segmenting the intervals
+    if (c == 3) {
+        //k++;
+        //l = bwt->primary;
+        //k = bwt->primary;
+    }
 
     //T and & fix
-
+    fprintf(stderr, "primary: %llu\n", bwt->primary);
     for (int j = 1; j < size; j++) {
-        //fprintf(stderr, "k: %llu l: %llu\n\n", k, l);
+        fprintf(stderr, "k: %llu l: %llu\n\n", k, l);
+        //positions
         c = nucAtSubinv(sub, size - j - 1);
-        //fprintf(stderr, "c: %llu\n", c);
+        fprintf(stderr, "c: %d\n", c);
 
+        //at this point k is ranked, starting at 1
+        //we need to change this
+        //passed in as positions
         switch (c) {
             case 0:
                 k = bwt_occ_new_index(bwt, k, c);
@@ -468,16 +405,17 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
             case 3:
                 k = total_A + total_G + bwt_occ_new_index(bwt, k, c);
                 l = total_A + total_G + bwt_occ_new_index(bwt, l, c);
-                if (j == 1) {l--; k++;}
         }
+        //if (k > bwt->primary)
+        //    k--;
     }
 
     uint64_t n_occ = (int) (l - k);
     fprintf(stderr, "k: %llu l: %llu\n", k, l);
     //should this be 1 or 0?
-    for (int i = 1; i < (int) n_occ; i++) {
+    for (int i = 0; i < (int) n_occ; i++) {
         // this does what the while loop does
-        fprintf(stderr, "Look after this! ------\n%llu\n", bwt_sa(bwt, k + i));
+        fprintf(stderr, "i: %llu Look after this! ------\n%llu\n", i, bwt_sa(bwt, k + i));
     }
 
 }
@@ -608,13 +546,22 @@ void bwt_dump_sa(const char *fn, const bwt_t *bwt) {
   err_fflush(fp);
   err_fclose(fp);
 }
-
+//why is there a problem here?
 static bwtint_t fread_fix(FILE *fp, bwtint_t size, void *a) { // Mac/Darwin has a bug when reading data longer than 2GB. This function fixes this issue by reading data in small chunks
   const int bufsize = 0x1000000; // 16M block
   bwtint_t offset = 0;
   while (size) {
+    fprintf(stderr, "1\n");
+
     int x = (unsigned) bufsize < size ? bufsize : (int) size;
+      fprintf(stderr, "2\n");
+
+    fprintf(stderr, "a: %d\n", a);
+    fprintf(stderr, "offset: %d\n", offset);
+    fprintf(stderr, "x: %llu\n", x);
     if ((x = err_fread_noeof(a + offset, 1, x, fp)) == 0) break;
+      fprintf(stderr, "3\n");
+
     size -= x; offset += x;
   }
   return offset;
@@ -646,15 +593,22 @@ bwt_t *bwt_restore_bwt(const char *fn) {
   FILE *fp;
 
   bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
+
   fp = xopen(fn, "rb");
   err_fseek(fp, 0, SEEK_END);
   bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
   //bwt->bwt = (uint32_t*)calloc(bwt->bwt_size, 4);
   err_fseek(fp, 0, SEEK_SET);
+
   err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
+
   err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
+    //error exists on the next line
+    fprintf(stderr, "size: %llu\n", bwt->bwt_size);
   fread_fix(fp, bwt->bwt_size<<2, bwt->bwt);
+
   bwt->seq_len = bwt->L2[4];
+
   err_fclose(fp);
   bwt_gen_cnt_table(bwt);
 
