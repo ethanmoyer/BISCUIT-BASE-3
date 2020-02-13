@@ -46,9 +46,6 @@
 #  include "malloc_wrap.h"
 #endif
 
-unsigned long long x;
-unsigned long long j = 1UL;
-
 int is_bwt(ubyte_t *T, int n);
 
 int64_t bwa_seq_len(const char *fn_pac)
@@ -83,27 +80,27 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	err_fread_noeof(buf2, 1, pac_size, fp);
 	err_fclose(fp);
 	memset(bwt->L2, 0, 5 * 4);
-	buf = (ubyte_t*)calloc((bwt->seq_len + 1)/2, 1);
+	buf = (ubyte_t*)calloc((bwt->seq_len + 1), 1);
 
 	//for (i = 0; i < bwt->seq_len/2; ++i) {
     //    fprintf(stderr, "%llu\n", buf2[i>>2] >> ((3 - (i&3)) << 1) & 3);
   //  }
-//	exit(0);
 
-	for (i = 0; i < bwt->seq_len/2; ++i) {
+	for (i = 0; i < bwt->seq_len; ++i) {
 		buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
 		++bwt->L2[1+buf[i]];
 	}
 	for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
     free(buf2);
 
-    //for (i = 0; i < bwt->seq_len/2; i++)
-     //   fprintf(stderr, "buf: %d\n", buf[i]);
+    //for (i = 0; i < bwt->seq_len; i++)
+    //    fprintf(stderr, "buf: %d\n", buf[i]);
 	// Burrows-Wheeler Transform
+
 	if (use_is) {
-		bwt->primary = is_bwt(buf, bwt->seq_len/2);
+		bwt->primary = is_bwt(buf, bwt->seq_len);
     fprintf(stderr,"primary: %llu\n", bwt->primary);
-	//for (i = 0; i < bwt->seq_len/2; i++)
+	//for (i = 0; i < bwt->seq_len; i++)
 	//	fprintf(stderr, "buf: %d\n", buf[i]);
 
 	} else {
@@ -114,32 +111,36 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 #endif
 	}
 
-    int n = ceil((double) bwt->seq_len/128);
-    bwt->bwt0_size = n;
+    int n = bwt->seq_len / 128 + 1; //1400 --> 700
+
+    fprintf(stderr, "[%s] seq_len: %d\n", __func__, bwt->seq_len);
+    fprintf(stderr, "[%s] n: %d\n", __func__, n);
 
     // intialize space of vector
-    bwt->bwt_new = (uint64_t*) calloc(16 * n, 8);
+    // how much space will we need??
+    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/128, 8);
 
-    fprintf(stderr, "n: %llu\n", n);
+    uint64_t j = 1UL;
+    uint64_t x = 0;
+    for (i = 0; i < bwt->seq_len; ++i) {
 
-    for (i = 0; i < bwt->seq_len/2; ++i) {
         x = j << (63 - (i % 64));
         if (!(buf[i] > 1)) {
-            bwt->bwt_new[i/128 * n + (i % 128 < 64 ? 4 : 5)] ^= x;
+            bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 4 : 5)] ^= x;
         }
 
         if (!(buf[i] % 2 == 0)) {
-            bwt->bwt_new[i/128 * n + (i % 128 < 64 ? 6 : 7)] ^= x;
+            bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 6 : 7)] ^= x;
         }
     }
-
     //----- may remove
+    /*
 	bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
     for (i = 0; i < bwt->seq_len; ++i)
     	bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
     free(buf);
+     */
     //-----
-
     return bwt;
 
 }
@@ -148,6 +149,7 @@ uint64_t* newIndex(uint64_t s, int length) {
     uint64_t *s_ = (uint64_t*)calloc(2, 8);
     s_[0] = ULLONG_MAX;
     s_[1] = ULLONG_MAX;
+    uint64_t j = 1UL;
     for (int i = 0; i < length / 2; i++) {
         if (s >> 2 * i + 1 & 1L)
             s_[0] ^= j << (63 - length/2 + 1 + i);
@@ -181,75 +183,64 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 
 //Where the occurrence is generated every OCC_INTERVAL
 //(I think that’s 128 bases) and write to the new bwt (which is buf)
-void bwt_bwtupdate_core(bwt_t *bwt)
+void bwt_bwtupdate_core(bwt_t *bwt, int index)
 {
-fprintf(stderr, "here\n");
-    bwtint_t i, k, c[4], n_occ;
-	uint32_t *buf;
-
-	n_occ = (bwt->seq_len + OCC_INTERVAL - 1) / OCC_INTERVAL + 1;
-	//fprintf(stderr, "n_occ: %llu\n", n_occ);
-	//exit(0);
-
-    //----- may remove
-
-	bwt->bwt_size += n_occ * sizeof(bwtint_t); // the new size
-	buf = (uint32_t*)calloc(bwt->bwt_size, 4); // will be the new bwt
-	c[0] = c[1] = c[2] = c[3] = 0;
-	for (i = k = 0; i < bwt->seq_len; ++i) {
-		if (i % OCC_INTERVAL == 0) {
-			memcpy(buf + k, c, sizeof(bwtint_t) * 4);
-			k += sizeof(bwtint_t); // in fact: sizeof(bwtint_t)=4*(sizeof(bwtint_t)/4)
-		}
-		if (i % 16 == 0) buf[k++] = bwt->bwt[i/16]; // 16 == sizeof(uint32_t)/2
-		++c[bwt_B00(bwt, i)];
-	}
-	// the last element
-	memcpy(buf + k, c, sizeof(bwtint_t) * 4);
-	xassert(k + sizeof(bwtint_t) == bwt->bwt_size, "inconsistent bwt_size");
-
-	//------
-
-	// update bwt
-	free(bwt->bwt); bwt->bwt = buf;
-    //free(buf);
-    int n = bwt->bwt0_size;
-    bwtint_t unallocated = n * 64 - bwt->seq_len/2;
-
-    for (i = 0; i < n / 2; i++)  {
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * n + 4]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * n + 6]);
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * n + 5]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * n + 7]);
+    bwtint_t i;
+    int n = bwt->seq_len / 128 + 1; //1400 --> 700
+    int k = 8;
+    for (i = 0; i < n - 1; i++) {
+        //when its half way,
+        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
+        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
+        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
+        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
 
         //A
-        bwt->bwt_new[i * n + 0] =
-            __builtin_popcountll(bwt->bwt_new[i * n + 4]) +
-            __builtin_popcountll(bwt->bwt_new[i * n + 5]);
+        bwt->bwt_new[i * k + 0] =
+            __builtin_popcountll((bwt->bwt_new[i * k + 4] ^ bwt->bwt_new[i * k + 6]) & bwt->bwt_new[i * k + 4]) +
+            __builtin_popcountll((bwt->bwt_new[i * k + 5] ^ bwt->bwt_new[i * k + 7]) & bwt->bwt_new[i * k + 5]);
+
         //T
-        bwt->bwt_new[i * n + 3] =
-            __builtin_popcountll(bwt->bwt_new[i * n + 6]) +
-            __builtin_popcountll(bwt->bwt_new[i * n + 7]);
-        //G
-        bwt->bwt_new[i * n + 2] =
-            __builtin_popcountll(~(bwt->bwt_new[i * n + 4] ^
-                    bwt->bwt_new[i * n + 6])) +
-            __builtin_popcountll(~(bwt->bwt_new[i * n + 5] ^
-                    bwt->bwt_new[i * n + 7]));
+        bwt->bwt_new[i * k + 3] =
+            __builtin_popcountll(bwt->bwt_new[i * k + 6] & ~bwt->bwt_new[i * k + 4]) +
+            __builtin_popcountll(bwt->bwt_new[i * k + 7] & ~bwt->bwt_new[i * k + 5]);
+
+        if (index == 0) {
+            //G
+            bwt->bwt_new[i * k + 2] =
+                    __builtin_popcountll(~(bwt->bwt_new[i * k + 4] ^
+                                           bwt->bwt_new[i * k + 6])) +
+                    __builtin_popcountll(~(bwt->bwt_new[i * k + 5] ^
+                                           bwt->bwt_new[i * k + 7]));
+        } else {
+            //C
+            bwt->bwt_new[i * k + 1] =
+                    __builtin_popcountll(bwt->bwt_new[i * k + 4] &
+                                         bwt->bwt_new[i * k + 6]) +
+                    __builtin_popcountll(bwt->bwt_new[i * k + 5] &
+                                         bwt->bwt_new[i * k + 7]);
+        }
 
         if (i != 0) {
-            bwt->bwt_new[i * n + 0] += bwt->bwt_new[(i - 1) * n + 0];
-            bwt->bwt_new[i * n + 2] += bwt->bwt_new[(i - 1) * n + 2];
-            bwt->bwt_new[i * n + 3] += bwt->bwt_new[(i - 1) * n + 3];
+            bwt->bwt_new[i * k + 0] += bwt->bwt_new[(i - 1) * k + 0];
+            bwt->bwt_new[i * k + 2] += bwt->bwt_new[(i - 1) * k + 2];
+            bwt->bwt_new[i * k + 3] += bwt->bwt_new[(i - 1) * k + 3];
+            bwt->bwt_new[i * k + 1] += bwt->bwt_new[(i - 1) * k + 1];
         }
-        if (i == n/2 - 1)   bwt->bwt_new[i * n + 2] -= unallocated;
-        fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu \n\n", i,
-        bwt->bwt_new[i * n + 0],
-        bwt->bwt_new[i * n + 2],
-        bwt->bwt_new[i * n + 3]);
-    }
-}
 
+        fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
+        bwt->bwt_new[i * k + 0],
+        bwt->bwt_new[i * k + 2],
+        bwt->bwt_new[i * k + 3],
+        bwt->bwt_new[i * k + 1]);
+    }
+
+    fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
+    fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
+    fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
+    fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
+}
+/*
 int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
 {
 	bwt_t *bwt;
@@ -263,7 +254,8 @@ int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
 	bwt_destroy(bwt);
 	return 0;
 }
-
+*/
+/*
 int bwa_bwt2sa(int argc, char *argv[]) // the "bwt2sa" command
 {
 	bwt_t *bwt;
@@ -284,7 +276,7 @@ int bwa_bwt2sa(int argc, char *argv[]) // the "bwt2sa" command
 	bwt_destroy(bwt);
 	return 0;
 }
-
+*/
 int main_biscuit_index(int argc, char *argv[]) {
 
   extern void bwa_pac_rev_core(const char *fn, const char *fn_rev);
@@ -352,40 +344,35 @@ int main_biscuit_index(int argc, char *argv[]) {
 
         // this is the subsequence that we're searching with old index
         // 00 = A, 10 = G, 11 = T
-        uint64_t s = 45039;
+        //uint64_t s = 45039; //001010111111101111 == 1010111111101111
         // the length var below is to counteract the missing data from the 00 of As
-        int s_len = 18;
-        int k = 0;
+        //int s_len = 18;
 
         //store subseq with new index
-        uint64_t *subseq = newIndex(s, s_len);
+        //uint64_t *subseq = newIndex(s, s_len);
 
         //generate bwt
         bwt = bwt_pac2bwt(str, algo_type == 3);
 
         //generates new occurrences array
-        bwt_bwtupdate_core(bwt);
+        bwt_bwtupdate_core(bwt, 0);
 
-        bwtint_t cntk[4];
-        fprintf(stderr, "L2[0]: %llu L2[1]: %llu L2[2]: %llu L2[3]: %llu L2[4]: %llu\n", bwt->L2[0], bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
-
-
-        //bwt_occ4_new_index(bwt, bwt->seq_len/2, cntk);
         //suffix array
-        bwt_cal_sa(bwt, 32);
+        //bwt_cal_sa(bwt, 32);
 
-        strcpy(str, prefix); strcat(str, ".dau.pac");
+        //strcpy(str, prefix); strcat(str, ".dau.pac");
 
         //A..., C..., G..., T.... and $
-        bwtintv_t ik, ok[3];
+        //bwtintv_t ik, ok[3];
 
         //const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back
-        bwt_extend(bwt, &ik, ok, 1, subseq, s_len/2);
+        //bwt_extend(bwt, &ik, ok, 1, subseq, s_len/2);
 
+        //fprintf(stderr, "size: %llu\n", bwt->bwt_size);
+        //fprintf(stderr, "length: %llu\n", bwt->seq_len);
         bwt_dump_bwt(str2, bwt);
-        bwt_destroy(bwt);
 
-        free(bwt->bwt_new);
+        bwt_destroy(bwt);
     }
     fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
   }
@@ -398,6 +385,41 @@ int main_biscuit_index(int argc, char *argv[]) {
     else if (algo_type == 1 || algo_type == 3) {
       bwt_t *bwt;
       bwt = bwt_pac2bwt(str, algo_type == 3);
+
+       // uint64_t s = 33471;
+        // the length var below is to counteract the missing data from the 00 of As
+       // int s_len = 9;
+
+        //store subseq with new index
+        /*uint8_t *q_ = (uint8_t*)calloc(1, s_len); //AACAACCTTT
+        q_[0] = 0;
+        q_[1] = 0;
+        q_[2] = 2;
+        q_[3] = 0;
+        q_[4] = 0;
+        q_[5] = 2;
+        q_[6] = 2;
+        q_[7] = 3;
+        q_[8] = 3;
+        q_[9] = 3;
+*/
+        //generate bwt
+        bwt = bwt_pac2bwt(str, algo_type == 3);
+        //generates new occurrences array
+        bwt_bwtupdate_core(bwt, 1);
+
+        //suffix array
+        //bwt_cal_sa(bwt, 32);
+
+        //strcpy(str, prefix); strcat(str, ".dau.pac");
+
+        //A..., C..., G..., T.... and $
+        //bwtintv_t ik, ok[3];
+
+        //const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back
+        //bwt_extend(bwt, &ik, ok, 1, q_, s_len);
+        //exit(0);
+
       bwt_dump_bwt(str2, bwt);
       bwt_destroy(bwt);
     }
@@ -408,13 +430,7 @@ int main_biscuit_index(int argc, char *argv[]) {
     strcpy(str, prefix); strcat(str, ".par.bwt");
     t = clock();
     fprintf(stderr, "[%s] Update parent BWT... \n", __func__);
-
-    //error exists here... why?
-
     bwt = bwt_restore_bwt(str);
-
-    bwt_bwtupdate_core(bwt);
-
     bwt_dump_bwt(str, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
@@ -427,9 +443,6 @@ int main_biscuit_index(int argc, char *argv[]) {
     fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
 
     bwt = bwt_restore_bwt(str);
-
-    bwt_bwtupdate_core(bwt);
-
     bwt_dump_bwt(str, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
@@ -451,9 +464,10 @@ int main_biscuit_index(int argc, char *argv[]) {
     strcpy(str, prefix); strcat(str, ".par.bwt");
     strcpy(str3, prefix); strcat(str3, ".par.sa");
     t = clock();
-    fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... ", __func__);
+    fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... \n", __func__);
     bwt = bwt_restore_bwt(str);
     bwt_cal_sa(bwt, 32);
+    fprintf(stderr, "seq_len: %llu\n", bwt->seq_len);
     bwt_dump_sa(str3, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
@@ -463,10 +477,10 @@ int main_biscuit_index(int argc, char *argv[]) {
     strcpy(str, prefix); strcat(str, ".dau.bwt");
     strcpy(str3, prefix); strcat(str3, ".dau.sa");
     t = clock();
-    fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... ", __func__);
+    fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... \n", __func__);
     bwt = bwt_restore_bwt(str);
     bwt_cal_sa(bwt, 32);
-    bwt_dump_sa(str3, bwt);
+      bwt_dump_sa(str3, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
   }

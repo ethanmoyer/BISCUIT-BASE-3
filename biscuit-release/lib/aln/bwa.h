@@ -12,6 +12,7 @@
 
 #define BWA_CTL_SIZE 0x10000
 
+//this is the data structure that we're concerned with
 typedef struct {
   bwt_t    bwt[2]; // FM-index
   bntseq_t *bns; // information on the reference sequences

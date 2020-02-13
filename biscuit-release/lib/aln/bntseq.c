@@ -9,7 +9,7 @@
    without limitation the rights to use, copy, modify, merge, publish,
    distribute, sublicense, and/or sell copies of the Software, and to
    permit persons to whom the Software is furnished to do so, subject to
-   the following conditions:
+   the file: ing conditions:
 
    The above copyright notice and this permission notice shall be
    included in all copies or substantial portions of the Software.
@@ -291,7 +291,10 @@ int64_t bns_fasta2bntseq(gzFile fp_fa, const char *prefix, int for_only) {
   bntamb1_t *q;
   FILE *fp;
 
-  // initialization
+    fprintf(stderr, "here...\n");
+
+
+    // initialization
   seq = kseq_init(fp_fa);
   bns = (bntseq_t*)calloc(1, sizeof(bntseq_t));
   bns->seed = 11; // fixed seed for random generator

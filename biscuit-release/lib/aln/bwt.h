@@ -64,17 +64,12 @@ typedef struct {
 	bwtint_t bwt_size; // size of bwt, about seq_len/4
 	uint32_t *bwt; // BWT
 	uint64_t *bwt_new;
-	// initialize bwt_vector struct
-	bwt_vector bwt_all;
 
 	// keep this constant
 	// occurrence array, separated to two parts
 	uint32_t cnt_table[256];
 
     bwt_vector subseq;
-
-    //store as poitner
-    bwt_occ_matrix bwt_occ_matrix0;
 
 	// suffix array
 	int sa_intv;
@@ -86,9 +81,6 @@ typedef struct {
     int c;
 
     //new data structure
-    bwtint_t *bwt0;
-    bwtint_t *bwt1;
-    uint64_t *occurrences;
     bwtint_t bwt0_size;
 
 } bwt_t;
@@ -146,7 +138,7 @@ extern "C" {
 	void bwt_bwtgen2(const char *fn_pac, const char *fn_bwt, int block_size); // from BWT-SW
 	void bwt_cal_sa(bwt_t *bwt, int intv);
 
-	void bwt_bwtupdate_core(bwt_t *bwt);
+	void bwt_bwtupdate_core(bwt_t *bwt, int index);
 
 	bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c);
 	void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4]);
@@ -163,14 +155,14 @@ extern "C" {
 	/**
 	 * Extend bi-SA-interval _ik_
 	 */
-	void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[4], int is_back, uint64_t *sub, int size);
+	void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[4], int is_back, uint8_t *sub, int size);
 
 	/**
 	 * Given a query _q_, collect potential SMEMs covering position _x_ and store them in _mem_.
 	 * Return the end of the longest exact match starting from _x_.
 	 */
 	int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
-	int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
+	int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
 
 	int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem);
 

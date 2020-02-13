@@ -39,18 +39,22 @@ typedef struct {
 } ktp_data_t;
 
 static void *process(void *shared, int step, void *_data) {
+    fprintf(stderr, "step: %d\n", step);
   ktp_aux_t *aux = (ktp_aux_t*)shared;
   ktp_data_t *data = (ktp_data_t*)_data;
   int i;
+
   if (step == 0) {
     int64_t size = 0;
     ktp_data_t *ret = calloc(1, sizeof(ktp_data_t));
     if (aux->_seq1) {  // prompt supplied input, for debug
+        //we dont go in here
       if (aux->__processed) return 0;
       ret->seqs = bis_create_bseq1(aux->_seq1, aux->_seq2, &ret->n_seqs);
       if (aux->_seq2)  aux->opt->flag |= MEM_F_PE;
       aux->__processed = 1;
     } else { // read from file
+
       ret->seqs = bis_bseq_read(aux->actual_chunk_size, &ret->n_seqs, aux->ks, aux->ks2);
       if (ret->seqs == 0) {
         free(ret);
@@ -63,7 +67,6 @@ static void *process(void *shared, int step, void *_data) {
           ret->seqs[i].comment = 0;
         }
     }
-
     for (i = 0; i < ret->n_seqs; ++i) {
       ret->seqs[i].sam = 0;
       size += ret->seqs[i].l_seq;
@@ -71,23 +74,32 @@ static void *process(void *shared, int step, void *_data) {
     
     if (bwa_verbose >= 3)
       fprintf(stderr, "[M::%s] read %d sequences (%ld bp)...\n", __func__, ret->n_seqs, (long)size);
-    
+
     return ret;
   } else if (step == 1) {
     const mem_opt_t *opt = aux->opt;
     const bwaidx_t *idx = aux->idx;
 
-    /* interleaved input */
-    if (opt->flag & MEM_F_SMARTPE) {
+      /* interleaved input */
+    if (1) { //opt->flag & MEM_F_SMARTPE <-- look into what these variables do
+
       bseq1_t *sep[2];
+
       int n_sep[2];
+
       mem_opt_t tmp_opt = *opt;
-
+      // --> bwa.c
       bseq_classify(data->n_seqs, data->seqs, n_sep, sep);
+        // single-end
+      if (n_sep[0]) {
 
-      if (n_sep[0]) {           // single-end
         tmp_opt.flag &= ~MEM_F_PE;
+        // --> bwamem.c
+        // n_sep[0] is responsible for allocating size of data for workers..
+
+
         mem_process_seqs(&tmp_opt, idx->bwt, idx->bns, idx->pac, aux->n_processed, n_sep[0], sep[0], 0);
+
         for (i = 0; i < n_sep[0]; ++i)
           data->seqs[sep[0][i].id].sam = sep[0][i].sam;
       }
@@ -448,11 +460,12 @@ int main_align(int argc, char *argv[]) {
   /* load bwt index */
   if (optind >= argc) return usage(opt);
   aux.idx = bwa_idx_load_from_shm(argv[optind]);
+
   if (aux.idx == 0) {
+      // what is BWA_IDX_ALL?
     if ((aux.idx = bwa_idx_load(argv[optind], BWA_IDX_ALL)) == 0) return 1; // FIXME: memory leak
   } else if (bwa_verbose >= 3)
     fprintf(stderr, "[M::%s] load the bwa index from shared memory\n", __func__);
-
   // infer alternative chromosomes from name
   if (auto_infer_alt_chrom) infer_alt_chromosomes(aux.idx->bns);
   

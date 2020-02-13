@@ -45,11 +45,12 @@
  * @return intv_cache (intv_cache->mem for a vector of bwtintv).  */
 #define intv_lt(a, b) ((a).info < (b).info)
 KSORT_INIT(mem_intv, bwtintv_t, intv_lt)
-
+// Called in memchain.c
 static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *seq, bwtintv_cache_t *intv_cache) {
 
   int k, x = 0, old_n;
   uint32_t i;
+  //max interval is either 2 or 1, why does it matter?
   int start_width = (opt->flag & MEM_F_SELF_OVLP)? 2 : 1;
   int split_len = (int)(opt->min_seed_len * opt->split_factor + .499);
 
@@ -65,10 +66,13 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
     if (seq[x] < 4) {
        // returns end of seed on read
       x = bwt_smem1(bwt, bwtc, len, seq, x, start_width, _mem, tmpv);
+
       for (i = 0; i < _mem->n; ++i)
         if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
           kv_push(bwtintv_t, *mem, _mem->a[i]);
+
     } else ++x;
+
   }
 
   // second pass: find MEMs inside a long SMEM
@@ -95,6 +99,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
         } else { // for now, we never come to this block which is slower
             //we are making this faster
           x = bwt_smem1a(bwt, bwtc, len, seq, x, start_width, opt->max_mem_intv, _mem, tmpv);
+
           for (i = 0; i < _mem->n; ++i)
             kv_push(bwtintv_t, *mem, _mem->a[i]);
         }
@@ -103,6 +108,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
   }
   // sort
   ks_introsort(mem_intv, mem->n, mem->a);
+
 }
 
 
@@ -265,6 +271,7 @@ static int merge_seed_to_chain(
 #define mem_getbss(parent, bns, rb) ((rb>bns->l_pac)==(parent)?1:0)
 #define chain_cmp(a, b) (((b).pos < (a).pos) - ((a).pos < (b).pos))
 KBTREE_INIT(chn, mem_chain_t, chain_cmp)
+// Called in bwamem.c
 mem_chain_v mem_chain(
    const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bns,
    bseq1_t *bseq, void *intv_cache, uint8_t parent) {
@@ -288,6 +295,11 @@ mem_chain_v mem_chain(
    _intv_cache = intv_cache ? (bwtintv_cache_t*) intv_cache : bwtintv_cache_init();
 
    /* generate bwtintv_v (seeds) in _intv_cache->mem */
+
+    // bseq contains both converted and unconverted sequence for the C>T and G>A, but mem_collect_intv only takes in one
+   // them at a time.
+   // originally passed bseq->bisseq[parent]
+   // there's an segmentation error here when mem_collect_intv is called
    mem_collect_intv(opt, &bwt[parent], &bwt[!parent], bseq->l_seq, bseq->bisseq[parent], _intv_cache);
 
    /* loop over mem and compute l_rep - number of repetitive seeds */

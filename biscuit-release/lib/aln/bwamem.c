@@ -131,23 +131,26 @@ void bseq_bsconvert(bseq1_t *s, uint8_t parent) {
 
   uint32_t i;
   if (parent) {                 // C>T strand
-    s->bisseq[1] = calloc(s->l_seq, sizeof(uint8_t));
+    s->bisseq[1] = calloc(s->l_seq * 2, sizeof(uint8_t));
     for (i=0; i< (unsigned) s->l_seq; ++i) {
       if (s->seq[i] == 1) s->bisseq[1][i] = 3;
       else s->bisseq[1][i] = s->seq[i];
     }
+
   } else {                      // G>A strand
-    s->bisseq[0] = calloc(s->l_seq, sizeof(uint8_t));
-    for (i=0; i< (unsigned) s->l_seq; ++i) {
-      if (s->seq[i] == 2) s->bisseq[0][i] = 0;
-      else s->bisseq[0][i] = s->seq[i];
-    }
+      s->bisseq[0] = calloc(s->l_seq, sizeof(uint8_t));
+      for (i = 0; i < (unsigned) s->l_seq; ++i) {
+          if (s->seq[i] == 2) s->bisseq[0][i] = 0;
+          else s->bisseq[0][i] = s->seq[i];
+      }
   }
+
 }
 
 /**
  * @param bseq - read sequence
  * @return mem_alnreg_v* regs */
+ // Called in bwamem.c
 static void mem_align1_core(
    const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bns,
    const uint8_t *pac, bseq1_t *bseq, void *buf, mem_alnreg_v *regs,
@@ -156,6 +159,7 @@ static void mem_align1_core(
    if (bwa_verbose >= 4) 
       printf("[%s] === Seeding %s against (parent: %u)\n", __func__, bseq->name, parent);
 
+   //we need to move this i think into the
    bseq_bsconvert(bseq, parent); // set bseq->bisseq
 
    /* WZ: I think it's always 2-bit encoding */
@@ -163,7 +167,9 @@ static void mem_align1_core(
    /* 	seq[i] = seq[i] < 4? seq[i] : nst_nt4_table[(int)seq[i]]; */
 
    /* use both bisseq and unconverted sequence here */
+
    mem_chain_v chns = mem_chain(opt, bwt, bns, bseq, buf, parent);
+
    /* filter whole chains */
    mem_chain_flt(opt, &chns);
    /* filter seeds in the chain by seed score */
@@ -276,6 +282,7 @@ static void read_clipping(bseq1_t *seq, uint8_t *adaptor, int l_adaptor, const m
  * @param tid thread id
  * @return w->regs[i] mem_alnreg_v*
  */
+ // Called in bwamem.c
 static void bis_worker1(void *data, int i, int tid) {
    
    worker_t *w = (worker_t*)data;
@@ -292,14 +299,16 @@ static void bis_worker1(void *data, int i, int tid) {
       regs = &w->regs[i]; kv_init(*regs); regs->n_pri = 0;
       if (!(opt->parent&1) || // no restriction
           opt->parent>>1)     // to daughter
+          fprintf(stderr, "mem_align1_core\n");
+      //this controls G->A or C->T encoding, both need to perform a backward and forward search
          mem_align1_core(opt, w->bwt, w->bns, w->pac, &w->seqs[i],
                          w->intv_cache[tid], regs, 0);
-    
+
       if (!(opt->parent&1) || // no restriction
           !(opt->parent>>1))  // to parent
          mem_align1_core(opt, w->bwt, w->bns, w->pac, &w->seqs[i],
                          w->intv_cache[tid], regs, 1);
-    
+
       mem_merge_regions(opt, w->bns, w->pac, &w->seqs[i], regs);
 
    } else {			// PE
@@ -397,10 +406,13 @@ static void bis_worker2(void *data, int i, int tid) {
  * @param seqs: query sequences
  * @param pes0: paired-end statistics
  */
+ // Called in align.c
 void mem_process_seqs(
    const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bns,
    const uint8_t *pac, int64_t n_processed, int n,
    bseq1_t *seqs, const mem_pestat_t *pes0) {
+
+    //bwt is changed here too
 
    extern void kt_for(int n_threads, void (*func)(void*,int,int), void *data, int n);
    int i;
@@ -415,12 +427,11 @@ void mem_process_seqs(
    w.opt = opt; w.bwt = bwt; w.bns = bns; w.pac = pac;
    w.seqs = seqs; w.n_processed = n_processed;
    /* w.pes = pes; // isn't this shared across all threads? */
-
-   /***** Step 1: Generate mapping position *****/
+    // I think we want to be here
+   /***** step 1: Generate mapping position *****/
    w.intv_cache = malloc(opt->n_threads * sizeof(bwtintv_cache_t));
    for (i = 0; i < opt->n_threads; ++i)
       w.intv_cache[i] = bwtintv_cache_init(); // w.intv_cache[i] is used by thread i only
-
    kt_for(opt->n_threads, bis_worker1, &w, (opt->flag&MEM_F_PE)? n>>1 : n);
 
    for (i = 0; i < opt->n_threads; ++i)

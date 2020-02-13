@@ -90,7 +90,7 @@ bseq1_t *bseq_read(int chunk_size, int *n_, void *ks1_, void *ks2_) {
  * @param seqs bseq1_t* interleaved
  * @param sep  (out) bseq1_t[2] reads in first and second in pair */
 void bseq_classify(int n, bseq1_t *seqs, int m[2], bseq1_t *sep[2])
-{
+{ //follow m[2]
   int i, has_last;
   kvec_t(bseq1_t) a[2] = {{0,0,0}, {0,0,0}};
   for (i = 1, has_last = 1; i < n; ++i) {
@@ -476,7 +476,6 @@ void bwa_idx_load_bwt(const char *hint, uint8_t parent, bwt_t *bwt)
     bwt_restore_sa(tmp, bwt);
   }
   bwt->parent = parent;
-
   free(tmp); free(prefix);
 }
 
@@ -485,23 +484,34 @@ void bwa_idx_load_bwt(const char *hint, uint8_t parent, bwt_t *bwt)
  * @param which    load BWA_IDX_BWT and/or BWA_IDX_BNS and/or BWA_IDX_PAC
  * @param bwaidx_t (out) include BWT, bns and pac
  */
+
+// we are concerned with the method
 bwaidx_t *bwa_idx_load_from_disk(const char *hint, int which) {
   bwaidx_t *idx;
   char *prefix;
+  // i dont think that prefix and hint should be the same lol
+  // nevermind apparently they should be ahah
   prefix = bwa_idx_infer_prefix(hint);
+
   if (prefix == 0) {
-    if (bwa_verbose >= 1) fprintf(stderr, "[E::%s] fail to locate the index files\n", __func__);
-    return 0;
+      if (bwa_verbose >= 1) fprintf(stderr, "[E::%s] fail to locate the index files\n", __func__);
+      return 0;
   }
+
   idx = calloc(1, sizeof(bwaidx_t));
   if (which & BWA_IDX_BWT) {
     bwa_idx_load_bwt(hint, 1, idx->bwt+1); /* parent strand */
     bwa_idx_load_bwt(hint, 0, idx->bwt);   /* daughter strand */
   }
-  if (which & BWA_IDX_BNS) {
+    int n = idx->bwt[1].seq_len/128 * 2 + 1;
+
+    if (which & BWA_IDX_BNS) {
     int i, c;
+    //i think this is responsible for the seed search
     idx->bns = bns_restore(prefix);
+
     for (i = c = 0; i < idx->bns->n_seqs; ++i)
+        fprintf(stderr, "idx->bns->anns[i].is_alt: %llu\n", idx->bns->anns[i].is_alt);
       if (idx->bns->anns[i].is_alt) ++c;
     if (bwa_verbose >= 3)
       fprintf(stderr, "[M::%s] read %d ALT contigs\n", __func__, c);
@@ -750,15 +760,18 @@ bseq1_t *bis_bseq_read(int chunk_size, int *n_, void *ks1_, void *ks2_) {
   int size = 0, m, n;
   bseq1_t *seqs;
   m = n = 0; seqs = 0;
+
   while (kseq_read(ks) >= 0) {
+
     if (ks2 && kseq_read(ks2) < 0) { // the 2nd file has fewer reads
       fprintf(stderr, "[W::%s] the 2nd file has fewer sequences.\n", __func__);
       break;
     }
-    if (n >= m) {
+      if (n >= m) {
       m = m? m<<1 : 256;
       seqs = realloc(seqs, m * sizeof(bseq1_t));
     }
+
     trim_readno(&ks->name);
     bis_kseq2bseq1(ks, &seqs[n]);
     size += seqs[n++].l_seq;
