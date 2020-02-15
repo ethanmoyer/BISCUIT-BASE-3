@@ -7,3 +7,14 @@
 *.ann
 *.bwt
 *.amb
+biscuit-release/NC_000009.fasta
+biscuit-release/NC_030850.1.fasta
+biscuit-release/MCF7_Cunha10k_1.fastq.gz
+biscuit-release/lib/htslib/test/ce#large_seq.sam
+biscuit-release/lib/htslib/test/.ce#large_seq.sam.icloud
+biscuit-release/lib/aln/CMakeLists.txt
+biscuit-release/index.txt
+biscuit-release/index_0.txt
+biscuit-release/lib/htslib/test/.ce#large_seq.sam.icloud
+biscuit-release/index.txt
+*.icloud

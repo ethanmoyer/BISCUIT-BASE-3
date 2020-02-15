@@ -64,8 +64,10 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
   // first pass: find all SMEMs, only keep seeds with length >= min_seed_len
   while (x < len) { // when seed end reaches read end
     if (seq[x] < 4) {
+
        // returns end of seed on read
       x = bwt_smem1(bwt, bwtc, len, seq, x, start_width, _mem, tmpv);
+      fprintf(stderr, "[%s] => x: %llu\n", __func__, x);
 
       for (i = 0; i < _mem->n; ++i)
         if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
