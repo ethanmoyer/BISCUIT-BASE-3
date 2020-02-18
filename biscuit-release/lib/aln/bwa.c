@@ -106,6 +106,8 @@ void bseq_classify(int n, bseq1_t *seqs, int m[2], bseq1_t *sep[2])
   sep[0] = a[0].a, m[0] = a[0].n;
   sep[1] = a[1].a, m[1] = a[1].n;
 
+  fprintf(stderr, "bwa_verbose %llu\n", bwa_verbose);
+  exit(0);
   if (bwa_verbose >= 3)
     fprintf(stderr, "[%s] %d SE sequences; %d PE sequences\n", __func__, m[0], m[1]);
 }

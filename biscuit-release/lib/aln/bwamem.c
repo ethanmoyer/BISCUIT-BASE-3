@@ -156,6 +156,8 @@ static void mem_align1_core(
    const uint8_t *pac, bseq1_t *bseq, void *buf, mem_alnreg_v *regs,
    uint8_t parent) {
 
+     fprintf(stderr, "bwa_verbose: %llu\n", bwa_verbose);
+
    if (bwa_verbose >= 4) 
       printf("[%s] === Seeding %s against (parent: %u)\n", __func__, bseq->name, parent);
 
@@ -177,6 +179,7 @@ static void mem_align1_core(
    mem_flt_chained_seeds(opt, bns, pac, bseq, &chns, parent);
 
    // make sure different bisulfite strand does not interfere
+   // how do regs get assigned after mem_chain is called
    mem_chain2region(opt, bns, pac, bseq, parent, &chns, regs);
    free_mem_chain_v(chns);
 }

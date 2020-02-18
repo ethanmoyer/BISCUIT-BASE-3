@@ -81,7 +81,7 @@ static void *process(void *shared, int step, void *_data) {
     const bwaidx_t *idx = aux->idx;
 
       /* interleaved input */
-    if (1) { //opt->flag & MEM_F_SMARTPE <-- look into what these variables do
+    if (opt->flag & MEM_F_SMARTPE) {
 
       bseq1_t *sep[2];
 

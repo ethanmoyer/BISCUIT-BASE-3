@@ -751,6 +751,7 @@ static void right_extend_seed_set_align_end(
  * @param pac reference
  * @param l_query length of query
  * @param query query sequence, raw WITHOUT bisulfite conversion */
+// Called in bwamem.c
 void mem_chain2region1(
    const mem_opt_t *opt, const bntseq_t *bns, uint8_t *rseq, int64_t rmax[], int rid,
    int l_query, const uint8_t *query, mem_seed_v *seeds, mem_alnreg_v *regs,

@@ -439,6 +439,7 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
             bwtintv_t tmp = p->a[p->n - 1 - j];
             p->a[p->n - 1 - j] = p->a[j];
             p->a[j] = tmp;
+            fprintf(stderr, "[%s] => p->a[i].info: %d\n", __func__, p->a[j].info);
             fprintf(stderr, "[%s] => p->a[i].x[0]: %d\n", __func__, p->a[j].x[0]);
             fprintf(stderr, "[%s] => p->a[i].x[1]: %d\n", __func__, p->a[j].x[1]);
             fprintf(stderr, "[%s] => p->a[i].x[2]: %d\n\n", __func__, p->a[j].x[2]);
@@ -645,7 +646,6 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
     }
     fprintf(stderr, "[%s] => n: %d\n", __func__, curr->n);
     bwt_reverse_intvs(curr); // s.t. smaller intervals (i.e. longer matches) visited first
-
     ret = curr->a[0].info; // this will be the returned value
     swap = curr; curr = prev; prev = swap;
 
@@ -674,6 +674,8 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
         swap = curr; curr = prev; prev = swap;
     }
     bwt_reverse_intvs(mem); // s.t. sorted by the start coordinate
+    fprintf(stderr, "[%s] => mem->m: %d\n", __func__, mem->m);
+    fprintf(stderr, "[%s] => mem->n: %d\n", __func__, mem->n);
 
     if (tmpvec == 0 || tmpvec[0] == 0) free(a[0].a);
     if (tmpvec == 0 || tmpvec[1] == 0) free(a[1].a);
