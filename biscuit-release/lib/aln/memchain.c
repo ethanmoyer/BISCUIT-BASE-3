@@ -300,8 +300,6 @@ mem_chain_v mem_chain(
 
     // bseq contains both converted and unconverted sequence for the C>T and G>A, but mem_collect_intv only takes in one
    // them at a time.
-   // originally passed bseq->bisseq[parent]
-   // there's an segmentation error here when mem_collect_intv is called
    mem_collect_intv(opt, &bwt[parent], &bwt[!parent], bseq->l_seq, bseq->bisseq[parent], _intv_cache);
 
    /* loop over mem and compute l_rep - number of repetitive seeds */
@@ -345,7 +343,9 @@ mem_chain_v mem_chain(
 
          /* this is the base coordinate in the forward-reverse reference */
          mem_seed_t s;
-         s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k);
+         // this is where we need to pay attention to
+         // this directs the interval regions that are chained together here
+         s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k - 1);
          s.qbeg = intv->info>>32;
          s.score = s.len = slen;
 
@@ -751,7 +751,7 @@ static void right_extend_seed_set_align_end(
  * @param pac reference
  * @param l_query length of query
  * @param query query sequence, raw WITHOUT bisulfite conversion */
-// Called in bwamem.c
+// Called in memchain.c
 void mem_chain2region1(
    const mem_opt_t *opt, const bntseq_t *bns, uint8_t *rseq, int64_t rmax[], int rid,
    int l_query, const uint8_t *query, mem_seed_v *seeds, mem_alnreg_v *regs,
@@ -882,7 +882,7 @@ void mem_chain2region1(
    }
    free(srt);
 }
-
+//called in bwamem.c
 void mem_chain2region(
    const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac,
    bseq1_t *bseq, uint8_t parent, mem_chain_v *chns, mem_alnreg_v *regs) {

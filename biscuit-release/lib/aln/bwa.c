@@ -49,7 +49,7 @@ static inline void kseq2bseq1(const kseq_t *ks, bseq1_t *s) {
  * @param ks1_, ks2_   kseq_t*
  * @param chunk_size   number of sequences to read
  * @param n_           (out) number of reads loaded
- * @return seqs        bseq1_t* 
+ * @return seqs        bseq1_t*
  */
 bseq1_t *bseq_read(int chunk_size, int *n_, void *ks1_, void *ks2_) {
   kseq_t *ks = (kseq_t*)ks1_, *ks2 = (kseq_t*)ks2_;
@@ -248,8 +248,8 @@ ret_gen_cigar:
 /**
  * Generate cigar from rb and re
  *
- * if there is gap do banded DP, if no gap, do seed extension 
- * 
+ * if there is gap do banded DP, if no gap, do seed extension
+ *
  * MD is appended to cigar.
  * mat is dependent on bss not parent, that is
  * BSW should use ctmat and BSC should use gamat
@@ -259,7 +259,7 @@ ret_gen_cigar:
  * @param n_cigar   (out) number of cigars
  * @param NM        (out) edit distance
  * @param ZC,ZR     (out) conversion and retention
- * 
+ *
  * @return cigar    uint32_t
  */
 uint32_t *bis_bwa_gen_cigar2(const int8_t mat[25], int o_del, int e_del, int o_ins, int e_ins, int w_, int64_t l_pac, const uint8_t *pac, int l_query, uint8_t *query, int64_t rb, int64_t re, int *score, int *n_cigar, int *NM, uint32_t *ZC, uint32_t *ZR, int *bss_u, uint8_t parent) {
@@ -321,12 +321,12 @@ uint32_t *bis_bwa_gen_cigar2(const int8_t mat[25], int o_del, int e_del, int o_i
 
   /* loop over cigars and compute NM and MD*/
   if (NM && n_cigar) {
-    /* n_mm: number of mismatches, 
+    /* n_mm: number of mismatches,
      * n_conv, n_ret: number of conversion and retention */
      int k, x, y, u, n_mm = 0, n_gap = 0;
      int n_conv_ct = 0, n_ret_c = 0;
      int n_conv_ga = 0, n_ret_g = 0;
-    
+
      str.l = str.m = *n_cigar * 4; str.s = (char*)cigar; // append MD to CIGAR
      int2base = rb < l_pac? "ACGTN" : "TGCAN";
      for (k = 0, x = y = u = 0; k < *n_cigar; ++k) {
@@ -444,7 +444,7 @@ char *bwa_idx_infer_prefix(const char *hint) {
     return 0;
   }
   fclose(fp);
-  
+
   prefix[l_hint] = 0;
   return prefix;
 }
@@ -513,9 +513,8 @@ bwaidx_t *bwa_idx_load_from_disk(const char *hint, int which) {
     idx->bns = bns_restore(prefix);
 
     for (i = c = 0; i < idx->bns->n_seqs; ++i)
-        fprintf(stderr, "idx->bns->anns[i].is_alt: %llu\n", idx->bns->anns[i].is_alt);
       if (idx->bns->anns[i].is_alt) ++c;
-    if (bwa_verbose >= 3)
+        if (bwa_verbose >= 3)
       fprintf(stderr, "[M::%s] read %d ALT contigs\n", __func__, c);
     if (which & BWA_IDX_PAC) {
       idx->pac = calloc(idx->bns->l_pac/4+1, 1);
@@ -573,7 +572,7 @@ int bwa_mem2idx(int64_t l_mem, uint8_t *mem, bwaidx_t *idx) {
   }
   idx->pac = (uint8_t*)(mem + k); k += idx->bns->l_pac/4+1;
   assert(k == l_mem);
-  
+
   idx->l_mem = k; idx->mem = mem;
   return 0;
 }

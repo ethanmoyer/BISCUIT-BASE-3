@@ -184,17 +184,14 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
     //bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }
 
-//what does this do?
 bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k)
 {
     k++;
     bwtint_t sa = 0;
     int mask = bwt->sa_intv;
-    //fprintf(stderr, "k %llu mask: %d\n", k, mask);
-    while (k % mask != 0) {
+    while (k % mask) { // != 0
         ++sa;
         k = bwt_invPsi(bwt, k);
-        //fprintf(stderr, "k %llu\n", k);
     }
 
     /* without setting bwt->sa[0] = -1, the following line should be
@@ -621,8 +618,7 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
             //bwt -> G>A
             //bwtc -> C>T
             bwt_extend_new(bwtc, &ik, ok, 0, c);
-            //if (ok->x[2] > 10000000)
-                //exit(0);
+
             if (ok[c].x[2] != ik.x[2]) { // change of the interval size
                 fprintf(stderr, "[%s] => Hit!\n", __func__);
                 kv_push(bwtintv_t, *curr, ik);
