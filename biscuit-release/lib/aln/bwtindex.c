@@ -82,10 +82,6 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	memset(bwt->L2, 0, 5 * 4);
 	buf = (ubyte_t*)calloc((bwt->seq_len + 1), 1);
 
-	//for (i = 0; i < bwt->seq_len/2; ++i) {
-    //    fprintf(stderr, "%llu\n", buf2[i>>2] >> ((3 - (i&3)) << 1) & 3);
-  //  }
-
 	for (i = 0; i < bwt->seq_len; ++i) {
 		buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
 		++bwt->L2[1+buf[i]];
@@ -93,15 +89,10 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
     free(buf2);
 
-    //for (i = 0; i < bwt->seq_len; i++)
-    //    fprintf(stderr, "buf: %d\n", buf[i]);
 	// Burrows-Wheeler Transform
-
 	if (use_is) {
 		bwt->primary = is_bwt(buf, bwt->seq_len);
     fprintf(stderr,"primary: %llu\n", bwt->primary);
-	//for (i = 0; i < bwt->seq_len; i++)
-	//	fprintf(stderr, "buf: %d\n", buf[i]);
 
 	} else {
 #ifdef _DIVBWT
@@ -118,7 +109,7 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 
     // intialize space of vector
     // how much space will we need??
-    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/128, 8);
+    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/16, 8);
 
     uint64_t j = 1UL;
     uint64_t x = 0;
@@ -341,37 +332,13 @@ int main_biscuit_index(int argc, char *argv[]) {
     if (algo_type == 2) bwt_bwtgen(str, str2);
     else if (algo_type == 1 || algo_type == 3) {
         bwt_t *bwt;
-
-        // this is the subsequence that we're searching with old index
-        // 00 = A, 10 = G, 11 = T
-        //uint64_t s = 45039; //001010111111101111 == 1010111111101111
-        // the length var below is to counteract the missing data from the 00 of As
-        //int s_len = 18;
-
-        //store subseq with new index
-        //uint64_t *subseq = newIndex(s, s_len);
-
         //generate bwt
         bwt = bwt_pac2bwt(str, algo_type == 3);
 
         //generates new occurrences array
         bwt_bwtupdate_core(bwt, 0);
 
-        //suffix array
-        //bwt_cal_sa(bwt, 32);
-
-        //strcpy(str, prefix); strcat(str, ".dau.pac");
-
-        //A..., C..., G..., T.... and $
-        //bwtintv_t ik, ok[3];
-
-        //const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back
-        //bwt_extend(bwt, &ik, ok, 1, subseq, s_len/2);
-
-        //fprintf(stderr, "size: %llu\n", bwt->bwt_size);
-        //fprintf(stderr, "length: %llu\n", bwt->seq_len);
         bwt_dump_bwt(str2, bwt);
-
         bwt_destroy(bwt);
     }
     fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
@@ -386,39 +353,10 @@ int main_biscuit_index(int argc, char *argv[]) {
       bwt_t *bwt;
       bwt = bwt_pac2bwt(str, algo_type == 3);
 
-       // uint64_t s = 33471;
-        // the length var below is to counteract the missing data from the 00 of As
-       // int s_len = 9;
-
-        //store subseq with new index
-        /*uint8_t *q_ = (uint8_t*)calloc(1, s_len); //AACAACCTTT
-        q_[0] = 0;
-        q_[1] = 0;
-        q_[2] = 2;
-        q_[3] = 0;
-        q_[4] = 0;
-        q_[5] = 2;
-        q_[6] = 2;
-        q_[7] = 3;
-        q_[8] = 3;
-        q_[9] = 3;
-*/
         //generate bwt
         bwt = bwt_pac2bwt(str, algo_type == 3);
         //generates new occurrences array
         bwt_bwtupdate_core(bwt, 1);
-
-        //suffix array
-        //bwt_cal_sa(bwt, 32);
-
-        //strcpy(str, prefix); strcat(str, ".dau.pac");
-
-        //A..., C..., G..., T.... and $
-        //bwtintv_t ik, ok[3];
-
-        //const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back
-        //bwt_extend(bwt, &ik, ok, 1, q_, s_len);
-        //exit(0);
 
       bwt_dump_bwt(str2, bwt);
       bwt_destroy(bwt);
@@ -467,7 +405,6 @@ int main_biscuit_index(int argc, char *argv[]) {
     fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... \n", __func__);
     bwt = bwt_restore_bwt(str);
     bwt_cal_sa(bwt, 32);
-    fprintf(stderr, "seq_len: %llu\n", bwt->seq_len);
     bwt_dump_sa(str3, bwt);
     bwt_destroy(bwt);
     fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
