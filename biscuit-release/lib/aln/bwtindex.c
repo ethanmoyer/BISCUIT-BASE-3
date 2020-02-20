@@ -61,8 +61,7 @@ int64_t bwa_seq_len(const char *fn_pac)
 	return (pac_len - 1) * 4 + (int)c;
 }
 
-bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
-{
+bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is) {
 	bwt_t *bwt;
 	ubyte_t *buf, *buf2;
 	uint32_t i, pac_size;         /* WZ from int */
@@ -92,7 +91,6 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 	// Burrows-Wheeler Transform
 	if (use_is) {
 		bwt->primary = is_bwt(buf, bwt->seq_len);
-    fprintf(stderr,"primary: %llu\n", bwt->primary);
 
 	} else {
 #ifdef _DIVBWT
@@ -102,40 +100,31 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
 #endif
 	}
 
-    int n = bwt->seq_len / 128 + 1; //1400 --> 700
-
-    fprintf(stderr, "[%s] seq_len: %d\n", __func__, bwt->seq_len);
-    fprintf(stderr, "[%s] n: %d\n", __func__, n);
-
     // intialize space of vector
     // how much space will we need??
     bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/16, 8);
 
+	// In the eight block structure of bwt->bwt_new, the lagging four are responsible for storing two bwt0 and two bwt1.
+	// [occ 256 bits][bwt0 128 bits][bwt1 128 bits]
+	// This structure orders the bwt0 and bwt1 sequentially.
     uint64_t j = 1UL;
     uint64_t x = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
-
         x = j << (63 - (i % 64));
         if (!(buf[i] > 1)) {
             bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 4 : 5)] ^= x;
         }
-
         if (!(buf[i] % 2 == 0)) {
             bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 6 : 7)] ^= x;
         }
     }
-    //----- may remove
-    /*
-	bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
-    for (i = 0; i < bwt->seq_len; ++i)
-    	bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
-    free(buf);
-     */
-    //-----
+
     return bwt;
 
 }
 
+// This function simply translate any string sequence into the new index. It was more useful using the development of
+// the new biscuit index.
 uint64_t* newIndex(uint64_t s, int length) {
     uint64_t *s_ = (uint64_t*)calloc(2, 8);
     s_[0] = ULLONG_MAX;
@@ -173,18 +162,21 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 #define bwt_B00(b, k) ((b)->bwt[(k)>>4]>>((~(k)&0xf)<<1)&3)
 
 //Where the occurrence is generated every OCC_INTERVAL
-//(I think that’s 128 bases) and write to the new bwt (which is buf)
+// This function generates the counts after each string of 128 bases. Using the __builtin_popcountll function, strings
+// of 64 nucleotides are counting with one operation. Depending on the index int that is passed, either C's (index = 0)
+// or G's (index = 1) will be ignored. The accessing of the bwt in bwt->bwt_new falls in line with the eight block
+// data structure.
+// The output after each 128 block is simply used for developmental purposes and debugging of the counts.
 void bwt_bwtupdate_core(bwt_t *bwt, int index)
 {
     bwtint_t i;
     int n = bwt->seq_len / 128 + 1; //1400 --> 700
     int k = 8;
     for (i = 0; i < n - 1; i++) {
-        //when its half way,
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
+        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
+        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
+        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
+        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
 
         //A
         bwt->bwt_new[i * k + 0] =
@@ -219,34 +211,36 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index)
             bwt->bwt_new[i * k + 1] += bwt->bwt_new[(i - 1) * k + 1];
         }
 
-        fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
-        bwt->bwt_new[i * k + 0],
-        bwt->bwt_new[i * k + 2],
-        bwt->bwt_new[i * k + 3],
-        bwt->bwt_new[i * k + 1]);
+        //fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
+        //bwt->bwt_new[i * k + 0],
+        //bwt->bwt_new[i * k + 2],
+        //bwt->bwt_new[i * k + 3],
+        //bwt->bwt_new[i * k + 1]);
     }
 
-    fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
-    fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
-    fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
-    fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
+    //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
+    //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
+    //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
+    //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
 }
-/*
+
+// There's going to be a problem here if bwtupdate is run because bwt_bwtupdate_core needs to be run twice in order to
+// have both G>A and
 int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
 {
-	bwt_t *bwt;
-	if (argc < 2) {
-		fprintf(stderr, "Usage: bwa bwtupdate <the.bwt>\n");
-		return 1;
-	}
-	bwt = bwt_restore_bwt(argv[1]);
-	bwt_bwtupdate_core(bwt);
-	bwt_dump_bwt(argv[1], bwt);
-	bwt_destroy(bwt);
-	return 0;
+    bwt_t *bwt;
+    if (argc < 2) {
+        fprintf(stderr, "Usage: bwa bwtupdate <the.bwt>\n");
+        return 1;
+    }
+    bwt = bwt_restore_bwt(argv[1]);
+    //bwt_bwtupdate_core(bwt);
+    bwt_dump_bwt(argv[1], bwt);
+    bwt_destroy(bwt);
+    return 0;
 }
-*/
-/*
+
+
 int bwa_bwt2sa(int argc, char *argv[]) // the "bwt2sa" command
 {
 	bwt_t *bwt;
@@ -267,162 +261,162 @@ int bwa_bwt2sa(int argc, char *argv[]) // the "bwt2sa" command
 	bwt_destroy(bwt);
 	return 0;
 }
-*/
+
 int main_biscuit_index(int argc, char *argv[]) {
 
-  extern void bwa_pac_rev_core(const char *fn, const char *fn_rev);
+    extern void bwa_pac_rev_core(const char *fn, const char *fn_rev);
 
-  char *prefix = 0, *str, *str2, *str3;
-  int c, algo_type = 0, is_64 = 0;
-  clock_t t;
-  int64_t l_pac;
+    char *prefix = 0, *str, *str2, *str3;
+    int c, algo_type = 0, is_64 = 0;
+    clock_t t;
+    int64_t l_pac;
 
-  while ((c = getopt(argc, argv, "6a:p:")) >= 0) {
-    switch (c) {
-    case 'a': // if -a is not set, algo_type will be determined later
-      if (strcmp(optarg, "div") == 0) algo_type = 1;
-      else if (strcmp(optarg, "bwtsw") == 0) algo_type = 2;
-      else if (strcmp(optarg, "is") == 0) algo_type = 3;
-      else err_fatal(__func__, "unknown algorithm: '%s'.", optarg);
-      break;
-    case 'p': prefix = strdup(optarg); break;
-    case '6': is_64 = 1; break;
-    default: return 1;
+    while ((c = getopt(argc, argv, "6a:p:")) >= 0) {
+        switch (c) {
+        case 'a': // if -a is not set, algo_type will be determined later
+            if (strcmp(optarg, "div") == 0) algo_type = 1;
+            else if (strcmp(optarg, "bwtsw") == 0) algo_type = 2;
+            else if (strcmp(optarg, "is") == 0) algo_type = 3;
+            else err_fatal(__func__, "unknown algorithm: '%s'.", optarg);
+            break;
+        case 'p': prefix = strdup(optarg); break;
+        case '6': is_64 = 1; break;
+        default: return 1;
+        }
     }
-  }
 
-  if (optind + 1 > argc) {
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Usage:   biscuit index [-a bwtsw|is] [-c] <in.fasta>\n\n");
-    fprintf(stderr, "Options: -a STR    BWT construction algorithm: bwtsw or is [auto]\n");
-    fprintf(stderr, "         -p STR    prefix of the index [same as fasta name]\n");
-    fprintf(stderr, "         -6        index files named as <in.fasta>.64.* instead of <in.fasta>.* \n");
-    fprintf(stderr, "\n");
-    fprintf(stderr,	"Warning: `-a bwtsw' does not work for short genomes, while `-a is' and\n");
-    fprintf(stderr, "         `-a div' do not work not for long genomes. Please choose `-a'\n");
-    fprintf(stderr, "         according to the length of the genome.\n\n");
-    return 1;
-  }
-  if (prefix == 0) {
-    prefix = malloc(strlen(argv[optind]) + 4);
-    strcpy(prefix, argv[optind]);
-    if (is_64) strcat(prefix, ".64");
-  }
-  str  = (char*)calloc(strlen(prefix) + 50, 1);
-  str2 = (char*)calloc(strlen(prefix) + 50, 1);
-  str3 = (char*)calloc(strlen(prefix) + 50, 1);
+    if (optind + 1 > argc) {
+        fprintf(stderr, "\n");
+        fprintf(stderr, "Usage:   biscuit index [-a bwtsw|is] [-c] <in.fasta>\n\n");
+        fprintf(stderr, "Options: -a STR    BWT construction algorithm: bwtsw or is [auto]\n");
+        fprintf(stderr, "         -p STR    prefix of the index [same as fasta name]\n");
+        fprintf(stderr, "         -6        index files named as <in.fasta>.64.* instead of <in.fasta>.* \n");
+        fprintf(stderr, "\n");
+        fprintf(stderr,	"Warning: `-a bwtsw' does not work for short genomes, while `-a is' and\n");
+        fprintf(stderr, "         `-a div' do not work not for long genomes. Please choose `-a'\n");
+        fprintf(stderr, "         according to the length of the genome.\n\n");
+        return 1;
+    }
+    if (prefix == 0) {
+        prefix = malloc(strlen(argv[optind]) + 4);
+        strcpy(prefix, argv[optind]);
+        if (is_64) strcat(prefix, ".64");
+    }
+    str  = (char*)calloc(strlen(prefix) + 50, 1);
+    str2 = (char*)calloc(strlen(prefix) + 50, 1);
+    str3 = (char*)calloc(strlen(prefix) + 50, 1);
 
-  { /* nucleotide indexing */
-    /* generates .ct.pac, .ct.ann and .ct.amb */
-    gzFile fp = xzopen(argv[optind], "r");
-    t = clock();
-    fprintf(stderr, "[%s] Pack bisulfite FASTA... ", __func__);
-    l_pac = bis_bns_fasta2bntseq(fp, prefix, 1); /* parent strand */
-    l_pac = bis_bns_fasta2bntseq(fp, prefix, 0); /* daughter strand */
+    {   /* nucleotide indexing */
+        /* generates .ct.pac, .ct.ann and .ct.amb */
+        gzFile fp = xzopen(argv[optind], "r");
+        t = clock();
+        fprintf(stderr, "[%s] Pack bisulfite FASTA... ", __func__);
+        l_pac = bis_bns_fasta2bntseq(fp, prefix, 1); /* parent strand */
+        l_pac = bis_bns_fasta2bntseq(fp, prefix, 0); /* daughter strand */
 
-    fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
-    err_gzclose(fp);
-  }
-  if (algo_type == 0) algo_type = l_pac > 50000000? 2 : 3; // set the algorithm for generating BWT
-  {
-    t = clock();
-    fprintf(stderr, "[%s] Construct BWT for the parent strands...\n", __func__);
-    strcpy(str, prefix); strcat(str, ".par.pac");
-    strcpy(str2, prefix); strcat(str2, ".par.bwt");
-    if (algo_type == 2) bwt_bwtgen(str, str2);
-    else if (algo_type == 1 || algo_type == 3) {
+        fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
+        err_gzclose(fp);
+    }
+    // set the algorithm for generating BWT
+    if (algo_type == 0) algo_type = l_pac > 50000000? 2 : 3; {
+        t = clock();
+        fprintf(stderr, "[%s] Construct BWT for the parent strands...\n", __func__);
+        strcpy(str, prefix); strcat(str, ".par.pac");
+        strcpy(str2, prefix); strcat(str2, ".par.bwt");
+        if (algo_type == 2) bwt_bwtgen(str, str2);
+        else if (algo_type == 1 || algo_type == 3) {
+            bwt_t *bwt;
+            //generate bwt
+            bwt = bwt_pac2bwt(str, algo_type == 3);
+
+            //generates new occurrences array
+            bwt_bwtupdate_core(bwt, 0);
+
+            bwt_dump_bwt(str2, bwt);
+            bwt_destroy(bwt);
+        }
+        fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
+    }
+    {
+        t = clock();
+        fprintf(stderr, "[%s] Construct BWT for the daughter strands...\n", __func__);
+        strcpy(str, prefix); strcat(str, ".dau.pac");
+        strcpy(str2, prefix); strcat(str2, ".dau.bwt");
+        if (algo_type == 2) bwt_bwtgen(str, str2);
+        else if (algo_type == 1 || algo_type == 3) {
+            bwt_t *bwt;
+            bwt = bwt_pac2bwt(str, algo_type == 3);
+
+            //generate bwt
+            bwt = bwt_pac2bwt(str, algo_type == 3);
+            //generates new occurrences array
+            bwt_bwtupdate_core(bwt, 1);
+
+            bwt_dump_bwt(str2, bwt);
+            bwt_destroy(bwt);
+    }
+    fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
+    }
+    {
         bwt_t *bwt;
-        //generate bwt
-        bwt = bwt_pac2bwt(str, algo_type == 3);
-
-        //generates new occurrences array
-        bwt_bwtupdate_core(bwt, 0);
-
-        bwt_dump_bwt(str2, bwt);
+        strcpy(str, prefix); strcat(str, ".par.bwt");
+        t = clock();
+        fprintf(stderr, "[%s] Update parent BWT... \n", __func__);
+        bwt = bwt_restore_bwt(str);
+        bwt_dump_bwt(str, bwt);
         bwt_destroy(bwt);
+        fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
-    fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
-  }
-  {
-    t = clock();
-    fprintf(stderr, "[%s] Construct BWT for the daughter strands...\n", __func__);
-    strcpy(str, prefix); strcat(str, ".dau.pac");
-    strcpy(str2, prefix); strcat(str2, ".dau.bwt");
-    if (algo_type == 2) bwt_bwtgen(str, str2);
-    else if (algo_type == 1 || algo_type == 3) {
-      bwt_t *bwt;
-      bwt = bwt_pac2bwt(str, algo_type == 3);
+    {
+        bwt_t *bwt;
+        strcpy(str, prefix); strcat(str, ".dau.bwt");
+        t = clock();
 
-        //generate bwt
-        bwt = bwt_pac2bwt(str, algo_type == 3);
-        //generates new occurrences array
-        bwt_bwtupdate_core(bwt, 1);
+        fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
 
-      bwt_dump_bwt(str2, bwt);
-      bwt_destroy(bwt);
+        bwt = bwt_restore_bwt(str);
+        bwt_dump_bwt(str, bwt);
+        bwt_destroy(bwt);
+        fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
-    fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
-  }
-  {
-    bwt_t *bwt;
-    strcpy(str, prefix); strcat(str, ".par.bwt");
-    t = clock();
-    fprintf(stderr, "[%s] Update parent BWT... \n", __func__);
-    bwt = bwt_restore_bwt(str);
-    bwt_dump_bwt(str, bwt);
-    bwt_destroy(bwt);
-    fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
-  }
-  {
-    bwt_t *bwt;
-    strcpy(str, prefix); strcat(str, ".dau.bwt");
-    t = clock();
-
-    fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
-
-    bwt = bwt_restore_bwt(str);
-    bwt_dump_bwt(str, bwt);
-    bwt_destroy(bwt);
-    fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
-  }
-  {
-    gzFile fp = xzopen(argv[optind], "r");
-    t = clock();
-    fprintf(stderr, "[%s] Pack forward-only FASTA... ", __func__);
-    l_pac = dump_forward_pac(fp, prefix);
-    fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
-    err_gzclose(fp);
-    strcpy(str, prefix); strcat(str, ".par.pac");
-    unlink(str);
-    strcpy(str, prefix); strcat(str, ".dau.pac");
-    unlink(str);
-  }
-  {
-    bwt_t *bwt;
-    strcpy(str, prefix); strcat(str, ".par.bwt");
-    strcpy(str3, prefix); strcat(str3, ".par.sa");
-    t = clock();
-    fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... \n", __func__);
-    bwt = bwt_restore_bwt(str);
-    bwt_cal_sa(bwt, 32);
-    bwt_dump_sa(str3, bwt);
-    bwt_destroy(bwt);
-    fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
-  }
-  {
-    bwt_t *bwt;
-    strcpy(str, prefix); strcat(str, ".dau.bwt");
-    strcpy(str3, prefix); strcat(str3, ".dau.sa");
-    t = clock();
-    fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... \n", __func__);
-    bwt = bwt_restore_bwt(str);
-    bwt_cal_sa(bwt, 32);
-      bwt_dump_sa(str3, bwt);
-    bwt_destroy(bwt);
-    fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
-  }
-  free(str3); free(str2); free(str); free(prefix);
-  return 0;
+    {
+        gzFile fp = xzopen(argv[optind], "r");
+        t = clock();
+        fprintf(stderr, "[%s] Pack forward-only FASTA... ", __func__);
+        l_pac = dump_forward_pac(fp, prefix);
+        fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
+        err_gzclose(fp);
+        strcpy(str, prefix); strcat(str, ".par.pac");
+        unlink(str);
+        strcpy(str, prefix); strcat(str, ".dau.pac");
+        unlink(str);
+    }
+    {
+        bwt_t *bwt;
+        strcpy(str, prefix); strcat(str, ".par.bwt");
+        strcpy(str3, prefix); strcat(str3, ".par.sa");
+        t = clock();
+        fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... \n", __func__);
+        bwt = bwt_restore_bwt(str);
+        bwt_cal_sa(bwt, 32);
+        bwt_dump_sa(str3, bwt);
+        bwt_destroy(bwt);
+        fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
+    }
+    {
+        bwt_t *bwt;
+        strcpy(str, prefix); strcat(str, ".dau.bwt");
+        strcpy(str3, prefix); strcat(str3, ".dau.sa");
+        t = clock();
+        fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... \n", __func__);
+        bwt = bwt_restore_bwt(str);
+        bwt_cal_sa(bwt, 32);
+        bwt_dump_sa(str3, bwt);
+        bwt_destroy(bwt);
+        fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
+    }
+    free(str3); free(str2); free(str); free(prefix);
+    return 0;
 }
 
 /* lower case repetitive region */
