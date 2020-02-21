@@ -102,7 +102,7 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is) {
 
     // intialize space of vector
     // how much space will we need??
-    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/8, 8);
+    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2, 8);
 
 	// In the eight block structure of bwt->bwt_new, the lagging four are responsible for storing two bwt0 and two bwt1.
 	// [occ 256 bits][bwt0 128 bits][bwt1 128 bits]
@@ -118,25 +118,9 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is) {
             bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 6 : 7)] ^= x;
         }
     }
-
+    free(buf);
     return bwt;
 
-}
-
-// This function simply translate any string sequence into the new index. It was more useful using the development of
-// the new biscuit index.
-uint64_t* newIndex(uint64_t s, int length) {
-    uint64_t *s_ = (uint64_t*)calloc(2, 8);
-    s_[0] = ULLONG_MAX;
-    s_[1] = ULLONG_MAX;
-    uint64_t j = 1UL;
-    for (int i = 0; i < length / 2; i++) {
-        if (s >> 2 * i + 1 & 1L)
-            s_[0] ^= j << (63 - length/2 + 1 + i);
-        if (!(s >> 2 * i & 1L))
-            s_[1] ^= j << (63 - length/2 + 1 + i);
-    }
-    return s_;
 }
 
 int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt generated at this step CANNOT be used with BWA. bwtupdate is required!
@@ -169,7 +153,7 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 // The output after each 128 block is simply used for developmental purposes and debugging of the counts.
 void bwt_bwtupdate_core(bwt_t *bwt, int index)
 {
-    bwtint_t i;
+    int i;
     int n = bwt->seq_len / 128 + 1; //1400 --> 700
     int k = 8;
     for (i = 0; i < n - 1; i++) {
@@ -326,12 +310,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         if (algo_type == 2) bwt_bwtgen(str, str2);
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
-            //generate bwt
-            bwt = bwt_pac2bwt(str, algo_type == 3);
-
-            //generates new occurrences array
-            bwt_bwtupdate_core(bwt, 0);
-
+            bwt = bwt_pac2bwt(str, algo_type == 3);     //generate bwt
+            bwt_bwtupdate_core(bwt, 0);                 //generates new occurrences array
             bwt_dump_bwt(str2, bwt);
             bwt_destroy(bwt);
         }
@@ -346,12 +326,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
             bwt = bwt_pac2bwt(str, algo_type == 3);
-
-            //generate bwt
             bwt = bwt_pac2bwt(str, algo_type == 3);
-            //generates new occurrences array
             bwt_bwtupdate_core(bwt, 1);
-
             bwt_dump_bwt(str2, bwt);
             bwt_destroy(bwt);
     }
@@ -371,9 +347,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         bwt_t *bwt;
         strcpy(str, prefix); strcat(str, ".dau.bwt");
         t = clock();
-
         fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
-
         bwt = bwt_restore_bwt(str);
         bwt_dump_bwt(str, bwt);
         bwt_destroy(bwt);

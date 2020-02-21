@@ -56,6 +56,7 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
         case 3:
             return __builtin_popcountll(~top & bottom); //T
     }
+    return 0;
 }
 // This is the bwt_occ equivalent for gathering counts when a position isn't divisible by 128.
 
@@ -66,18 +67,18 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
     bwtint_t count = 0;
 
     if ((k + 1) / 128)
-        count = bwt->bwt_new[((k + 1)/128 - 1) * 8 + c];
+        count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
 
     if (k == bwt->seq_len && c == 2 && count == 0)
         return 0;
 
     if ((k + 1) % 128 == 0) return count;
 
-    if (k % 128 < 64) {
+    if ((k + 1) % 128 < 64) {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, (k % 128) + 1);
     } else {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64);
-        if ((k + 1)% 64 == 0) return count;
+        if ((k + 1) % 64 == 0) return count;
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 5], bwt->bwt_new[k/128 * 8 + 7], c, (k % 64) + 1);
     }
     return count;
@@ -98,7 +99,7 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
     return p; //return C
 }
 // This is for self implemented extend function, which was used mostly during development.
-
+/*
 int nucAtSubinv(bwtint_t *sub, bwtint_t k) {
     bwtint_t p = (sub[0] >> (63 - k % 64) & 1) | (sub[1] >> (63 - k % 64) & 1);
     if (p == 0)
@@ -109,7 +110,7 @@ int nucAtSubinv(bwtint_t *sub, bwtint_t k) {
         p = 0;
     return p;
 }
-
+*/
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
     bwtint_t x = k - (k > bwt->primary);
@@ -299,84 +300,6 @@ int bwt_match_exact_alt(const bwt_t *bwt, int len, const ubyte_t *str, bwtint_t 
  * Bidirectional BWT *
  *********************/
 
-// we need to fix this code; make it smaller
-// this copy of bwt_extend works with bwt_smem1a
-void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, uint8_t *q, int len) //add argument for the sequence
-{
-    //replace with L2 sizes
-    bwtint_t total_C = 0;
-    bwtint_t total_A = bwt_occ_new_index(bwt, bwt->seq_len, 0);
-    bwtint_t total_G = bwt_occ_new_index(bwt, bwt->seq_len, 2);
-    if (!total_G)
-        total_C = bwt_occ_new_index(bwt, bwt->seq_len, 1);
-    bwtint_t total_T = bwt_occ_new_index(bwt, bwt->seq_len, 3);
-
-    fprintf(stderr, "\nA: %llu G: %llu T: %llu C: %llu\n", total_A, total_G, total_T, total_C);
-
-    //int c = nucAtSubinv(q, len - 1);
-    int j = 1;
-    if (!is_back) {
-        //len = len * 2;
-    }
-    int c = q[len - 1];
-
-    fprintf(stderr,"[%s] L2[0]: %llu L2[1]: %llu L2[2]: %llu L2[3]: %llu L2[4]: %llu\n", __func__,
-            bwt->L2[0], bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
-
-    bwt_set_intv(bwt, bwt, c, *ik);
-
-    uint64_t k = ik->x[!is_back] - 1;
-    uint64_t l = ik->x[!is_back] + ik->x[2] - 1;
-
-    fprintf(stderr, "primary: %llu\n", bwt->primary);
-    fprintf(stderr, "c: %d\n", c);
-    j = j + 1;
-    for (; j < len + 1; j++) {
-        fprintf(stderr, "k: %llu l: %llu\n\n", k, l);
-        //positions
-        //c = nucAtSubinv(q, len - j - 1);
-        c = q[len - j];
-
-        //at this point k is ranked, starting at 1
-        //we need to change this
-        //passed in as positions
-        switch (c) {
-            case 0:
-                k = bwt_occ_new_index(bwt, k, c);
-                l = bwt_occ_new_index(bwt, l, c);
-                break;
-            case 1: //C
-                k = total_A + bwt_occ_new_index(bwt, k, c);
-                l = total_A + bwt_occ_new_index(bwt, l, c);
-                break;
-            case 2: //G
-                k = total_A + bwt_occ_new_index(bwt, k, c);
-                l = total_A + bwt_occ_new_index(bwt, l, c);
-                break;
-            case 3:
-                if (total_G) {
-                    k = total_A + total_G + bwt_occ_new_index(bwt, k, c);
-                    l = total_A + total_G + bwt_occ_new_index(bwt, l, c);
-
-                } else {
-                    int i = k;
-                    k = total_A + total_C + bwt_occ_new_index(bwt, k, c);
-                    l = total_A + total_C + bwt_occ_new_index(bwt, l, c);
-
-                }
-        }
-        fprintf(stderr, "c: %d\n", c);
-    }
-    uint64_t n_occ = (int) (l - k);
-    fprintf(stderr, "k: %llu l: %llu\n", k, l);
-    //should this be 1 or 0?
-    for (int i = 0; i < (int) n_occ; i++) {
-        // this does what the while loop does
-        fprintf(stderr, "i: %d Look after this! ------\n%llu\n", i, bwt_sa(bwt, k + i));
-    }
-
-}
-
 static void bwt_reverse_intvs(bwtintv_v *p) {
     if (p->n > 1) {
         int j;
@@ -445,21 +368,22 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, u
     return 0;
 }
 */
+/*
 void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bwtint_t *cntl, int c) {
     k -= (k >= bwt->primary);
     bwtint_t count = 0;
     for (int i = 0; i < 4; i++) {
         c = i;
         count = 0;
-        if (k / 128)
-            count = bwt->bwt_new[((k) / 128 - 1) * 8 + c];
-        if (~(k % 128 == 0)) {
+        if ((k + 1) / 128)
+            count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
+        if (~((k + 1) % 128 == 0)) {
             if (k % 128 < 64) {
                 count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c,
                                             (k % 128) + 1);
             } else {
                 count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c, 64);
-                if (~(k % 64 == 0)) {
+                if (~((k + 1) % 64 == 0)) {
                     count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 5], bwt->bwt_new[k / 128 * 8 + 7], c,
                                                 (k % 64) + 1);
                 }
@@ -473,16 +397,16 @@ void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bw
     for (int i = 0; i < 4; i++) {
         c = i;
         count = 0;
-        if (k / 128)
-            count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
+        if ((k + 1) / 128)
+            count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
 
-        if (~(k % 128 == 0)) {
-            if (k % 128 < 64) {
+        if (~((k + 1) % 128 == 0)) {
+            if ((k + 1) % 128 < 64) {
                 count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c,
                                             (k % 128) + 1);
             } else {
                 count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c, 64);
-                if (~(k % 64 == 0)) {
+                if (~((k + 1) % 64 == 0)) {
                     count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 5], bwt->bwt_new[k / 128 * 8 + 7], c,
                                                 (k % 64) + 1);
                 }
@@ -491,25 +415,31 @@ void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bw
         cntl[i] = count;
     }
 }
+*/
 
-void bwt_extend_new(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
+void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
     bwtint_t tk[4], tl[4];
-    bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
-    for (int i = 0; i != 4; ++i) {
+    //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
+    for (int i = c; i != 4; i++) {
+        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
+        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
         ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
         ok[i].x[2] = tl[i] - tk[i];
     }
+
     // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
     ok[3].x[is_back] = ik->x[is_back] + (
             ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-    ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
-    ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
-    ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
+    for (int i = 3; i > c; --i) {
+        ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
+    }
 
+    //ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
+    //ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
+    //ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
 }
 
-
-int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
+int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
 
     int i, j, c, ret;
     bwtintv_t ik, ok[4];
@@ -523,8 +453,6 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
     prev = tmpvec && tmpvec[0]? tmpvec[0] : &a[0]; // use the temporary vector if provided
     curr = tmpvec && tmpvec[1]? tmpvec[1] : &a[1];
     bwt_set_intv(bwt, bwtc, q[x], ik); // the initial interval of a single base
-    uint64_t k = ik.x[0] - 1;
-    uint64_t l = ik.x[0] + ik.x[2] - 1;
     ik.info = x + 1;
 
     for (i = x + 1, curr->n = 0; i < len; ++i) { // forward search
@@ -533,7 +461,7 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
             break;
         } else if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i];
-            bwt_extend_new(bwtc, &ik, ok, 0, c);
+            bwt_extend(bwtc, &ik, ok, 0, c);
             if (ok[c].x[2] != ik.x[2]) { // change of the interval size
                 kv_push(bwtintv_t, *curr, ik);
                 if (ok[c].x[2] < (unsigned) min_intv) { // no more matches
@@ -561,7 +489,7 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
             bwtintv_t *p = &prev->a[j];
 
             if (c >= 0 && ik.x[2] >= max_intv)
-                bwt_extend_new(bwt, p, ok, 1, c); // is_back == true
+                bwt_extend(bwt, p, ok, 1, c); // is_back == true
 
             if (c < 0 || ik.x[2] < (unsigned) max_intv || ok[c].x[2] < (unsigned) min_intv) { // keep the hit if reaching the beginning or an ambiguous base or the intv is small enough
                 if (curr->n == 0) { // test curr->n>0 to make sure there are no longer matches
@@ -587,7 +515,7 @@ int bwt_smem1a_new (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t 
 // this copy of bwt_extend works with bwt_smem1a
 // Called from memchain.c
 int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
-    return bwt_smem1a_new(bwt, bwtc, len, q, x, min_intv, 0, mem, tmpvec);
+    return bwt_smem1a(bwt, bwtc, len, q, x, min_intv, 0, mem, tmpvec);
 }
 
 int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem) {
@@ -600,7 +528,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_new(bwtc, &ik, ok, 0, c);
+            bwt_extend(bwtc, &ik, ok, 0, c);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
@@ -622,7 +550,7 @@ void bwt_dump_bwt(const char *fn, const bwt_t *bwt) {
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     //second argument is the number of bytes; third argument is the number of elements
-    err_fwrite(bwt->bwt_new, 8, bwt->seq_len/8, fp);
+    err_fwrite(bwt->bwt_new, 8, bwt->bwt_size, fp);
     err_fflush(fp);
     err_fclose(fp);
 }
@@ -685,7 +613,7 @@ bwt_t *bwt_restore_bwt(const char *fn) {
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
-    fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new);
+    fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new); //change bwt->bwt_size<<2 with seq_len/8
     bwt->seq_len = bwt->L2[4];
     err_fclose(fp);
 

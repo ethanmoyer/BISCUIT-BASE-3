@@ -155,14 +155,14 @@ extern "C" {
 	/**
 	 * Extend bi-SA-interval _ik_
 	 */
-	void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[4], int is_back, uint8_t *sub, int size);
+	void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c);
 
 	/**
 	 * Given a query _q_, collect potential SMEMs covering position _x_ and store them in _mem_.
 	 * Return the end of the longest exact match starting from _x_.
 	 */
 	int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
-	int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
+	int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
 
 	int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem);
 
