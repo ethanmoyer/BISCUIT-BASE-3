@@ -67,7 +67,6 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
 
        // returns end of seed on read
       x = bwt_smem1(bwt, bwtc, len, seq, x, start_width, _mem, tmpv);
-      fprintf(stderr, "[%s] => x: %llu\n", __func__, x);
 
       for (i = 0; i < _mem->n; ++i)
         if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
@@ -121,7 +120,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
 /* filtering seed if it violates asymmetric scoring */
 /* static int asymmetric_flt_seed( */
 /*    mem_seed_t *s, const uint8_t *pac, const bntseq_t *bns, bseq1_t *bseq) { */
-   
+
 /*    int is_rev; */
 /*    bwtint_t pos = bns_depos(bns, s->rbeg, &is_rev); */
 /*    if (is_rev) pos -= s->len - 1; */
@@ -145,7 +144,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
 // filter seed with T(ref)>C(read) or A(ref)>G(read)
 static int asymmetric_flt_seed(
    const uint8_t *rseq, const uint8_t *query, const mem_seed_t *s, int64_t rbeg) {
-   
+
    int i;
    const uint8_t *r;
    for (i=0, r=rseq + s->rbeg - rbeg; i<s->len; ++i, ++r) {
@@ -155,7 +154,7 @@ static int asymmetric_flt_seed(
    }
    return 0;
 }
-   
+
 
 /***************
  * mem_chain_t *
@@ -328,15 +327,15 @@ mem_chain_v mem_chain(
        * visit every position in the interval
        * otherwise, look at max_occ positions at most (sampling is arbitrary).
        * This is to avoid highly repetitive regions. High max_occ increase sensitivity. */
-      
+
       // int step = intv->x[2] > opt->max_occ? intv->x[2] / opt->max_occ : 1;
       // for (k = count = 0; k < intv->x[2] && count < opt->max_occ; k += step, ++count) {
-      
+
       // when there are few hits, keep visiting to the end
       // when there are enough hits, then cap number of visits at opt->max_occ
       for (k = count = 0; k < intv->x[2] && count < opt->max_occ &&
               ((count > 5 && k < opt->max_occ) || count <= 5); ++k) {
-         
+
          mem_chain_t tmp;    // the chain that hold the key for query
          mem_chain_t *lower; // lower bound interval in B-tree
          mem_chain_t *upper; // upper bound interval in B-tree
@@ -360,10 +359,10 @@ mem_chain_v mem_chain(
              mem_getbss(parent, bns, s.rbeg) != opt->bsstrand>>1) continue;
 
          /* filter seeds that do not conform to the assymetric scoring matrix
-          * This turns out to be a very time-consuming step. 
+          * This turns out to be a very time-consuming step.
           * I am going to filter the chain instead of filtering seeds */
          /* if (asymmetric_flt_seed(&s, pac, bns, bseq)) continue; */
-         
+
          int to_add = 0;
          if (kb_size(tree)) {
             kb_intervalp(chn, tree, &tmp, &lower, &upper); // find the closest chain
@@ -398,9 +397,9 @@ mem_chain_v mem_chain(
       printf("[%s] Found %zu chains; Fraction of repetitive seeds: %.3f\n", __func__, chains.n, (float)l_rep / bseq->l_seq);
       mem_print_chains(bns, &chains);
    }
-   
+
    kb_destroy(chn, tree);
-   
+
    return chains;
 }
 
@@ -418,7 +417,7 @@ KSORT_INIT(mem_flt, mem_chain_t, flt_lt) /* sort by chain weight */
 void mem_chain_flt(const mem_opt_t *opt, mem_chain_v *chns) {
 
   if (chns->n == 0) return; // no need to filter
-  
+
   uint32_t i, k;
   kvec_t(int) to_keep = {0,0,0}; // this keeps int indices of the non-overlapping chains
 
@@ -530,16 +529,16 @@ static int mem_seed_sw(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t 
     if (mid < l_pac) re = l_pac;
     else rb = l_pac;
   }
-  
+
   // the seed seems good enough; no need to do SW
   // also protect against fetching too long reference sequence
-  if (qe - qb >= MEM_SHORT_LEN || re - rb >= MEM_SHORT_LEN) return -1; 
+  if (qe - qb >= MEM_SHORT_LEN || re - rb >= MEM_SHORT_LEN) return -1;
 
   rseq = bns_fetch_seq(bns, pac, &rb, mid, &re, &rid);
   // the asymmetric Smith-Waterman
   x = ksw_align2(
-      qe - qb, (uint8_t*) query + qb, 
-      re - rb, rseq, 
+      qe - qb, (uint8_t*) query + qb,
+      re - rb, rseq,
       5, parent?opt->ctmat:opt->gamat, opt->o_del, opt->e_del, opt->o_ins, opt->e_ins, KSW_XSTART, 0);
   free(rseq);
 
@@ -551,12 +550,12 @@ static int mem_seed_sw(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t 
 void mem_flt_chained_seeds(
    const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac,
    const bseq1_t *s, mem_chain_v *chns, uint8_t parent) {
-  
+
    int l_query = s->l_seq; uint8_t *query = s->seq;
    double min_l = opt->min_chain_weight ? MEM_HSP_COEF * opt->min_chain_weight : MEM_MINSC_COEF * log(l_query);
    if (min_l > MEM_SEEDSW_COEF * l_query)
       goto END_CHAIN_FLT; // don't run the following for short reads
-  
+
    int min_HSP_score = (int)(opt->a * min_l + .499);
    unsigned u, j, k;
    for (u = 0; u < chns->n; ++u) {
@@ -656,7 +655,7 @@ static void left_extend_seed_set_align_beg(
 
     if (bwa_verbose >= 4) {
       int j;
-      printf("*** [%s] Left ref:   ", __func__); 
+      printf("*** [%s] Left ref:   ", __func__);
       for (j = 0; j < tmp; ++j) putchar("ACGTN"[(int)rs[j]]); putchar('\n');
       printf("*** [%s] Left query: ", __func__);
       for (j = 0; j < s->qbeg; ++j) putchar("ACGTN"[(int)qs[j]]); putchar('\n');
@@ -743,7 +742,7 @@ static void right_extend_seed_set_align_end(
 
 
 /* build mem_alnreg_v (arv) from mem_chain_t (c)
- * mem_alnreg_t is constructed through banded SW and seed extension 
+ * mem_alnreg_t is constructed through banded SW and seed extension
  *
  * @param c mem_chain_t
  * @param opt parameter
@@ -769,7 +768,7 @@ void mem_chain2region1(
       const mem_seed_t *s = seeds->a + (uint32_t)srt[k];
 
       if (asymmetric_flt_seed(rseq, query, s, rmax[0])) continue;
-      
+
       // test whether extension has been made before
       for (u = reg0; u < regs->n; ++u) {
          mem_alnreg_t *reg = regs->a+u;
@@ -792,7 +791,7 @@ void mem_chain2region1(
          max_gap = cal_max_gap(opt, min(qd, rd)); // the maximal gap allowed in regions ahead of the seed
          w = min(max_gap, reg->w);
          if (qd - rd < w && rd - qd < w) break;
-      
+
          // similar to the previous four lines, but this time we look at the region behind
          qd = reg->qe - (s->qbeg + s->len);
          rd = reg->re - (s->rbeg + s->len);
@@ -801,7 +800,7 @@ void mem_chain2region1(
          if (qd - rd < w && rd - qd < w) break;
       }
 
-      // the seed is (almost) contained in an existing alignment; 
+      // the seed is (almost) contained in an existing alignment;
       // further testing is needed to confirm it is not leading to a different aln
       if (u < regs->n) {
 
@@ -820,7 +819,7 @@ void mem_chain2region1(
             if (s->qbeg <= t->qbeg &&
                 s->qbeg + s->len - t->qbeg >= s->len>>2 &&
                 t->qbeg - s->qbeg != t->rbeg - s->rbeg) break;
-            
+
             if (t->qbeg <= s->qbeg &&
                 t->qbeg + t->len - s->qbeg >= s->len>>2 &&
                 s->qbeg - t->qbeg != s->rbeg - t->rbeg) break;
@@ -866,7 +865,7 @@ void mem_chain2region1(
             "*** [%s] Added alignment region: [%d,%d) <=> [%ld,%ld); score=%d; {left,right}_bandwidth={%d,%d}\n",
             __func__, reg->qb, reg->qe, (long) reg->rb, (long)reg->re,
             reg->score, aw[0], aw[1]);
- 
+
       /* compute seedcov */
       for (i = 0, reg->seedcov = 0; i < seeds->n; ++i) {
          const mem_seed_t *t = seeds->a + i;
@@ -903,7 +902,7 @@ void mem_chain2region(
       mem_chain_reference_span(opt, bseq->l_seq, bns->l_pac, c, rmax);
       uint8_t *rseq = bns_fetch_seq(bns, pac, &rmax[0], c->seeds.a[0].rbeg, &rmax[1], &rid);
       // assert(c->rid == rid);
-      
+
       /* convert chain to region */
       uint32_t n0 = regs->n;
       mem_chain2region1(opt, bns, rseq, rmax, rid, bseq->l_seq, bseq->seq, &c->seeds, regs, parent, reg0, c->frac_rep);

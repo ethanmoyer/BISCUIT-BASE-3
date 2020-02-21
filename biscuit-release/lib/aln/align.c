@@ -39,7 +39,6 @@ typedef struct {
 } ktp_data_t;
 
 static void *process(void *shared, int step, void *_data) {
-    fprintf(stderr, "step: %d\n", step);
     ktp_aux_t *aux = (ktp_aux_t*)shared;
     ktp_data_t *data = (ktp_data_t*)_data;
     int i;

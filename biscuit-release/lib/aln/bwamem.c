@@ -156,8 +156,6 @@ static void mem_align1_core(
    const uint8_t *pac, bseq1_t *bseq, void *buf, mem_alnreg_v *regs,
    uint8_t parent) {
 
-     fprintf(stderr, "bwa_verbose: %llu\n", bwa_verbose);
-
    if (bwa_verbose >= 4) 
       printf("[%s] === Seeding %s against (parent: %u)\n", __func__, bseq->name, parent);
 
@@ -302,8 +300,7 @@ static void bis_worker1(void *data, int i, int tid) {
       regs = &w->regs[i]; kv_init(*regs); regs->n_pri = 0;
       if (!(opt->parent&1) || // no restriction
           opt->parent>>1)     // to daughter
-          fprintf(stderr, "mem_align1_core\n");
-      //this controls G->A or C->T encoding, both need to perform a backward and forward search
+
          mem_align1_core(opt, w->bwt, w->bns, w->pac, &w->seqs[i],
                          w->intv_cache[tid], regs, 0);
 
@@ -430,7 +427,7 @@ void mem_process_seqs(
    w.opt = opt; w.bwt = bwt; w.bns = bns; w.pac = pac;
    w.seqs = seqs; w.n_processed = n_processed;
    /* w.pes = pes; // isn't this shared across all threads? */
-    // I think we want to be here
+
    /***** step 1: Generate mapping position *****/
    w.intv_cache = malloc(opt->n_threads * sizeof(bwtintv_cache_t));
    for (i = 0; i < opt->n_threads; ++i)

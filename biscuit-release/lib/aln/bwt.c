@@ -58,6 +58,7 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
     }
 }
 // This is the bwt_occ equivalent for gathering counts when a position isn't divisible by 128.
+
 bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
     k -= (k >= bwt->primary);
@@ -388,6 +389,7 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 }
 
 // NOTE: $max_intv is not currently used in BWA-MEM
+/*
 int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
     fprintf(stderr, "[%s] bwt_smem1a\n", __func__);
     int i, j, c, ret;
@@ -418,8 +420,9 @@ int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv
 
     }
     fprintf(stderr, "[%s] len: %d\n", __func__, len);
-
-//void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, uint8_t *q, int len)
+*/
+/*
+void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, uint8_t *q, int len)
 
     fprintf(stderr, "[%s] Forward:\n", __func__);
 
@@ -441,7 +444,7 @@ int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv
     exit(0);
     return 0;
 }
-
+*/
 void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bwtint_t *cntl, int c) {
     k -= (k >= bwt->primary);
     bwtint_t count = 0;
@@ -496,6 +499,7 @@ void bwt_extend_new(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back,
         ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
         ok[i].x[2] = tl[i] - tk[i];
     }
+    // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
     ok[3].x[is_back] = ik->x[is_back] + (
             ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
     ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
