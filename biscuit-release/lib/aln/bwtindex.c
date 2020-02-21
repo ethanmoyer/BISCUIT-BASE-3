@@ -102,7 +102,7 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is) {
 
     // intialize space of vector
     // how much space will we need??
-    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/16, 8);
+    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/8, 8);
 
 	// In the eight block structure of bwt->bwt_new, the lagging four are responsible for storing two bwt0 and two bwt1.
 	// [occ 256 bits][bwt0 128 bits][bwt1 128 bits]

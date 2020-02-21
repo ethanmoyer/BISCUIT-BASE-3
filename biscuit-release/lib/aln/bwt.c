@@ -622,7 +622,7 @@ void bwt_dump_bwt(const char *fn, const bwt_t *bwt) {
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     //second argument is the number of bytes; third argument is the number of elements
-    err_fwrite(bwt->bwt_new, 8, bwt->bwt_size * 4, fp);
+    err_fwrite(bwt->bwt_new, 8, bwt->seq_len/8, fp);
     err_fflush(fp);
     err_fclose(fp);
 }
