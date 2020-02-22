@@ -179,6 +179,7 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index)
                                            bwt->bwt_new[i * k + 6])) +
                     __builtin_popcountll(~(bwt->bwt_new[i * k + 5] ^
                                            bwt->bwt_new[i * k + 7]));
+            bwt->bwt_new[i * k + 1] = 0;
         } else {
             //C
             bwt->bwt_new[i * k + 1] =
@@ -186,6 +187,7 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index)
                                          bwt->bwt_new[i * k + 6]) +
                     __builtin_popcountll(bwt->bwt_new[i * k + 5] &
                                          bwt->bwt_new[i * k + 7]);
+            bwt->bwt_new[i * k + 2] = 0;
         }
 
         if (i != 0) {

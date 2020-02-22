@@ -87,9 +87,10 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 
 // Retrieves the base at a specific position with the least amount of operations as possible (or the least
 // to my knowledge). There may be room for improvement.
+// Seg fault is here
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    bwtint_t top = (bwt->bwt_new[k/128 * 8 + (k % 128 < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
-    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + (k % 128 < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
+    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
+    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
