@@ -70,7 +70,7 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
     if ((k + 1) / 128)
         count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
 
-    if (k == bwt->seq_len && c == 2 && count == 0)
+    if ((k + 1) == bwt->seq_len && c == 2 && count == 0)
         return 0;
 
     if ((k + 1) % 128 == 0) return count;
