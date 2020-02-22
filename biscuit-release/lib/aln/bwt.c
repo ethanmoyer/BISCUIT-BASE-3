@@ -40,7 +40,8 @@
 #  include "malloc_wrap.h"
 #endif
 
-// This function is called to get the counts for the first k nucleotides. Here k is accepted as ...
+// This function is called to get the counts for the first k nucleotides. Here k is accepted as positioning starting at
+// 1.
 bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
     uint64_t partial_G = 0;
     uint64_t top = seq0 >> (64 - k);
@@ -75,7 +76,7 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
     if ((k + 1) % 128 == 0) return count;
 
     if ((k + 1) % 128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, (k % 128) + 1);
+        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, ((k + 1) % 128));
     } else {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64);
         if ((k + 1) % 64 == 0) return count;
@@ -87,8 +88,8 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 // Retrieves the base at a specific position with the least amount of operations as possible (or the least
 // to my knowledge). There may be room for improvement.
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    ubyte_t top = (bwt->bwt_new[k/128 * 8 + (k % 128 < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
-    ubyte_t bottom = (bwt->bwt_new[k/128 * 8 + (k % 128 < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
+    bwtint_t top = (bwt->bwt_new[k/128 * 8 + (k % 128 < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
+    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + (k % 128 < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
@@ -125,7 +126,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
     kv_roundup32(intv_round);
     xassert(intv_round == intv, "SA sample interval is not a power of 2.");
     xassert(bwt->bwt_new, "bwt_t::bwt is not initialized.");
-
+    //fprintf(stderr, "Check 1\n");
     if (bwt->sa) free(bwt->sa);
     bwt->sa_intv = intv;
     bwt->n_sa = (bwt->seq_len + intv) / intv;
@@ -139,7 +140,6 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
         --sa;
         isa = bwt_invPsi(bwt, isa);
     }
-
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     //bwt->sa[0] = 0; //might change back later
     //bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len

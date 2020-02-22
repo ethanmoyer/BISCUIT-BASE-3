@@ -102,7 +102,8 @@ static void *process(void *shared, int step, void *_data) {
         } else {
             mem_process_seqs(opt, idx->bwt, idx->bns, idx->pac, aux->n_processed, data->n_seqs, data->seqs, aux->pes0);
         }
-
+        free(idx->bwt[0].bwt_new);
+        free(idx->bwt[1].bwt_new);
         aux->n_processed += data->n_seqs;
         return data;
     } else if (step == 2) {
