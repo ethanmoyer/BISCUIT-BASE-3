@@ -640,5 +640,6 @@ void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
 void bwt_destroy(bwt_t *bwt) {
     if (bwt == 0) return;
     free(bwt->sa); free(bwt->bwt);
+    free(bwt->bwt_new);
     free(bwt);
 }

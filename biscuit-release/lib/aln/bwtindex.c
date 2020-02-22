@@ -209,7 +209,9 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index)
 }
 
 // There's going to be a problem here if bwtupdate is run because bwt_bwtupdate_core needs to be run twice in order to
-// have both G>A and
+// have both G>A and C>T
+// Asking wanding about how he wants to handle this functions and functions alike. We only store enough data for one of
+// the indexes and not two. How was it handled before.
 int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
 {
     bwt_t *bwt;
@@ -218,7 +220,7 @@ int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
         return 1;
     }
     bwt = bwt_restore_bwt(argv[1]);
-    //bwt_bwtupdate_core(bwt);
+    bwt_bwtupdate_core(bwt, 0);
     bwt_dump_bwt(argv[1], bwt);
     bwt_destroy(bwt);
     return 0;
@@ -325,7 +327,6 @@ int main_biscuit_index(int argc, char *argv[]) {
         if (algo_type == 2) bwt_bwtgen(str, str2);
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
-            bwt = bwt_pac2bwt(str, algo_type == 3);
             bwt = bwt_pac2bwt(str, algo_type == 3);
             bwt_bwtupdate_core(bwt, 1);
             bwt_dump_bwt(str2, bwt);
