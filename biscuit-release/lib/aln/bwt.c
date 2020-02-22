@@ -420,19 +420,22 @@ void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bw
 void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
     bwtint_t tk[4], tl[4];
     //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
-    for (int i = c; i != 4; i++) {
+    for (int i = 3; i != c - 1; i--) {
         tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
         tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
         ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
         ok[i].x[2] = tl[i] - tk[i];
-    }
-
-    // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
-    ok[3].x[is_back] = ik->x[is_back] + (
-            ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-    for (int i = 3; i > c; --i) {
+        if (i == 3)
+            ok[3].x[is_back] = ik->x[is_back] + (
+                    ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
         ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
     }
+    // Implemented it all in one for loop... will need to test.
+    // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
+    //ok[3].x[is_back] = ik->x[is_back] + (
+    //      ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
+    //for (int i = 3; i > c; --i) {
+    //}
 
     //ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
     //ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];

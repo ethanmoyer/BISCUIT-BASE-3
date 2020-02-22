@@ -106,8 +106,6 @@ void bseq_classify(int n, bseq1_t *seqs, int m[2], bseq1_t *sep[2])
   sep[0] = a[0].a, m[0] = a[0].n;
   sep[1] = a[1].a, m[1] = a[1].n;
 
-  fprintf(stderr, "bwa_verbose %llu\n", bwa_verbose);
-  exit(0);
   if (bwa_verbose >= 3)
     fprintf(stderr, "[%s] %d SE sequences; %d PE sequences\n", __func__, m[0], m[1]);
 }
@@ -505,7 +503,6 @@ bwaidx_t *bwa_idx_load_from_disk(const char *hint, int which) {
     bwa_idx_load_bwt(hint, 1, idx->bwt+1); /* parent strand */
     bwa_idx_load_bwt(hint, 0, idx->bwt);   /* daughter strand */
   }
-    int n = idx->bwt[1].seq_len/128 * 2 + 1;
 
     if (which & BWA_IDX_BNS) {
     int i, c;
@@ -585,7 +582,7 @@ int bwa_idx2mem(bwaidx_t *idx) {
   /* TODO: not quite sure how this should adapt for biscuit */
   // copy idx->bwt
   x = idx->bwt->bwt_size * 4;
-  mem = realloc(idx->bwt->bwt, sizeof(bwt_t) + x); idx->bwt->bwt = 0;
+  mem = realloc(idx->bwt->bwt_new, sizeof(bwt_t) + x); idx->bwt->bwt_new = 0;
   memmove(mem + sizeof(bwt_t), mem, x);
   memcpy(mem, idx->bwt, sizeof(bwt_t)); k = sizeof(bwt_t) + x;
   x = idx->bwt->n_sa * sizeof(bwtint_t); mem = realloc(mem, k + x); memcpy(mem + k, idx->bwt->sa, x); k += x;
