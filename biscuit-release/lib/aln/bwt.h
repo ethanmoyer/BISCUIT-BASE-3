@@ -125,10 +125,11 @@ typedef struct {
 extern "C" {
 #endif
 
-	void bwt_dump_bwt(const char *fn, const bwt_t *bwt);
+	void bwt_dump_bwt(const char *fn, const bwt_t *bwt, ubyte_t I);
 	void bwt_dump_sa(const char *fn, const bwt_t *bwt);
 
 	bwt_t *bwt_restore_bwt(const char *fn);
+    bwt_t *bwt_restore_bwt_new(const char *fn);
   void bwt_restore_bwt2(const char *fn, bwt_t *bwt);
 	void bwt_restore_sa(const char *fn, bwt_t *bwt);
 

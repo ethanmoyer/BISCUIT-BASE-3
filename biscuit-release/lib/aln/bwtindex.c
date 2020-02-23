@@ -61,66 +61,50 @@ int64_t bwa_seq_len(const char *fn_pac)
 	return (pac_len - 1) * 4 + (int)c;
 }
 
-bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is) {
-	bwt_t *bwt;
-	ubyte_t *buf, *buf2;
-	uint32_t i, pac_size;         /* WZ from int */
-	FILE *fp;
+bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
+{
+    bwt_t *bwt;
+    ubyte_t *buf, *buf2;
+    uint32_t i, pac_size;         /* WZ from int */
+    FILE *fp;
 
-	// initialization
-	bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
-	bwt->seq_len = bwa_seq_len(fn_pac);
-	bwt->bwt_size = (bwt->seq_len + 15) >> 4;
-	fp = xopen(fn_pac, "rb");
+    // initialization
+    bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
+    bwt->seq_len = bwa_seq_len(fn_pac);
+    bwt->bwt_size = (bwt->seq_len + 15) >> 4;
+    fp = xopen(fn_pac, "rb");
 
-	// prepare sequence
-	pac_size = (bwt->seq_len>>2) + ((bwt->seq_len&3) == 0? 0 : 1);
-	buf2 = (ubyte_t*)calloc(pac_size, 1);
-	err_fread_noeof(buf2, 1, pac_size, fp);
-	err_fclose(fp);
-	memset(bwt->L2, 0, 5 * 4);
-	buf = (ubyte_t*)calloc((bwt->seq_len + 1), 1);
-
-	for (i = 0; i < bwt->seq_len; ++i) {
-		buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
-		++bwt->L2[1+buf[i]];
-	}
-	for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
+    // prepare sequence
+    pac_size = (bwt->seq_len>>2) + ((bwt->seq_len&3) == 0? 0 : 1);
+    buf2 = (ubyte_t*)calloc(pac_size, 1);
+    err_fread_noeof(buf2, 1, pac_size, fp);
+    err_fclose(fp);
+    memset(bwt->L2, 0, 5 * 4);
+    buf = (ubyte_t*)calloc(bwt->seq_len + 1, 1);
+    for (i = 0; i < bwt->seq_len; ++i) {
+        buf[i] = buf2[i>>2] >> ((3 - (i&3)) << 1) & 3;
+        ++bwt->L2[1+buf[i]];
+    }
+    for (i = 2; i <= 4; ++i) bwt->L2[i] += bwt->L2[i-1];
     free(buf2);
 
-	// Burrows-Wheeler Transform
-	if (use_is) {
-		bwt->primary = is_bwt(buf, bwt->seq_len);
-
-	} else {
+    // Burrows-Wheeler Transform
+    if (use_is) {
+        bwt->primary = is_bwt(buf, bwt->seq_len);
+    } else {
 #ifdef _DIVBWT
-		bwt->primary = divbwt(buf, buf, 0, bwt->seq_len);
+        bwt->primary = divbwt(buf, buf, 0, bwt->seq_len);
 #else
-		err_fatal_simple("libdivsufsort is not compiled in.");
+        err_fatal_simple("libdivsufsort is not compiled in.");
 #endif
-	}
-
-    // intialize space of vector
-    // how much space will we need??
-    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2, 8);
-
-	// In the eight block structure of bwt->bwt_new, the lagging four are responsible for storing two bwt0 and two bwt1.
-	// [occ 256 bits][bwt0 128 bits][bwt1 128 bits]
-	// This structure orders the bwt0 and bwt1 sequentially.
-    uint64_t j = 1UL;
-    uint64_t x = 0;
-    for (i = 0; i < bwt->seq_len; ++i) {
-        x = j << (63 - (i % 64));
-        if (!(buf[i] > 1)) {
-            bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 4 : 5)] ^= x;
-        }
-        if (!(buf[i] % 2 == 0)) {
-            bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 6 : 7)] ^= x;
-        }
     }
-    free(buf);
-    return bwt;
+    bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
+    for (i = 0; i < bwt->seq_len; ++i)
+        bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
 
+    free(buf);
+
+    return bwt;
 }
 
 int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt generated at this step CANNOT be used with BWA. bwtupdate is required!
@@ -138,7 +122,7 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 		return 1;
 	}
 	bwt = bwt_pac2bwt(argv[optind], use_is);
-	bwt_dump_bwt(argv[optind+1], bwt);
+	bwt_dump_bwt(argv[optind+1], bwt, 0);
 	bwt_destroy(bwt);
 	return 0;
 }
@@ -151,12 +135,35 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 // or G's (index = 1) will be ignored. The accessing of the bwt in bwt->bwt_new falls in line with the eight block
 // data structure.
 // The output after each 128 block is simply used for developmental purposes and debugging of the counts.
-void bwt_bwtupdate_core(bwt_t *bwt, int index)
-{
-    bwtint_t i;
+void bwt_bwtupdate_core(bwt_t *bwt, int index) {
+
+    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2, 8);
+
+    uint64_t j = 1UL;
+    uint64_t x = 0;
+    ubyte_t buf = 0;
+    for (bwtint_t i = 0; i < bwt->seq_len; ++i) {
+        buf = 0;
+        buf = (bwt->bwt[i/16] >> (30 - 2 * i % 32)) & 3;
+        x = j << (63 - (i % 64));
+        if (!(buf > 1)) {
+            bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 4 : 5)] ^= x;
+        }
+        if (!(buf % 2 == 0)) {
+            bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 6 : 7)] ^= x;
+        }
+    }
+
+    for (bwtint_t i = 0; i < bwt->seq_len/128 + 1; i++) {
+        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * 8 + 4]);
+        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * 8 + 6]);
+        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * 8 + 5]);
+        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * 8 + 7]);
+    }
+
     bwtint_t n = bwt->seq_len / 128 + 1; //1400 --> 700
     bwtint_t k = 8;
-    for (i = 0; i < n - 1; i++) {
+    for (bwtint_t i = 0; i < n - 1; i++) {
         //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
         //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
         //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
@@ -223,7 +230,7 @@ int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
     }
     bwt = bwt_restore_bwt(argv[1]);
     bwt_bwtupdate_core(bwt, 0);
-    bwt_dump_bwt(argv[1], bwt);
+    bwt_dump_bwt(argv[1], bwt, 0);
     bwt_destroy(bwt);
     return 0;
 }
@@ -306,7 +313,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         err_gzclose(fp);
     }
     // set the algorithm for generating BWT
-    if (algo_type == 0) algo_type = l_pac > 50000000? 2 : 3; {
+    if (algo_type == 0) algo_type = l_pac > 50000000? 2 : 3; // set the algorithm for generating BWT
+    {
         t = clock();
         fprintf(stderr, "[%s] Construct BWT for the parent strands...\n", __func__);
         strcpy(str, prefix); strcat(str, ".par.pac");
@@ -314,10 +322,10 @@ int main_biscuit_index(int argc, char *argv[]) {
         if (algo_type == 2) bwt_bwtgen(str, str2);
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
-            bwt = bwt_pac2bwt(str, algo_type == 3);     //generate bwt
-            bwt_bwtupdate_core(bwt, 0);                 //generates new occurrences array
-            bwt_dump_bwt(str2, bwt);
+            bwt = bwt_pac2bwt(str, algo_type == 3);
+            bwt_dump_bwt(str2, bwt, 1);
             bwt_destroy(bwt);
+
         }
         fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
@@ -330,11 +338,11 @@ int main_biscuit_index(int argc, char *argv[]) {
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
             bwt = bwt_pac2bwt(str, algo_type == 3);
-            bwt_bwtupdate_core(bwt, 1);
-            bwt_dump_bwt(str2, bwt);
+            bwt_dump_bwt(str2, bwt, 1);
+
             bwt_destroy(bwt);
-    }
-    fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
+        }
+        fprintf(stderr, "[%s] %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
     {
         bwt_t *bwt;
@@ -342,7 +350,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         t = clock();
         fprintf(stderr, "[%s] Update parent BWT... \n", __func__);
         bwt = bwt_restore_bwt(str);
-        bwt_dump_bwt(str, bwt);
+        bwt_bwtupdate_core(bwt, 0);
+        bwt_dump_bwt_new(str, bwt, 0);
         bwt_destroy(bwt);
         fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
@@ -352,7 +361,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         t = clock();
         fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
         bwt = bwt_restore_bwt(str);
-        bwt_dump_bwt(str, bwt);
+        bwt_bwtupdate_core(bwt, 1);
+        bwt_dump_bwt_new(str, bwt, 0);
         bwt_destroy(bwt);
         fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
@@ -373,8 +383,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         strcpy(str, prefix); strcat(str, ".par.bwt");
         strcpy(str3, prefix); strcat(str3, ".par.sa");
         t = clock();
-        fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... \n", __func__);
-        bwt = bwt_restore_bwt(str);
+        fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... ", __func__);
+        bwt = bwt_restore_bwt_new(str);
         bwt_cal_sa(bwt, 32);
         bwt_dump_sa(str3, bwt);
         bwt_destroy(bwt);
@@ -385,8 +395,8 @@ int main_biscuit_index(int argc, char *argv[]) {
         strcpy(str, prefix); strcat(str, ".dau.bwt");
         strcpy(str3, prefix); strcat(str3, ".dau.sa");
         t = clock();
-        fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... \n", __func__);
-        bwt = bwt_restore_bwt(str);
+        fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... ", __func__);
+        bwt = bwt_restore_bwt_new(str);
         bwt_cal_sa(bwt, 32);
         bwt_dump_sa(str3, bwt);
         bwt_destroy(bwt);

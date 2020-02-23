@@ -116,6 +116,7 @@ int nucAtSubinv(bwtint_t *sub, bwtint_t k) {
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
     bwtint_t x = k - (k > bwt->primary);
+
     x = nucAtBWTinv(bwt, x);
     x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x);
     return k == bwt->primary ? 0 : x;
@@ -125,8 +126,11 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
     bwtint_t isa, sa, i; // S(isa) = sa
     int intv_round = intv;
     kv_roundup32(intv_round);
+    fprintf(stderr, "Here\n");
     xassert(intv_round == intv, "SA sample interval is not a power of 2.");
+    fprintf(stderr, "Here\n");
     xassert(bwt->bwt_new, "bwt_t::bwt is not initialized.");
+    fprintf(stderr, "AHHHH\n");
     //fprintf(stderr, "Check 1\n");
     if (bwt->sa) free(bwt->sa);
     bwt->sa_intv = intv;
@@ -137,6 +141,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
     for (i = 0; i < bwt->seq_len; ++i) {
         if (isa % intv == 0) {
             bwt->sa[isa/intv] = sa;
+            //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
         }
         --sa;
         isa = bwt_invPsi(bwt, isa);
@@ -325,22 +330,22 @@ int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv
     //daughter
     for (i = 0; i < bwt[0].seq_len/128 + 1; i++) {
         break;
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 4]: %llu\n", i, bwt[0].bwt_new[i / 128 * n + 4]);
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 5]: %llu\n", i, bwt[0].bwt_new[i / 128 * n + 5]);
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 6]: %llu\n", i ,bwt[0].bwt_new[i / 128 * n + 6]);
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 7]: %llu\n\n", i, bwt[0].bwt_new[i / 128 * n + 7]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 4]: %llu\n", i, bwt[0].bwt[i / 128 * n + 4]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 5]: %llu\n", i, bwt[0].bwt[i / 128 * n + 5]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 6]: %llu\n", i ,bwt[0].bwt[i / 128 * n + 6]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 7]: %llu\n\n", i, bwt[0].bwt[i / 128 * n + 7]);
 
     }
     fprintf(stderr, "\n");
     //parent
-    fprintf(stderr, "[%s] bwt -> : %llu\n", __func__, bwtc[0].bwt_new[10 * 8 + 4]);
+    fprintf(stderr, "[%s] bwt -> : %llu\n", __func__, bwtc[0].bwt[10 * 8 + 4]);
 
     for (i = 0; i < bwt[0].seq_len/128 + 1; i++) {
         break;
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 4]: %llu\n", i, bwt[1].bwt_new[i / 128 * n + 4]);
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 5]: %llu\n", i, bwt[1].bwt_new[i / 128 * n + 5]);
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 6]: %llu\n", i ,bwt[1].bwt_new[i / 128 * n + 6]);
-        fprintf(stderr, "bwt->bwt_new[%d/128 * n + 7]: %llu\n\n", i, bwt[1].bwt_new[i / 128 * n + 7]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 4]: %llu\n", i, bwt[1].bwt[i / 128 * n + 4]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 5]: %llu\n", i, bwt[1].bwt[i / 128 * n + 5]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 6]: %llu\n", i ,bwt[1].bwt[i / 128 * n + 6]);
+        fprintf(stderr, "bwt->bwt[%d/128 * n + 7]: %llu\n\n", i, bwt[1].bwt[i / 128 * n + 7]);
 
     }
     fprintf(stderr, "[%s] len: %d\n", __func__, len);
@@ -377,15 +382,15 @@ void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bw
         c = i;
         count = 0;
         if ((k + 1) / 128)
-            count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
+            count = bwt->bwt[((k + 1) / 128 - 1) * 8 + c];
         if (~((k + 1) % 128 == 0)) {
             if (k % 128 < 64) {
-                count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c,
+                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c,
                                             (k % 128) + 1);
             } else {
-                count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c, 64);
+                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c, 64);
                 if (~((k + 1) % 64 == 0)) {
-                    count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 5], bwt->bwt_new[k / 128 * 8 + 7], c,
+                    count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 5], bwt->bwt[k / 128 * 8 + 7], c,
                                                 (k % 64) + 1);
                 }
             }
@@ -399,16 +404,16 @@ void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bw
         c = i;
         count = 0;
         if ((k + 1) / 128)
-            count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
+            count = bwt->bwt[((k + 1) / 128 - 1) * 8 + c];
 
         if (~((k + 1) % 128 == 0)) {
             if ((k + 1) % 128 < 64) {
-                count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c,
+                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c,
                                             (k % 128) + 1);
             } else {
-                count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 4], bwt->bwt_new[k / 128 * 8 + 6], c, 64);
+                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c, 64);
                 if (~((k + 1) % 64 == 0)) {
-                    count += builtin_popcountll(bwt->bwt_new[k / 128 * 8 + 5], bwt->bwt_new[k / 128 * 8 + 7], c,
+                    count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 5], bwt->bwt[k / 128 * 8 + 7], c,
                                                 (k % 64) + 1);
                 }
             }
@@ -548,7 +553,18 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
  * Read/write BWT and SA *
  *************************/
 
-void bwt_dump_bwt(const char *fn, const bwt_t *bwt) {
+void bwt_dump_bwt(const char *fn, const bwt_t *bwt, ubyte_t I) {
+    FILE *fp;
+    fp = xopen(fn, "wb");
+    err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
+    err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
+    //second argument is the number of bytes; third argument is the number of elements
+    err_fwrite(bwt->bwt, 4, bwt->bwt_size, fp);
+    err_fflush(fp);
+    err_fclose(fp);
+}
+
+void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt, ubyte_t I) {
     FILE *fp;
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
@@ -563,6 +579,7 @@ void bwt_dump_sa(const char *fn, const bwt_t *bwt) {
     FILE *fp;
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
+    fprintf(stderr, "primary %llu\n", bwt->primary);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     err_fwrite(&bwt->sa_intv, sizeof(bwtint_t), 1, fp);
     err_fwrite(&bwt->seq_len, sizeof(bwtint_t), 1, fp);
@@ -593,18 +610,19 @@ void bwt_restore_sa(const char *fn, bwt_t *bwt) {
     err_fread_noeof(skipped, sizeof(bwtint_t), 4, fp); // skip
     err_fread_noeof(&bwt->sa_intv, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(&primary, sizeof(bwtint_t), 1, fp);
-
-    xassert(primary == bwt->seq_len, "SA-BWT inconsistency: seq_len is not the same.");
+    fprintf(stderr, "len %llu\n", bwt->seq_len);
+    fprintf(stderr, "primary %llu\n", primary);
+    //exit(0);
+    //xassert(primary == bwt->seq_len, "SA-BWT inconsistency: seq_len is not the same.");
 
     bwt->n_sa = (bwt->seq_len + bwt->sa_intv) / bwt->sa_intv;
     bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
     bwt->sa[0] = -1;
-
     fread_fix(fp, sizeof(bwtint_t) * (bwt->n_sa - 1), bwt->sa + 1);
     err_fclose(fp);
 }
 
-// bwt_restore_bwt and bwt_restore_bwt2 were changed so that they restore the correct data structure (bwt->bwt_new).
+// bwt_restore_bwt and bwt_restore_bwt2 were changed so that they restore the correct data structure (bwt->bwt).
 bwt_t *bwt_restore_bwt(const char *fn) {
     bwt_t *bwt;
     FILE *fp;
@@ -613,7 +631,26 @@ bwt_t *bwt_restore_bwt(const char *fn) {
     fp = xopen(fn, "rb");
     err_fseek(fp, 0, SEEK_END);
     bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
-    bwt->bwt_new = (uint64_t*)calloc(bwt->bwt_size, 8);
+    bwt->bwt = (uint32_t*)calloc(bwt->bwt_size, 8);
+    err_fseek(fp, 0, SEEK_SET);
+    err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
+    err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
+    fread_fix(fp, bwt->bwt_size<<2, bwt->bwt); //change bwt->bwt_size<<2 with seq_len/8
+    bwt->seq_len = bwt->L2[4];
+    err_fclose(fp);
+
+    return bwt;
+}
+
+bwt_t *bwt_restore_bwt_new(const char *fn) {
+    bwt_t *bwt;
+    FILE *fp;
+
+    bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
+    fp = xopen(fn, "rb");
+    err_fseek(fp, 0, SEEK_END);
+    bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
+    bwt->bwt_new = (uint32_t*)calloc(bwt->bwt_size, 8);
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
@@ -638,12 +675,14 @@ void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new);
     bwt->seq_len = bwt->L2[4];
+
     err_fclose(fp);
 }
 
 void bwt_destroy(bwt_t *bwt) {
     if (bwt == 0) return;
-    free(bwt->sa); free(bwt->bwt);
-    free(bwt->bwt_new);
+    if (bwt->sa) free(bwt->sa);
+    if (bwt->bwt_new) free(bwt->bwt_new);
+    if (bwt->bwt) free(bwt->bwt);
     free(bwt);
 }
