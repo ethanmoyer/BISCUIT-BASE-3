@@ -100,21 +100,10 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
         return 0; //return A
     return p; //return C
 }
-// This is for self implemented extend function, which was used mostly during development.
-/*
-int nucAtSubinv(bwtint_t *sub, bwtint_t k) {
-    bwtint_t p = (sub[0] >> (63 - k % 64) & 1) | (sub[1] >> (63 - k % 64) & 1);
-    if (p == 0)
-        p = 2;
-    else if ((p == 1) & sub[1] >> (63 - k % 64))
-        p = 3;
-    else
-        p = 0;
-    return p;
-}
-*/
+
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
+
     bwtint_t x = k - (k > bwt->primary);
 
     x = nucAtBWTinv(bwt, x);
@@ -126,12 +115,8 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
     bwtint_t isa, sa, i; // S(isa) = sa
     int intv_round = intv;
     kv_roundup32(intv_round);
-    fprintf(stderr, "Here\n");
     xassert(intv_round == intv, "SA sample interval is not a power of 2.");
-    fprintf(stderr, "Here\n");
     xassert(bwt->bwt_new, "bwt_t::bwt is not initialized.");
-    fprintf(stderr, "AHHHH\n");
-    //fprintf(stderr, "Check 1\n");
     if (bwt->sa) free(bwt->sa);
     bwt->sa_intv = intv;
     bwt->n_sa = (bwt->seq_len + intv) / intv;
@@ -141,7 +126,6 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
     for (i = 0; i < bwt->seq_len; ++i) {
         if (isa % intv == 0) {
             bwt->sa[isa/intv] = sa;
-            //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
         }
         --sa;
         isa = bwt_invPsi(bwt, isa);
@@ -154,13 +138,14 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
 bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k) {
     k++;
     bwtint_t sa = 0;
-    int mask = bwt->sa_intv;
+    int mask = bwt->sa_intv; //does the data type matter here?
     while (k % mask) { // != 0
         ++sa;
         k = bwt_invPsi(bwt, k);
     }
     /* without setting bwt->sa[0] = -1, the following line should be
        changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
+    fprintf(stderr, "sa: %llu\n", sa + bwt->sa[k/bwt->sa_intv]);
     return sa + bwt->sa[k/bwt->sa_intv];
 }
 
@@ -318,110 +303,6 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 }
 
 // NOTE: $max_intv is not currently used in BWA-MEM
-/*
-int bwt_smem1a(bwt_t *bwt, bwt_t *bwtc, int len, uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
-    fprintf(stderr, "[%s] bwt_smem1a\n", __func__);
-    int i, j, c, ret;
-    bwtintv_t ik, ok[4];
-    //why are these used?
-    bwtintv_v a[2], *prev, *curr, *swap;
-
-    int n = 8;
-    //daughter
-    for (i = 0; i < bwt[0].seq_len/128 + 1; i++) {
-        break;
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 4]: %llu\n", i, bwt[0].bwt[i / 128 * n + 4]);
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 5]: %llu\n", i, bwt[0].bwt[i / 128 * n + 5]);
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 6]: %llu\n", i ,bwt[0].bwt[i / 128 * n + 6]);
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 7]: %llu\n\n", i, bwt[0].bwt[i / 128 * n + 7]);
-
-    }
-    fprintf(stderr, "\n");
-    //parent
-    fprintf(stderr, "[%s] bwt -> : %llu\n", __func__, bwtc[0].bwt[10 * 8 + 4]);
-
-    for (i = 0; i < bwt[0].seq_len/128 + 1; i++) {
-        break;
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 4]: %llu\n", i, bwt[1].bwt[i / 128 * n + 4]);
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 5]: %llu\n", i, bwt[1].bwt[i / 128 * n + 5]);
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 6]: %llu\n", i ,bwt[1].bwt[i / 128 * n + 6]);
-        fprintf(stderr, "bwt->bwt[%d/128 * n + 7]: %llu\n\n", i, bwt[1].bwt[i / 128 * n + 7]);
-
-    }
-    fprintf(stderr, "[%s] len: %d\n", __func__, len);
-*/
-/*
-void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t ok[3], int is_back, uint8_t *q, int len)
-
-    fprintf(stderr, "[%s] Forward:\n", __func__);
-
-    for (int i = 0; i < len; i++) {
-        fprintf(stderr, "[%s] q:%u\n", __func__, q[i]);
-    }
-
-    bwt_extend(&bwt[0], &ik, ok, 1, q, len);
-
-    uint8_t *q_ = (uint8_t*)calloc(1, len);
-
-    fprintf(stderr, "\n[%s] Backward:\n", __func__);
-
-    for (int i = 0; i < len; i++) {
-        q_[len - i - 1] = 3 - q[i];
-    }
-    bwtintv_t ik_, ok_[4];
-    bwt_extend(&bwtc[0], &ik_, ok_, 1, q_, len);
-    exit(0);
-    return 0;
-}
-*/
-/*
-void bwt_occ_new_index_v2(bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t *cntk, bwtint_t *cntl, int c) {
-    k -= (k >= bwt->primary);
-    bwtint_t count = 0;
-    for (int i = 0; i < 4; i++) {
-        c = i;
-        count = 0;
-        if ((k + 1) / 128)
-            count = bwt->bwt[((k + 1) / 128 - 1) * 8 + c];
-        if (~((k + 1) % 128 == 0)) {
-            if (k % 128 < 64) {
-                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c,
-                                            (k % 128) + 1);
-            } else {
-                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c, 64);
-                if (~((k + 1) % 64 == 0)) {
-                    count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 5], bwt->bwt[k / 128 * 8 + 7], c,
-                                                (k % 64) + 1);
-                }
-            }
-        }
-        cntk[i] = count;
-    }
-
-    l -= (l >= bwt->primary);
-    k = l;
-    for (int i = 0; i < 4; i++) {
-        c = i;
-        count = 0;
-        if ((k + 1) / 128)
-            count = bwt->bwt[((k + 1) / 128 - 1) * 8 + c];
-
-        if (~((k + 1) % 128 == 0)) {
-            if ((k + 1) % 128 < 64) {
-                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c,
-                                            (k % 128) + 1);
-            } else {
-                count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 4], bwt->bwt[k / 128 * 8 + 6], c, 64);
-                if (~((k + 1) % 64 == 0)) {
-                    count += builtin_popcountll(bwt->bwt[k / 128 * 8 + 5], bwt->bwt[k / 128 * 8 + 7], c,
-                                                (k % 64) + 1);
-                }
-            }
-        }
-        cntl[i] = count;
-    }
-}
-*/
 
 void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
     bwtint_t tk[4], tl[4];
@@ -505,6 +386,7 @@ int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, 
                     if (mem->n == 0 || (unsigned) i + 1 < mem->a[mem->n-1].info>>32) { // skip contained matches
                         ik = *p; ik.info |= (uint64_t)(i + 1)<<32;
                         kv_push(bwtintv_t, *mem, ik);
+                        fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
                     }
                 } // otherwise the match is contained in another longer match
             } else if (curr->n == 0 || ok[c].x[2] != curr->a[curr->n-1].x[2]) {
@@ -579,7 +461,6 @@ void bwt_dump_sa(const char *fn, const bwt_t *bwt) {
     FILE *fp;
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
-    fprintf(stderr, "primary %llu\n", bwt->primary);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     err_fwrite(&bwt->sa_intv, sizeof(bwtint_t), 1, fp);
     err_fwrite(&bwt->seq_len, sizeof(bwtint_t), 1, fp);
@@ -610,10 +491,7 @@ void bwt_restore_sa(const char *fn, bwt_t *bwt) {
     err_fread_noeof(skipped, sizeof(bwtint_t), 4, fp); // skip
     err_fread_noeof(&bwt->sa_intv, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(&primary, sizeof(bwtint_t), 1, fp);
-    fprintf(stderr, "len %llu\n", bwt->seq_len);
-    fprintf(stderr, "primary %llu\n", primary);
-    //exit(0);
-    //xassert(primary == bwt->seq_len, "SA-BWT inconsistency: seq_len is not the same.");
+    xassert(primary == bwt->seq_len, "SA-BWT inconsistency: seq_len is not the same.");
 
     bwt->n_sa = (bwt->seq_len + bwt->sa_intv) / bwt->sa_intv;
     bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
@@ -650,7 +528,7 @@ bwt_t *bwt_restore_bwt_new(const char *fn) {
     fp = xopen(fn, "rb");
     err_fseek(fp, 0, SEEK_END);
     bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
-    bwt->bwt_new = (uint32_t*)calloc(bwt->bwt_size, 8);
+    bwt->bwt_new = (uint64_t*)calloc(bwt->bwt_size, 8);
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);

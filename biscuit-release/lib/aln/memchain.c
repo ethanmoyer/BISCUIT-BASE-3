@@ -345,6 +345,7 @@ mem_chain_v mem_chain(
          // this is where we need to pay attention to
          // this directs the interval regions that are chained together here
          s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k - 1);
+          // s.rbeg is the problem here...
          s.qbeg = intv->info>>32;
          s.score = s.len = slen;
 
