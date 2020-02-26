@@ -93,7 +93,7 @@ typedef struct {
  * (uint32_t) info - end;
  */
 
-//gives name to user defined data type --> bwtintv_t
+//gives name tomem_seed_t user defined data type --> bwtintv_t
 typedef struct {
 	bwtint_t x[3], info;
 } bwtintv_t;
@@ -125,10 +125,11 @@ typedef struct {
 extern "C" {
 #endif
 
-	void bwt_dump_bwt(const char *fn, const bwt_t *bwt);
+	void bwt_dump_bwt(const char *fn, const bwt_t *bwt, ubyte_t I);
 	void bwt_dump_sa(const char *fn, const bwt_t *bwt);
 
 	bwt_t *bwt_restore_bwt(const char *fn);
+    bwt_t *bwt_restore_bwt_new(const char *fn);
   void bwt_restore_bwt2(const char *fn, bwt_t *bwt);
 	void bwt_restore_sa(const char *fn, bwt_t *bwt);
 

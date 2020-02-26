@@ -127,24 +127,22 @@ int mem_approx_mapq_se(const mem_opt_t *opt, const mem_alnreg_t *a) {
 // TODO (future plan): group hits into a uint64_t[] array. This will be cleaner and more flexible
 
 void bseq_bsconvert(bseq1_t *s, uint8_t parent) {
-  if (s->bisseq[parent]) return;
+    if (s->bisseq[parent]) return;
 
-  uint32_t i;
-  if (parent) {                 // C>T strand
-    s->bisseq[1] = calloc(s->l_seq * 2, sizeof(uint8_t));
-    for (i=0; i< (unsigned) s->l_seq; ++i) {
-      if (s->seq[i] == 1) s->bisseq[1][i] = 3;
-      else s->bisseq[1][i] = s->seq[i];
+    uint32_t i;
+    if (parent) {                 // C>T strand
+        s->bisseq[1] = calloc(s->l_seq, sizeof(uint8_t));
+        for (i=0; i< (unsigned) s->l_seq; ++i) {
+            if (s->seq[i] == 1) s->bisseq[1][i] = 3;
+            else s->bisseq[1][i] = s->seq[i];
+        }
+    } else {                      // G>A strand
+        s->bisseq[0] = calloc(s->l_seq, sizeof(uint8_t));
+        for (i=0; i< (unsigned) s->l_seq; ++i) {
+            if (s->seq[i] == 2) s->bisseq[0][i] = 0;
+            else s->bisseq[0][i] = s->seq[i];
+        }
     }
-
-  } else {                      // G>A strand
-      s->bisseq[0] = calloc(s->l_seq, sizeof(uint8_t));
-      for (i = 0; i < (unsigned) s->l_seq; ++i) {
-          if (s->seq[i] == 2) s->bisseq[0][i] = 0;
-          else s->bisseq[0][i] = s->seq[i];
-      }
-  }
-
 }
 
 /**

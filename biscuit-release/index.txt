@@ -3,437 +3,52 @@ T(11) == 01
 G(10) == 00
 C(01) == 11
 
-./biscuit align -k 10 in.fa in.fastq
+ssh moyerej@respublica-an01.research.chop.edu
 
+./biscuit align -k 10 in.fa in.fastq
+./biscuit align -k 5 -1 TCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGC in.fa
 1 ^ 0 & 1 = 1 = 1 & 1 ^ 0
 0 ^ 1 & 0 = 0 =/ 0 & 0 ^ 1
 1 ^ 1 & 1 = 0
 0 ^ 0 & 0 = 0 = 0 & 0 ^ 0
 
-001010111111101111 --> 000000111111001111 4047
-AGGTTTGTT --> AAATTTATT
-              000333033
+New index
+TTTACGTAAAAAAACAAAAATACTAAAATAAACAAAAAAATTTTAAAAAAAAACAAATTTAAAAAATTTACACTA
+78888999999998::<<<;<;<<;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<;;;;;;;::::9999998
 
-GGTACAAAAGACAAAAAAGTGTTTTCGTCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGCCTAATTTATGTTGATGTATGTAAACATACACTAGAAAACAGGATATTAAAAAAATAATGACACCGGGTAGTTTTATTGTAGAATAATTTTTACCATGGACAATTGTTTGTGAAAATGACACCTTGAAAACACATCTTACTTTTTTACTTGCTGGAGAATGAAACTTGAATTACAAGTCCTTTGGGTAGCCTGGTTTGAGCAGTATTAGGAAATAAGCAAGCCTAACTTAGTTAAATTCTAACCTCTTCTGATTCCCAGAAGTCCAAAGTTCATTTGGGGGTAATACAACGTGATACATGCTTTTTGTGATTTCTACAAGGTGAACTAAAGAAATAACTAAAGATGGACCAGTTAGGTTTTGGTAAAAACTGTGATAAGTTTTGTTGTGTTTTAAATACTGATGTTGAGTCAGTTCATCTTTCCTACTGAAAATCCTTAAGTGGGAAAAGTATAGAAAAAGTAGGAGTTACACCAAAATATTAACGCTTGCCACTTGATGGTAGGATCTGAGTGCCCTTTTTTTACGTTCTTTAAATTATCTGTATGTGGCTTTTTTTTTTTTTTAATGTTTTACAAGCATGTACTACTTTCGTATCTGGAAAAAGGTTTGTTTTTCTTTCATTTTTTAAGAA
+Old index
+TAGTGTAAATTTTTTAAATTTGTTTTTTTTTAAAATTTTTTTGTTTATTTTAGTATTTTTGTTTTTTTACGTAAA
+8999999::::;;;;;;;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<;<<;<;<<<::89999999988887
 
-TTCTTAAAAAATGAAAGAAA AACAAACCTT TTTCCAGATACGAAAGTAGTACATGCTTGTAAAACATTAAAAAAAAAAAAAAGCCACATACAGATAATTTAAAGAACGTAAAAAAAGGGCACTCAGATCCTACCATCAAGTGGCAAGCGTTAATATTTTGGTGTAACTCCTACTTTTTCTATACTTTTCCCACTTAAGGATTTTCAGTAGGAAAGATGAACTGACTCAACATCAGTATTTAAAACACAACAAAACTTATCACAGTTTTTACCAAAACCTAACTGGTCCATCTTTAGTTATTTCTTTAGTTCACCTTGTAGAAATCACAAAAAGCATGTATCACGTTGTATTACCCCCAAATGAACTTTGGACTTCTGGGAATCAGAAGAGGTTAGAATTTAACTAAGTTAGGCTTGCTTATTTCCTAATACTGCTCAAACCAGGCTACCCAAAGGACTTGTAATTCAAGTTTCATTCTCCAGCAAGTAAAAAAGTAAGATGTGTTTTCAAGGTGTCATTTTCACAAACAATTGTCCATGGTAAAAATTATTCTACAATAAAACTACCCGGTGTCATTATTTTTTTAATATCCTGTTTTCTAGTGTATGTTTACATACATCAACATAAATTAGGCACTTATGAGTCCCTGATTTATTTCCCAACTTTAACAAGACGAAAACACTTTTTTGTCTTTTGTACC
+Actual short read
+TAGTGTAAATTTTTTAAATTTGTTTTTTTTTAAAATTTTTTTGTTTATTTTAGTATTTTTGTTTTTTTACGTAAA
++
+8999999::::;;;;;;;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<;<<;<;<<<::89999999988887
 
-AAGGTTTGTT G>A AAAATTTATT RC  R TTATTTAAAA
-0000333033     0000333033    0030003333
+... Generating reverse complement?... what lol
+TAGTGTAAATTTTTTAAATTTGTTTTTTTTTAAAATTTTTTTGTTTATTTTAGTATTTTTGTTTTTTTACGTAAA
 
-index
 
-search: AAGGTTTGTT
+also -
 
-genome
+for some reason, the short reads are being converted to their reverse complements...
 
-GGTACAAAAGACAAAAAAGTGTTTTCGTCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGCCTAATTTATGTTGATGTATGTAAACATACACTAGAAAACAGGATATTAAAAAAATAATGACACCGGGTAGTTTTATTGTAGAATAATTTTTACCATGGACAATTGTTTGTGAAAATGACACCTTGAAAACACATCTTACTTTTTTACTTGCTGGAGAATGAAACTTGAATTACAAGTCCTTTGGGTAGCCTGGTTTGAGCAGTATTAGGAAATAAGCAAGCCTAACTTAGTTAAATTCTAACCTCTTCTGATTCCCAGAAGTCCAAAGTTCATTTGGGGGTAATACAACGTGATACATGCTTTTTGTGATTTCTACAAGGTGAACTAAAGAAATAACTAAAGATGGACCAGTTAGGTTTTGGTAAAAACTGTGATAAGTTTTGTTGTGTTTTAAATACTGATGTTGAGTCAGTTCATCTTTCCTACTGAAAATCCTTAAGTGGGAAAAGTATAGAAAAAGTAGGAGTTACACCAAAATATTAACGCTTGCCACTTGATGGTAGGATCTGAGTGCCCTTTTTTTACGTTCTTTAAATTATCTGTATGTGGCTTTTTTTTTTTTTTAATGTTTTACAAGCATGTACTACTTTCGTATCTGGAAAAAGGTTTGTTTTTCTTTCATTTTTTAAGAA
+New index
+CGAATTCAAACGATTCTCCTACCTCATCCTCCCGATAACTAAAATTACAAACACCTACCACCATATCTAACTTTT
+9:;;;;;;;<<<<<<<<<<<;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<;;<<<;<;;;;;;:::::999999
+NM:i:7  MD:Z:1A24G6^A0A38G0A0G0 ZC:i:16 ZR:i:1  AS:i:57 XS:i:56 XL:i:75
+XA:Z:chr22,-33831080,34M1D41M,6;chr22,-39252875,34M1D41M,7;chr22,-29172501,33M1D42M,8
+XB:Z:3,0        YD:A:r
 
-reverse comp
+Old index
+CGAATTCAAACGATTCTCCTACCTCATCCTCCCGATAACTAAAATTACAAACACCTACCACCATATCTAACTTTT
+9:;;;;;;;<<<<<<<<<<<;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<;;<<<;<;;;;;;:::::999999 NM:i:7
+MD:Z:1A24G6^A0A38G0A0G0 ZC:i:16 ZR:i:1  AS:i:57 XS:i:56 XL:i:75 X
+B:Z:7,0        YD:A:r
 
-TTCTTAAAAAATGAAAGAAAAACAAACCTTTTTCCAGATACGAAAGTAGTACATGCTTGTAAAACATTAAAAAAAAAAAAAAGCCACATACAGATAATTTAAAGAACGTAAAAAAAGGGCACTCAGATCCTACCATCAAGTGGCAAGCGTTAATATTTTGGTGTAACTCCTACTTTTTCTATACTTTTCCCACTTAAGGATTTTCAGTAGGAAAGATGAACTGACTCAACATCAGTATTTAAAACACAACAAAACTTATCACAGTTTTTACCAAAACCTAACTGGTCCATCTTTAGTTATTTCTTTAGTTCACCTTGTAGAAATCACAAAAAGCATGTATCACGTTGTATTACCCCCAAATGAACTTTGGACTTCTGGGAATCAGAAGAGGTTAGAATTTAACTAAGTTAGGCTTGCTTATTTCCTAATACTGCTCAAACCAGGCTACCCAAAGGACTTGTAATTCAAGTTTCATTCTCCAGCAAGTAAAAAAGTAAGATGTGTTTTCAAGGTGTCATTTTCACAAACAATTGTCCATGGTAAAAATTATTCTACAATAAAACTACCCGGTGTCATTATTTTTTTAATATCCTGTTTTCTAGTGTATGTTTACATACATCAACATAAATTAGGCACTTATGAGTCCCTGATTTATTTCCCAACTTTAACAAGACGAAAACACTTTTTTGTCTTTTGTACC
 
-G>A parent
+0001111010001101110011111111001110111110111111101111111011110110
+0110000101110010001100000000110001000001000000010000000100001001
 
-AATACAAAAAACAAAAAAATATTTTCATCTTATTAAAATTAAAAAATAAATCAAAAACTCATAAATACCTAATTTATATTAATATATATAAACATACACTAAAAAACAAAATATTAAAAAAATAATAACACCAAATAATTTTATTATAAAATAATTTTTACCATAAACAATTATTTATAAAAATAACACCTTAAAAACACATCTTACTTTTTTACTTACTAAAAAATAAAACTTAAATTACAAATCCTTTAAATAACCTAATTTAAACAATATTAAAAAATAAACAAACCTAACTTAATTAAATTCTAACCTCTTCTAATTCCCAAAAATCCAAAATTCATTTAAAAATAATACAACATAATACATACTTTTTATAATTTCTACAAAATAAACTAAAAAAATAACTAAAAATAAACCAATTAAATTTTAATAAAAACTATAATAAATTTTATTATATTTTAAATACTAATATTAAATCAATTCATCTTTCCTACTAAAAATCCTTAAATAAAAAAAATATAAAAAAAATAAAAATTACACCAAAATATTAACACTTACCACTTAATAATAAAATCTAAATACCCTTTTTTTACATTCTTTAAATTATCTATATATAACTTTTTTTTTTTTTTAATATTTTACAAACATATACTACTTTCATATCTAAAAAAAAATTTATTTTTCTTTCATTTTTTAAAAA
-
-G>A daughter
-
-TTCTTAAAAAATAAAAAAAAAACAAACCTTTTTCCAAATACAAAAATAATACATACTTATAAAACATTAAAAAAAAAAAAAAACCACATACAAATAATTTAAAAAACATAAAAAAAAAACACTCAAATCCTACCATCAAATAACAAACATTAATATTTTAATATAACTCCTACTTTTTCTATACTTTTCCCACTTAAAAATTTTCAATAAAAAAAATAAACTAACTCAACATCAATATTTAAAACACAACAAAACTTATCACAATTTTTACCAAAACCTAACTAATCCATCTTTAATTATTTCTTTAATTCACCTTATAAAAATCACAAAAAACATATATCACATTATATTACCCCCAAATAAACTTTAAACTTCTAAAAATCAAAAAAAATTAAAATTTAACTAAATTAAACTTACTTATTTCCTAATACTACTCAAACCAAACTACCCAAAAAACTTATAATTCAAATTTCATTCTCCAACAAATAAAAAAATAAAATATATTTTCAAAATATCATTTTCACAAACAATTATCCATAATAAAAATTATTCTACAATAAAACTACCCAATATCATTATTTTTTTAATATCCTATTTTCTAATATATATTTACATACATCAACATAAATTAAACACTTATAAATCCCTAATTTATTTCCCAACTTTAACAAAACAAAAACACTTTTTTATCTTTTATACC
-
-C>T parent
-
-GGTATAAAAGATAAAAAAGTGTTTTTGTTTTGTTAAAGTTGGGAAATAAATTAGGGATTTATAAGTGTTTAATTTATGTTGATGTATGTAAATATATATTAGAAAATAGGATATTAAAAAAATAATGATATTGGGTAGTTTTATTGTAGAATAATTTTTATTATGGATAATTGTTTGTGAAAATGATATTTTGAAAATATATTTTATTTTTTTATTTGTTGGAGAATGAAATTTGAATTATAAGTTTTTTGGGTAGTTTGGTTTGAGTAGTATTAGGAAATAAGTAAGTTTAATTTAGTTAAATTTTAATTTTTTTTGATTTTTAGAAGTTTAAAGTTTATTTGGGGGTAATATAATGTGATATATGTTTTTTGTGATTTTTATAAGGTGAATTAAAGAAATAATTAAAGATGGATTAGTTAGGTTTTGGTAAAAATTGTGATAAGTTTTGTTGTGTTTTAAATATTGATGTTGAGTTAGTTTATTTTTTTTATTGAAAATTTTTAAGTGGGAAAAGTATAGAAAAAGTAGGAGTTATATTAAAATATTAATGTTTGTTATTTGATGGTAGGATTTGAGTGTTTTTTTTTTATGTTTTTTAAATTATTTGTATGTGGTTTTTTTTTTTTTTTAATGTTTTATAAGTATGTATTATTTTTGTATTTGGAAAAAGGTTTGTTTTTTTTTTATTTTTTAAGAA
-
-C>T daughter
-                     AAAATTTATT
-                     0000333033
-                     0030003333
-TTTTTAAAAAATGAAAGAAA AATAAATTTTTTTTTAGATATGAAAGTAGTATATGTTTGTAAAATATTAAAAAAAAAAAAAAGTTATATATAGATAATTTAAAGAATGTAAAAAAAGGGTATTTAGATTTTATTATTAAGTGGTAAGTGTTAATATTTTGGTGTAATTTTTATTTTTTTTATATTTTTTTTATTTAAGGATTTTTAGTAGGAAAGATGAATTGATTTAATATTAGTATTTAAAATATAATAAAATTTATTATAGTTTTTATTAAAATTTAATTGGTTTATTTTTAGTTATTTTTTTAGTTTATTTTGTAGAAATTATAAAAAGTATGTATTATGTTGTATTATTTTTAAATGAATTTTGGATTTTTGGGAATTAGAAGAGGTTAGAATTTAATTAAGTTAGGTTTGTTTATTTTTTAATATTGTTTAAATTAGGTTATTTAAAGGATTTGTAATTTAAGTTTTATTTTTTAGTAAGTAAAAAAGTAAGATGTGTTTTTAAGGTGTTATTTTTATAAATAATTGTTTATGGTAAAAATTATTTTATAATAAAATTATTTGGTGTTATTATTTTTTTAATATTTTGTTTTTTAGTGTATGTTTATATATATTAATATAAATTAGGTATTTATGAGTTTTTGATTTATTTTTTAATTTTAATAAGATGAAAATATTTTTTTGTTTTTTGTATT
-
-G>A first AAAATTTATT forward on G>A parent, backward on C>T daughter
-
-(base) Ethans-MacBook-Air:biscuit ethanmoyer$ ./biscuit align -k 5 -1 TCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGC in.fa
-[M::bwa_idx_load_from_disk] read 0 ALT contigs
-@SQ	SN:test_seq	LN:700
-@PG	ID:biscuit	PN:biscuit	VN:0.3.14.20200104	CL:./biscuit align -k 5 -1 TCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGC in.fa
-[M::process] read 1 sequences (41 bp)...
-[M::mem_process_seqs] Processed 1 reads in 0.000 CPU sec, 0.000 real sec
-inputread	0	test_seq	28	0	41M	*	0	0	TCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGC	NM:i:0	MD:Z:41	ZC:i:0	ZR:i:5	AS:i:41	XS:i:41	XL:i:41	XA:Z:test_seq,+28,41M,0	XB:Z:1,0	YD:A:u
-[main] Version: 0.3.14.20200104
-[main] CMD: ./biscuit align -k 5 -1 TCTTGTTAAAGTTGGGAAATAAATCAGGGACTCATAAGTGC in.fa
-(base) Ethans-MacBook-Air:biscuit ethanmoyer$
-
-[bwt_reverse_intvs] => p->a[i].x[0]: 1186
-[bwt_reverse_intvs] => p->a[i].x[1]: 624
-[bwt_reverse_intvs] => p->a[i].x[2]: 1
-[bwt_reverse_intvs] => p->a[i].x[0]: 1184
-[bwt_reverse_intvs] => p->a[i].x[1]: 734
-[bwt_reverse_intvs] => p->a[i].x[2]: 3
-[bwt_reverse_intvs] => p->a[i].x[0]: 1184
-[bwt_reverse_intvs] => p->a[i].x[1]: 103
-[bwt_reverse_intvs] => p->a[i].x[2]: 10
-
-My code
-----------------------------------------------------------
-[mem_chain] Found 21 chains; Fraction of repetitive seeds: 0.000
-** CHAIN: n=1, n_extra=0, weight=13	13;13;10,31(test_seq:+32)	EXTRA
-** CHAIN: n=4, n_extra=2, weight=17	6;6;6,33(test_seq:+34)	13;13;10,37(test_seq:+38)	7;7;12,114(test_seq:+115)	7;7;12,191(test_seq:+192)	EXTRA	7;7;12,99(test_seq:+100)	7;7;12,39(test_seq:+40)
-** CHAIN: n=3, n_extra=1, weight=11	10;10;20,47(test_seq:+48)	6;6;25,101(test_seq:+102)	6;6;25,192(test_seq:+193)	EXTRA	6;6;25,52(test_seq:+53)
-** CHAIN: n=2, n_extra=0, weight=7	7;7;12,219(test_seq:+220)	7;7;12,273(test_seq:+274)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;6,280(test_seq:+281)	EXTRA
-** CHAIN: n=7, n_extra=0, weight=41	6;6;0,311(test_seq:+312)	41;41;0,311(test_seq:+312)	7;7;12,393(test_seq:+394)	7;7;17,440(test_seq:+441)	6;6;19,472(test_seq:+473)	8;8;19,472(test_seq:+473)	10;10;20,473(test_seq:+474)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,431(test_seq:+432)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=7	7;7;12,508(test_seq:+509)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=7	7;7;12,519(test_seq:+520)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,568(test_seq:+569)	7;7;12,664(test_seq:+665)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;31,657(test_seq:+658)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=8	7;7;12,704(test_seq:-690)	6;6;25,706(test_seq:-689)	EXTRA
-** CHAIN: n=3, n_extra=1, weight=7	7;7;12,711(test_seq:-683)	7;7;12,808(test_seq:-586)	7;7;12,907(test_seq:-487)	EXTRA	7;7;12,799(test_seq:-595)
-** CHAIN: n=2, n_extra=2, weight=6	6;6;25,717(test_seq:-678)	6;6;25,814(test_seq:-581)	EXTRA	6;6;25,801(test_seq:-594)	6;6;25,778(test_seq:-617)
-** CHAIN: n=1, n_extra=0, weight=7	7;7;17,838(test_seq:-556)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1028(test_seq:-367)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,1092(test_seq:-303)	7;7;12,1186(test_seq:-208)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1151(test_seq:-244)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;6,1194(test_seq:-201)	EXTRA
-** CHAIN: n=1, n_extra=1, weight=7	7;7;18,1323(test_seq:-71)	EXTRA	6;6;19,1324(test_seq:-71)
-** CHAIN: n=3, n_extra=1, weight=13	7;7;18,1338(test_seq:-56)	8;8;19,1339(test_seq:-54)	6;6;25,1374(test_seq:-21)	EXTRA	6;6;19,1339(test_seq:-56)
-[mem_flt_chained_seeds] 3 chains remained.
-** CHAIN: n=7, n_extra=0, weight=41	6;6;0,311(test_seq:+312)	41;41;0,311(test_seq:+312)	7;7;12,393(test_seq:+394)	7;7;17,440(test_seq:+441)	6;6;19,472(test_seq:+473)	8;8;19,472(test_seq:+473)	10;10;20,473(test_seq:+474)	EXTRA
-** CHAIN: n=4, n_extra=2, weight=17	6;6;6,33(test_seq:+34)	13;13;10,37(test_seq:+38)	7;7;12,114(test_seq:+115)	7;7;12,191(test_seq:+192)	EXTRA	7;7;12,99(test_seq:+100)	7;7;12,39(test_seq:+40)
-** CHAIN: n=1, n_extra=0, weight=6	6;6;31,657(test_seq:+658)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=7, n_extra=0, weight=41	6;6;0,311(test_seq:+312)	41;41;0,311(test_seq:+312)	7;7;12,393(test_seq:+394)	7;7;17,440(test_seq:+441)	6;6;19,472(test_seq:+473)	8;8;19,472(test_seq:+473)	10;10;20,473(test_seq:+474)	EXTRA
-** ---> [mem_chain2region1] Extending from seed(5) [10;20,473] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TTGTAGTCATAAATTTTGTGTTGTTTTGAATAGTGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGTGTTTTTCGTACATAGTGCAACATAATGGGGGTTTACTTGAAACCTGAAGACCCTTAGTCTTCTC
-*** [left_extend_seed_set_align_beg] Left query: TAAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=11; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   ATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: CTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=11; score=11; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [19,41) <=> [472,494); score=11; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(4) [8;19,472] is almost contained in an existing alignment [19,41) <=> [472,494)
-** [mem_chain2region1] Seed(4) might lead to a different alignment even though it is contained. Extension will be performed.
-** ---> [mem_chain2region1] Extending from seed(4) [8;19,472] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TGTAGTCATAAATTTTGTGTTGTTTTGAATAGTGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGTGTTTTTCGTACATAGTGCAACATAATGGGGGTTTACTTGAAACCTGAAGACCCTTAGTCTTCTC
-*** [left_extend_seed_set_align_beg] Left query: AAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=8; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   TTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: GGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=8; score=8; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [19,27) <=> [472,480); score=8; {left,right}_bandwidth={100,100}
-** ---> [mem_chain2region1] Extending from seed(3) [7;17,440] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGTGTTTTTCGTACATAGTGCAACATAATGGGGGTTTACTTGAAACCTGAAGACCCTTAGTCTTCTC
-*** [left_extend_seed_set_align_beg] Left query: AGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   TTTGTTGTGTTTTAAATACTGATGTTGAGTCAGTTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: CAGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=7; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [17,24) <=> [440,447); score=7; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(1) [6;19,472] is almost contained in an existing alignment [19,41) <=> [472,494)
-** [mem_chain2region1] Seed(1) might lead to a different alignment even though it is contained. Extension will be performed.
-** ---> [mem_chain2region1] Extending from seed(1) [6;19,472] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TGTAGTCATAAATTTTGTGTTGTTTTGAATAGTGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGTGTTTTTCGTACATAGTGCAACATAATGGGGGTTTACTTGAAACCTGAAGACCCTTAGTCTTCTC
-*** [left_extend_seed_set_align_beg] Left query: AAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=6; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   AGTTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: AGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=6; score=8; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [19,27) <=> [472,480); score=8; {left,right}_bandwidth={100,100}
-** ---> [mem_chain2region1] Extending from seed(0) [6;0,311] @ test_seq <---
-*** [right_extend_seed_set_align_end] Right ref:   GATTCCCAGAAGTCCAAAGTTCATTTGGGGGTAATACAACGTGATACATGCTTTTTGTGATTTCTACAAGGTGAACTAAAGAAATAACTAAAGATGGACCAGTTAGGTTTTGGTAAAAACTGTGATAAGTTTTGTTGTGTTTTAAATACTGATGTTGAGTCAGTTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: TAAAGTTGGGAAATAAATCAGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=6; score=6; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [0,6) <=> [311,317); score=6; {left,right}_bandwidth={100,100}
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=4, n_extra=2, weight=17	6;6;6,33(test_seq:+34)	13;13;10,37(test_seq:+38)	7;7;12,114(test_seq:+115)	7;7;12,191(test_seq:+192)	EXTRA	7;7;12,99(test_seq:+100)	7;7;12,39(test_seq:+40)
-** ---> [mem_chain2region1] Extending from seed(3) [13;10,37] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   AAATTGTTCTGCTTT
-*** [left_extend_seed_set_align_beg] Left query: AAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=23; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   TCAGGGACTCATAAGTGCCTAATTTATGTTGATGTATGTAAACATACACTAGAAAACAGGATATTAAAAAAATAATGACACCGGGTAGTTTTATTGTAGAATAATTTTTACCATGGACAATTGTTTGTGAAAATGACACCTTGAAAACACATCTTACTTTTTTACTTGCTGGAGAATGAAACTTGAA
-*** [right_extend_seed_set_align_end] Right query: TCAGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=23; score=41; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [0,41) <=> [27,68); score=41; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(0) [6;6,33] is almost contained in an existing alignment [0,41) <=> [27,68)
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;31,657(test_seq:+658)	EXTRA
-** ---> [mem_chain2region1] Extending from seed(0) [6;31,657] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TTCATCATGTACGAACATTTTGTAATTTTTTTTTTTTTTCGGTGTATGTCTATTAAA
-*** [left_extend_seed_set_align_beg] Left query: CAGGGACTAAATAAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=6; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   CTGGA
-*** [right_extend_seed_set_align_end] Right query: GTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=6; score=6; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [31,41) <=> [657,667); score=6; {left,right}_bandwidth={100,100}
-
-[mem_chain] Found 16 chains; Fraction of repetitive seeds: 0.000
-** CHAIN: n=1, n_extra=0, weight=6	6;6;0,22(test_seq:+23)	EXTRA
-** CHAIN: n=4, n_extra=0, weight=24	6;6;0,27(test_seq:+28)	6;6;12,39(test_seq:+40)	6;6;18,45(test_seq:+46)	6;6;30,57(test_seq:+58)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=11	8;8;14,275(test_seq:+276)	9;9;16,277(test_seq:+278)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=12	6;6;6,331(test_seq:+332)	6;6;12,342(test_seq:+343)	EXTRA
-** CHAIN: n=3, n_extra=1, weight=41	6;6;0,369(test_seq:+370)	6;6;0,446(test_seq:+447)	41;41;0,446(test_seq:+447)	EXTRA	6;6;30,379(test_seq:+380)
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,637(test_seq:+638)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;0,655(test_seq:+656)	EXTRA
-** CHAIN: n=3, n_extra=1, weight=18	6;6;0,700(test_seq:-695)	9;9;16,719(test_seq:-673)	10;10;18,721(test_seq:-670)	EXTRA	6;6;18,721(test_seq:-674)
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,877(test_seq:-518)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=10	6;6;12,1075(test_seq:-320)	8;8;14,1077(test_seq:-316)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=12	6;6;6,1223(test_seq:-172)	6;6;30,1250(test_seq:-145)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=6	6;6;0,1289(test_seq:-106)	6;6;0,1384(test_seq:-11)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,1308(test_seq:-87)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=6	6;6;18,1323(test_seq:-72)	6;6;18,1367(test_seq:-28)	EXTRA
-** CHAIN: n=3, n_extra=0, weight=18	10;10;18,1323(test_seq:-68)	6;6;24,1329(test_seq:-66)	6;6;30,1335(test_seq:-60)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;0,1391(test_seq:-4)	EXTRA
-[mem_flt_chained_seeds] 2 chains remained.
-** CHAIN: n=3, n_extra=1, weight=41	6;6;0,369(test_seq:+370)	6;6;0,446(test_seq:+447)	41;41;0,446(test_seq:+447)	EXTRA	6;6;30,379(test_seq:+380)
-** CHAIN: n=4, n_extra=0, weight=24	6;6;0,27(test_seq:+28)	6;6;12,39(test_seq:+40)	6;6;18,45(test_seq:+46)	6;6;30,57(test_seq:+58)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=3, n_extra=1, weight=41	6;6;0,369(test_seq:+370)	6;6;0,446(test_seq:+447)	41;41;0,446(test_seq:+447)	EXTRA	6;6;30,379(test_seq:+380)
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=4, n_extra=0, weight=24	6;6;0,27(test_seq:+28)	6;6;12,39(test_seq:+40)	6;6;18,45(test_seq:+46)	6;6;30,57(test_seq:+58)	EXTRA
-** ---> [mem_chain2region1] Extending from seed(3) [6;30,57] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   AGGGACTAAATAAAGGGTTGAAATTGTTCTGCTTTTGTGAAAAAACAGAAAACAT
-*** [left_extend_seed_set_align_beg] Left query: AGGGACTAAATAAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=36; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   AGTGCCTAATTTATGTTGATGTATGTAAACATACA
-*** [right_extend_seed_set_align_end] Right query: AGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=36; score=41; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [0,41) <=> [27,68); score=41; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(2) [6;18,45] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(1) [6;12,39] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(0) [6;0,27] is almost contained in an existing alignment [0,41) <=> [27,68)
-* potential hit merge between [0,6)<=>[311,317) and [17,24)<=>[440,447), @ test_seq; w=112, r=0.4461
-* potential hit merge between [17,24)<=>[440,447) and [19,27)<=>[472,480), @ test_seq; w=30, r=1.125
-* potential hit merge between [0,6)<=>[311,317) and [19,27)<=>[472,480), @ test_seq; w=142, r=0.4357
-* potential hit merge between [17,24)<=>[440,447) and [19,27)<=>[472,480), @ test_seq; w=30, r=1.125
-* potential hit merge between [0,6)<=>[311,317) and [19,27)<=>[472,480), @ test_seq; w=142, r=0.4357
-* potential hit merge between [17,24)<=>[440,447) and [19,41)<=>[472,494), @ test_seq; w=30, r=0.6713
-* potential hit merge between [0,6)<=>[311,317) and [19,41)<=>[472,494), @ test_seq; w=142, r=0.5299
-* potential hit merge between [17,24)<=>[440,447) and [31,41)<=>[657,667), @ test_seq; w=203, r=0.6334
-* potential hit merge between [0,6)<=>[311,317) and [31,41)<=>[657,667), @ test_seq; w=315, r=0.3453
-[mem_merge_regions] 5 regions remain after merging duplicated regions
-** 5 regions.
-** 41, [0,41) <=> [27,68,test_seq,27) sec: 0, bss: 0, parent: 1
-** 11, [19,41) <=> [472,494,test_seq,472) sec: 0, bss: 1, parent: 0
-** 7, [17,24) <=> [440,447,test_seq,440) sec: 0, bss: 1, parent: 0
-** 6, [0,6) <=> [311,317,test_seq,311) sec: 0, bss: 1, parent: 0
-** 6, [31,41) <=> [657,667,test_seq,657) sec: 0, bss: 1, parent: 0
-
-=====> [bis_worker2] Finalizing SE read 'inputread' <=====
-[mem_mark_primary_se] Before marking
-** 5 regions.
-** 41, [0,41) <=> [27,68) sec: 0, bss: 0, parent: 1
-** 11, [19,41) <=> [472,494) sec: 0, bss: 1, parent: 0
-** 7, [17,24) <=> [440,447) sec: 0, bss: 1, parent: 0
-** 6, [0,6) <=> [311,317) sec: 0, bss: 1, parent: 0
-** 6, [31,41) <=> [657,667) sec: 0, bss: 1, parent: 0
-[mem_mark_primary_se] 1st round marking
-** 5 regions.
-** 41, [0,41) <=> [27,68) sec: -1, bss: 0, parent: 1
-** 11, [19,41) <=> [472,494) sec: 0, bss: 1, parent: 0
-** 7, [17,24) <=> [440,447) sec: 0, bss: 1, parent: 0
-** 6, [31,41) <=> [657,667) sec: 0, bss: 1, parent: 0
-** 6, [0,6) <=> [311,317) sec: 0, bss: 1, parent: 0
-[mem_mark_primary_se] 2nd round marking
-** 5 regions.
-** 41, [0,41) <=> [27,68) sec: -1, bss: 0, parent: 1
-** 11, [19,41) <=> [472,494) sec: 0, bss: 1, parent: 0
-** 7, [17,24) <=> [440,447) sec: 0, bss: 1, parent: 0
-** 6, [31,41) <=> [657,667) sec: 0, bss: 1, parent: 0
-** 6, [0,6) <=> [311,317) sec: 0, bss: 1, parent: 0
-
-Original code
-----------------------------------------------------------
-
-[mem_chain] Found 24 chains; Fraction of repetitive seeds: 0.000
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,6(test_seq:+7)	EXTRA
-** CHAIN: n=3, n_extra=4, weight=41	6;6;0,27(test_seq:+28)	41;41;0,27(test_seq:+28)	7;7;12,114(test_seq:+115)	EXTRA	6;6;6,33(test_seq:+34)	13;13;10,37(test_seq:+38)	7;7;12,99(test_seq:+100)	7;7;12,39(test_seq:+40)
-** CHAIN: n=5, n_extra=2, weight=14	7;7;17,44(test_seq:+45)	7;7;18,45(test_seq:+46)	8;8;19,46(test_seq:+47)	10;10;20,47(test_seq:+48)	6;6;25,101(test_seq:+102)	EXTRA	6;6;19,46(test_seq:+47)	6;6;25,52(test_seq:+53)
-** CHAIN: n=1, n_extra=0, weight=6	6;6;31,58(test_seq:+59)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,146(test_seq:+147)	7;7;12,219(test_seq:+220)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,192(test_seq:+193)	EXTRA
-** CHAIN: n=1, n_extra=1, weight=13	13;13;10,271(test_seq:+272)	EXTRA	7;7;12,273(test_seq:+274)
-** CHAIN: n=4, n_extra=0, weight=15	7;7;12,393(test_seq:+394)	7;7;17,440(test_seq:+441)	6;6;19,472(test_seq:+473)	8;8;19,472(test_seq:+473)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,431(test_seq:+432)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=7	7;7;12,508(test_seq:+509)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=7	7;7;12,519(test_seq:+520)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,568(test_seq:+569)	7;7;12,664(test_seq:+665)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=7	7;7;12,704(test_seq:-690)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=12	7;7;12,711(test_seq:-683)	6;6;25,717(test_seq:-678)	EXTRA
-** CHAIN: n=3, n_extra=1, weight=7	7;7;12,767(test_seq:-627)	7;7;12,808(test_seq:-586)	7;7;12,907(test_seq:-487)	EXTRA	7;7;12,799(test_seq:-595)
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,778(test_seq:-617)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,801(test_seq:-594)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,814(test_seq:-581)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1028(test_seq:-367)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=10	10;10;20,1078(test_seq:-313)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,1092(test_seq:-303)	7;7;12,1186(test_seq:-208)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1151(test_seq:-244)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;6,1194(test_seq:-201)	EXTRA
-** CHAIN: n=2, n_extra=1, weight=13	7;7;18,1338(test_seq:-56)	6;6;25,1374(test_seq:-21)	EXTRA	6;6;19,1339(test_seq:-56)
-[mem_flt_chained_seeds] 16 chains remained.
-** CHAIN: n=3, n_extra=4, weight=41	6;6;0,27(test_seq:+28)	41;41;0,27(test_seq:+28)	7;7;12,114(test_seq:+115)	EXTRA	6;6;6,33(test_seq:+34)	13;13;10,37(test_seq:+38)	7;7;12,99(test_seq:+100)	7;7;12,39(test_seq:+40)
-** CHAIN: n=4, n_extra=0, weight=15	7;7;12,393(test_seq:+394)	7;7;17,440(test_seq:+441)	6;6;19,472(test_seq:+473)	8;8;19,472(test_seq:+473)	EXTRA
-** CHAIN: n=5, n_extra=2, weight=14	7;7;17,44(test_seq:+45)	7;7;18,45(test_seq:+46)	8;8;19,46(test_seq:+47)	10;10;20,47(test_seq:+48)	6;6;25,101(test_seq:+102)	EXTRA	6;6;19,46(test_seq:+47)	6;6;25,52(test_seq:+53)
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,1092(test_seq:-303)	7;7;12,1186(test_seq:-208)	EXTRA
-** CHAIN: n=2, n_extra=1, weight=13	7;7;18,1338(test_seq:-56)	6;6;25,1374(test_seq:-21)	EXTRA	6;6;19,1339(test_seq:-56)
-** CHAIN: n=2, n_extra=0, weight=12	7;7;12,711(test_seq:-683)	6;6;25,717(test_seq:-678)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=10	10;10;20,1078(test_seq:-313)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,6(test_seq:+7)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,431(test_seq:+432)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,778(test_seq:-617)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,801(test_seq:-594)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,814(test_seq:-581)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1028(test_seq:-367)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,192(test_seq:+193)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;31,58(test_seq:+59)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1151(test_seq:-244)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=3, n_extra=4, weight=41	6;6;0,27(test_seq:+28)	41;41;0,27(test_seq:+28)	7;7;12,114(test_seq:+115)	EXTRA	6;6;6,33(test_seq:+34)	13;13;10,37(test_seq:+38)	7;7;12,99(test_seq:+100)	7;7;12,39(test_seq:+40)
-** ---> [mem_chain2region1] Extending from seed(2) [41;0,27] @ test_seq <---
-*** [mem_chain2region1] Added alignment region: [0,41) <=> [27,68); score=41; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(0) [6;0,27] is almost contained in an existing alignment [0,41) <=> [27,68)
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=4, n_extra=0, weight=15	7;7;12,393(test_seq:+394)	7;7;17,440(test_seq:+441)	6;6;19,472(test_seq:+473)	8;8;19,472(test_seq:+473)	EXTRA
-** ---> [mem_chain2region1] Extending from seed(3) [8;19,472] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TGTAGTCATAAATTTTGTGTTGTTTTGAATAGTGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGT
-*** [left_extend_seed_set_align_beg] Left query: AAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=8; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   TTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: GGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=8; score=8; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [19,27) <=> [472,480); score=8; {left,right}_bandwidth={100,100}
-** ---> [mem_chain2region1] Extending from seed(2) [7;17,440] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGT
-*** [left_extend_seed_set_align_beg] Left query: AGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   TTTGTTGTGTTTTAAATACTGATGTTGAGTCAGTTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: CAGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=7; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [17,24) <=> [440,447); score=7; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(0) [6;19,472] is almost contained in an existing alignment [19,27) <=> [472,480)
-** [mem_chain2region1] Seed(0) might lead to a different alignment even though it is contained. Extension will be performed.
-** ---> [mem_chain2region1] Extending from seed(0) [6;19,472] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TGTAGTCATAAATTTTGTGTTGTTTTGAATAGTGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGT
-*** [left_extend_seed_set_align_beg] Left query: AAAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=6; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   AGTTCATCTTTCCTACTGAAAATCCTT
-*** [right_extend_seed_set_align_end] Right query: AGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=6; score=8; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [19,27) <=> [472,480); score=8; {left,right}_bandwidth={100,100}
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=5, n_extra=2, weight=14	7;7;17,44(test_seq:+45)	7;7;18,45(test_seq:+46)	8;8;19,46(test_seq:+47)	10;10;20,47(test_seq:+48)	6;6;25,101(test_seq:+102)	EXTRA	6;6;19,46(test_seq:+47)	6;6;25,52(test_seq:+53)
-** [mem_chain2region1] Seed(4) [10;20,47] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(3) [8;19,46] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(2) [7;18,45] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(1) [7;17,44] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(1) [6;25,52] is almost contained in an existing alignment [0,41) <=> [27,68)
-** [mem_chain2region1] Seed(0) [6;19,46] is almost contained in an existing alignment [0,41) <=> [27,68)
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=2, n_extra=0, weight=13	6;6;6,1092(test_seq:-303)	7;7;12,1186(test_seq:-208)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=2, n_extra=1, weight=13	7;7;18,1338(test_seq:-56)	6;6;25,1374(test_seq:-21)	EXTRA	6;6;19,1339(test_seq:-56)
-** ---> [mem_chain2region1] Extending from seed(1) [7;18,1338] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   TTCACGGATTAAATACAACTACATACATTTG
-*** [left_extend_seed_set_align_beg] Left query: AAGGGTTGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   CCTGATTTATTTCCCAACTTTAACAAGACGAAAACACTTTTTTGTCTTTT
-*** [right_extend_seed_set_align_end] Right query: AGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=7; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [18,25) <=> [1338,1345); score=7; {left,right}_bandwidth={100,100}
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=2, n_extra=0, weight=12	7;7;12,711(test_seq:-683)	6;6;25,717(test_seq:-678)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=10	10;10;20,1078(test_seq:-313)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,6(test_seq:+7)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,431(test_seq:+432)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,778(test_seq:-617)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,801(test_seq:-594)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,814(test_seq:-581)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1028(test_seq:-367)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,192(test_seq:+193)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;31,58(test_seq:+59)	EXTRA
-** [mem_chain2region1] Seed(0) [6;31,58] is almost contained in an existing alignment [0,41) <=> [27,68)
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=1, n_extra=0, weight=6	6;6;25,1151(test_seq:-244)	EXTRA
-[mem_align1_core] === Seeding inputread against (parent: 1)
-
-[mem_chain] Found 17 chains; Fraction of repetitive seeds: 0.000
-** CHAIN: n=1, n_extra=0, weight=6	6;6;0,22(test_seq:+23)	EXTRA
-** CHAIN: n=2, n_extra=8, weight=41	6;6;0,27(test_seq:+28)	41;41;0,27(test_seq:+28)	EXTRA	6;6;6,33(test_seq:+34)	6;6;12,39(test_seq:+40)	8;8;14,41(test_seq:+42)	9;9;16,43(test_seq:+44)	6;6;18,45(test_seq:+46)	10;10;18,45(test_seq:+46)	6;6;24,51(test_seq:+52)	6;6;30,57(test_seq:+58)
-** CHAIN: n=1, n_extra=0, weight=8	8;8;14,275(test_seq:+276)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;6,331(test_seq:+332)	EXTRA
-** CHAIN: n=3, n_extra=0, weight=12	6;6;0,369(test_seq:+370)	6;6;0,446(test_seq:+447)	6;6;12,508(test_seq:+509)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,379(test_seq:+380)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,637(test_seq:+638)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;0,655(test_seq:+656)	EXTRA
-** CHAIN: n=1, n_extra=1, weight=9	9;9;16,719(test_seq:-673)	EXTRA	6;6;18,721(test_seq:-674)
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,877(test_seq:-518)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=12	6;6;0,1012(test_seq:-383)	6;6;12,1075(test_seq:-320)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,1219(test_seq:-176)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=12	6;6;18,1222(test_seq:-173)	6;6;30,1250(test_seq:-145)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=6	6;6;0,1289(test_seq:-106)	6;6;0,1384(test_seq:-11)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;30,1308(test_seq:-87)	EXTRA
-** CHAIN: n=2, n_extra=0, weight=10	6;6;18,1323(test_seq:-72)	10;10;18,1323(test_seq:-68)	EXTRA
-** CHAIN: n=1, n_extra=0, weight=6	6;6;0,1391(test_seq:-4)	EXTRA
-[mem_flt_chained_seeds] 2 chains remained.
-** CHAIN: n=2, n_extra=8, weight=41	6;6;0,27(test_seq:+28)	41;41;0,27(test_seq:+28)	EXTRA	6;6;6,33(test_seq:+34)	6;6;12,39(test_seq:+40)	8;8;14,41(test_seq:+42)	9;9;16,43(test_seq:+44)	6;6;18,45(test_seq:+46)	10;10;18,45(test_seq:+46)	6;6;24,51(test_seq:+52)	6;6;30,57(test_seq:+58)
-** CHAIN: n=3, n_extra=0, weight=12	6;6;0,369(test_seq:+370)	6;6;0,446(test_seq:+447)	6;6;12,508(test_seq:+509)	EXTRA
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=2, n_extra=8, weight=41	6;6;0,27(test_seq:+28)	41;41;0,27(test_seq:+28)	EXTRA	6;6;6,33(test_seq:+34)	6;6;12,39(test_seq:+40)	8;8;14,41(test_seq:+42)	9;9;16,43(test_seq:+44)	6;6;18,45(test_seq:+46)	10;10;18,45(test_seq:+46)	6;6;24,51(test_seq:+52)	6;6;30,57(test_seq:+58)
-** ---> [mem_chain2region1] Extending from seed(1) [41;0,27] @ test_seq <---
-*** [mem_chain2region1] Added alignment region: [0,41) <=> [27,68); score=41; {left,right}_bandwidth={100,100}
-** [mem_chain2region1] Seed(0) [6;0,27] is almost contained in an existing alignment [0,41) <=> [27,68)
-[mem_chain2region] ---> Convert following chain to region <---
-** CHAIN: n=3, n_extra=0, weight=12	6;6;0,369(test_seq:+370)	6;6;0,446(test_seq:+447)	6;6;12,508(test_seq:+509)	EXTRA
-** ---> [mem_chain2region1] Extending from seed(2) [6;12,508] @ test_seq <---
-*** [left_extend_seed_set_align_beg] Left ref:   GAATTCCTAAAAGTCATCCTTTCTACTTGACTGAGTTGTAGTCATAAATTTTGTGTTGTTTTGAATAGTGTCAAAAATGGTTTTGGATTGACCAGGTAGAAATCAATAAAGAAATCAAGTGGAACATCTTTAGTGTTTTT
-*** [left_extend_seed_set_align_beg] Left query: TGAAATTGTTCT
-*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=6; bandwidth=100; max_off_diagonal_dist=0
-*** [right_extend_seed_set_align_end] Right ref:   AAGTATAGAAAAAGTAGGAGTTACACCAAAATATTAACGCT
-*** [right_extend_seed_set_align_end] Right query: ATAAATCAGGGACTCATAAGTGC
-*** [right_extend_seed_set_align_end] Right extension: prev_score=6; score=7; bandwidth=100; max_off_diagonal_dist=0
-*** [mem_chain2region1] Added alignment region: [12,19) <=> [508,515); score=7; {left,right}_bandwidth={100,100}
-* potential hit merge between [17,24)<=>[440,447) and [19,27)<=>[472,480), @ test_seq; w=30, r=1.125
-* potential hit merge between [17,24)<=>[440,447) and [19,27)<=>[472,480), @ test_seq; w=30, r=1.125
-[mem_merge_regions] 6 regions remain after merging duplicated regions
-** 6 regions.
-** 41, [0,41) <=> [27,68,test_seq,27) sec: 0, bss: 0, parent: 1
-** 7, [12,19) <=> [508,515,test_seq,508) sec: 0, bss: 0, parent: 1
-** 7, [18,25) <=> [1338,1345,test_seq,55) sec: 0, bss: 0, parent: 0
-** 41, [0,41) <=> [27,68,test_seq,27) sec: 0, bss: 1, parent: 0
-** 8, [19,27) <=> [472,480,test_seq,472) sec: 0, bss: 1, parent: 0
-** 7, [17,24) <=> [440,447,test_seq,440) sec: 0, bss: 1, parent: 0
-
-=====> [bis_worker2] Finalizing SE read 'inputread' <=====
-[mem_mark_primary_se] Before marking
-** 6 regions.
-** 41, [0,41) <=> [27,68) sec: 0, bss: 0, parent: 1
-** 7, [12,19) <=> [508,515) sec: 0, bss: 0, parent: 1
-** 7, [18,25) <=> [1338,1345) sec: 0, bss: 0, parent: 0
-** 41, [0,41) <=> [27,68) sec: 0, bss: 1, parent: 0
-** 8, [19,27) <=> [472,480) sec: 0, bss: 1, parent: 0
-** 7, [17,24) <=> [440,447) sec: 0, bss: 1, parent: 0
-[mem_mark_primary_se] 1st round marking
-** 6 regions.
-** 41, [0,41) <=> [27,68) sec: -1, bss: 0, parent: 1
-** 41, [0,41) <=> [27,68) sec: 0, bss: 1, parent: 0
-** 8, [19,27) <=> [472,480) sec: 0, bss: 1, parent: 0
-** 7, [12,19) <=> [508,515) sec: 0, bss: 0, parent: 1
-** 7, [18,25) <=> [1338,1345) sec: 0, bss: 0, parent: 0
-** 7, [17,24) <=> [440,447) sec: 0, bss: 1, parent: 0
-[mem_mark_primary_se] 2nd round marking
-** 6 regions.
-** 41, [0,41) <=> [27,68) sec: -1, bss: 0, parent: 1
-** 41, [0,41) <=> [27,68) sec: 0, bss: 1, parent: 0
-** 8, [19,27) <=> [472,480) sec: 0, bss: 1, parent: 0
-** 7, [12,19) <=> [508,515) sec: 0, bss: 0, parent: 1
-** 7, [18,25) <=> [1338,1345) sec: 0, bss: 0, parent: 0
-** 7, [17,24) <=> [440,447) sec: 0, bss: 1, parent: 0
+1111111111101001001100100011111110111111001001101011101111011110
+0000000000010110110011011100000001000000110110010100010000100001
