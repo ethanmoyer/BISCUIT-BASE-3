@@ -301,7 +301,34 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 // NOTE: $max_intv is not currently used in BWA-MEM
 
 void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
-    bwtint_t tk[4], tl[4];
+    bwtint_t tk[4] = {0};
+    bwtint_t tl[4] = {0};
+    //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
+    for (int i = 3; i != c - 1; i--) {
+        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
+        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
+        ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
+        ok[i].x[2] = tl[i] - tk[i];
+        if (i == 3)
+            ok[3].x[is_back] = ik->x[is_back] + (
+                    ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
+        ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
+    }
+    // Implemented it all in one for loop... will need to test.
+    // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
+    //ok[3].x[is_back] = ik->x[is_back] + (
+    //      ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
+    //for (int i = 3; i > c; --i) {
+    //}
+
+    //ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
+    //ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
+    //ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
+}
+
+void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c, uint8_t *q) {
+    bwtint_t tk[4] = {0};
+    bwtint_t tl[4] = {0};
     //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
     for (int i = 3; i != c - 1; i--) {
         tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
@@ -414,7 +441,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend(bwtc, &ik, ok, 0, c);
+            bwt_extend_debug(bwtc, &ik, ok, 0, c);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
