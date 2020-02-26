@@ -46,6 +46,7 @@ static inline void bwtintv_cache_destroy(bwtintv_cache_t *a) {
 typedef struct {
   int64_t rbeg; // coordinate on forward-reverse reference
   int32_t qbeg, len;
+    int64_t print1, print2, print3;
   int score;
 } mem_seed_t; // unaligned memory
 

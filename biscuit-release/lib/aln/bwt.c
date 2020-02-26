@@ -103,7 +103,6 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
 
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
-
     bwtint_t x = k - (k > bwt->primary);
 
     x = nucAtBWTinv(bwt, x);
@@ -136,16 +135,13 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
 }
 
 bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k) {
-    k++;
-    bwtint_t sa = 0;
-    int mask = bwt->sa_intv; //does the data type matter here?
+    bwtint_t sa = 0, mask = bwt->sa_intv - 1;
     while (k % mask) { // != 0
         ++sa;
         k = bwt_invPsi(bwt, k);
     }
     /* without setting bwt->sa[0] = -1, the following line should be
        changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
-    fprintf(stderr, "sa: %llu\n", sa + bwt->sa[k/bwt->sa_intv]);
     return sa + bwt->sa[k/bwt->sa_intv];
 }
 
@@ -386,7 +382,6 @@ int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, 
                     if (mem->n == 0 || (unsigned) i + 1 < mem->a[mem->n-1].info>>32) { // skip contained matches
                         ik = *p; ik.info |= (uint64_t)(i + 1)<<32;
                         kv_push(bwtintv_t, *mem, ik);
-                        fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
                     }
                 } // otherwise the match is contained in another longer match
             } else if (curr->n == 0 || ok[c].x[2] != curr->a[curr->n-1].x[2]) {

@@ -199,6 +199,7 @@ static void mem_print_chain1(const bntseq_t *bns, const mem_chain_t *c) {
       printf("\t%d;%d;%d,%ld(%s:%c%ld)", s.score, s.len, s.qbeg,
              (long)s.rbeg, bns->anns[c->rid].name,
              "+-"[is_rev], (long)(pos - bns->anns[c->rid].offset) + 1);
+       printf("\tk: %lld; ik->x[0]: %lld", s.print1, s.print2);
    }
    printf("\tEXTRA");
    for (k = 0; k < c->seeds_extra.n; ++k) {
@@ -210,6 +211,7 @@ static void mem_print_chain1(const bntseq_t *bns, const mem_chain_t *c) {
       printf("\t%d;%d;%d,%ld(%s:%c%ld)", s.score, s.len, s.qbeg,
              (long)s.rbeg, bns->anns[c->rid].name,
              "+-"[is_rev], (long)(pos - bns->anns[c->rid].offset) + 1);
+       printf("\tk: %lld; ik->x[0]: %lld", s.print1, s.print2);
    }
    putchar('\n');
 }
@@ -344,8 +346,9 @@ mem_chain_v mem_chain(
          mem_seed_t s;
          // this is where we need to pay attention to
          // this directs the interval regions that are chained together here
-         s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k - 1);
-          // s.rbeg is the problem here...
+         s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k);
+         s.print1 = k;
+         s.print2 = intv->x[0];
          s.qbeg = intv->info>>32;
          s.score = s.len = slen;
 
