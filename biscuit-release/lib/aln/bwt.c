@@ -89,8 +89,8 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 // to my knowledge). There may be room for improvement.
 // Seg fault is here
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
-    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
+    bwtint_t top = (bwt->bwt_new[(k + 1)/128 * 8 + (((k + 1) % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
+    bwtint_t bottom = (bwt->bwt_new[(k + 1)/128 * 8 + (((k + 1) % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
@@ -110,12 +110,15 @@ static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
     return k == bwt->primary ? 0 : x;
 }
 
-void bwt_cal_sa(bwt_t *bwt, int intv) {
+void bwt_cal_sa(bwt_t *bwt, int intv)
+{
     bwtint_t isa, sa, i; // S(isa) = sa
     int intv_round = intv;
+
     kv_roundup32(intv_round);
     xassert(intv_round == intv, "SA sample interval is not a power of 2.");
     xassert(bwt->bwt_new, "bwt_t::bwt is not initialized.");
+
     if (bwt->sa) free(bwt->sa);
     bwt->sa_intv = intv;
     bwt->n_sa = (bwt->seq_len + intv) / intv;
@@ -123,15 +126,12 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
     // calculate SA value
     isa = 0; sa = bwt->seq_len;
     for (i = 0; i < bwt->seq_len; ++i) {
-        if (isa % intv == 0) {
-            bwt->sa[isa/intv] = sa;
-        }
+        if (isa % intv == 0) bwt->sa[isa/intv] = sa;
         --sa;
         isa = bwt_invPsi(bwt, isa);
     }
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
-    //bwt->sa[0] = 0; //might change back later
-    //bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
+    bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }
 
 bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k) {
