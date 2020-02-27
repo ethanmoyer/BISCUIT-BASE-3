@@ -354,6 +354,24 @@ void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_bac
     //ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
 }
 
+void bwt_extend_old(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back)
+{
+    bwtint_t tk[4], tl[4];
+    int i;
+    for (i = 0; i != 4; ++i) {
+        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
+        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
+        ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
+        ok[i].x[2] = tl[i] - tk[i];
+    }
+
+    ok[3].x[is_back] = ik->x[is_back] + (
+            ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
+    ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
+    ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
+    ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
+}
+
 int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
 
     int i, j, c, ret;
@@ -443,7 +461,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_debug(bwtc, &ik, ok, 0, c, q);
+            bwt_extend_old(bwtc, &ik, ok, 0);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
