@@ -301,6 +301,8 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 // NOTE: $max_intv is not currently used in BWA-MEM
 
 void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
+    //add old bwt_extend
+    //create test function for bwt_extend
     bwtint_t tk[4] = {0};
     bwtint_t tl[4] = {0};
     //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
@@ -441,7 +443,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_debug(bwtc, &ik, ok, 0, c);
+            bwt_extend_debug(bwtc, &ik, ok, 0, c, &q);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
