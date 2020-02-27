@@ -127,7 +127,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv) {
             bwt->sa[isa/intv] = sa;
         }
         --sa;
-        isa = bwt_invPsi(bwt, isa);
+        isa = bwt_invPsi(bwt, isa + 1);
     }
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     //bwt->sa[0] = 0; //might change back later
