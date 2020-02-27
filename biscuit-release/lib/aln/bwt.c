@@ -340,7 +340,8 @@ void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_bac
         if (i == 3)
             ok[3].x[is_back] = ik->x[is_back] + (
                     ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-        ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
+        if (i != 0)
+            ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
     }
     // Implemented it all in one for loop... will need to test.
     // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
@@ -461,7 +462,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_old(bwtc, &ik, ok, 0);
+            bwt_extend_debug(bwtc, &ik, ok, 0, c, q);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
