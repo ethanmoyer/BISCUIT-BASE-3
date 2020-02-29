@@ -127,8 +127,11 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
     isa = 0; sa = bwt->seq_len;
     int j = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
+        if (i > 3205648)
+            fprintf(stderr, "isa: %d\n", isa);
         if (isa % intv == 0) {
             bwt->sa[isa / intv] = sa;
+
             j++;
         }
         --sa;
