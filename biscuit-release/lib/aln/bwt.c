@@ -123,21 +123,15 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
     bwt->sa_intv = intv;
     bwt->n_sa = (bwt->seq_len + intv) / intv;
     bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
-    int *instances = (int*)calloc(bwt->seq_len, sizeof(int));
     // calculate SA value
     isa = 0; sa = bwt->seq_len;
     int j = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
-        for (int k = 0; k < i; k++) {
-            if (isa == instances[k])
-                fprintf(stderr, "j: %d\n", j);
-        }
         if (isa % intv == 0) {
             bwt->sa[isa / intv] = sa;
             j++;
         }
         --sa;
-        instances[i] = isa;
         isa = bwt_invPsi(bwt, isa);
     }
     fprintf(stderr, "j: %d\n", j);
