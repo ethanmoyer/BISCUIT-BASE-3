@@ -146,7 +146,7 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
         buf = 0;
         buf = (bwt->bwt[i/16] >> (30 - 2 * i % 32)) & 3;
         x = j << (63 - (i % 64));
-        if (!(buf > 1)) {
+        if (buf <= 1) {
             bwt->bwt_new[i/128 * 8 + (i % 128 < 64 ? 4 : 5)] ^= x;
         }
         if (!(buf % 2 == 0)) {
@@ -154,20 +154,13 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
         }
     }
 
-    for (bwtint_t i = 0; i < bwt->seq_len/128 + 1; i++) {
-        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * 8 + 4]);
-        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * 8 + 6]);
-        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * 8 + 5]);
-        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * 8 + 7]);
-    }
-
     bwtint_t n = bwt->seq_len / 128 + 1; //1400 --> 700
     bwtint_t k = 8;
     for (bwtint_t i = 0; i < n - 1; i++) {
-        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
-        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
-        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
-        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
+        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
+        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
+        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
+        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
 
         //A
         bwt->bwt_new[i * k + 0] =
@@ -186,7 +179,7 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
                                            bwt->bwt_new[i * k + 6])) +
                     __builtin_popcountll(~(bwt->bwt_new[i * k + 5] ^
                                            bwt->bwt_new[i * k + 7]));
-            bwt->bwt_new[i * k + 1] = 0UL;
+            //bwt->bwt_new[i * k + 1] = 0UL;
         } else {
             //C
             bwt->bwt_new[i * k + 1] =
@@ -194,7 +187,7 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
                                          bwt->bwt_new[i * k + 6]) +
                     __builtin_popcountll(bwt->bwt_new[i * k + 5] &
                                          bwt->bwt_new[i * k + 7]);
-            bwt->bwt_new[i * k + 2] = 0UL;
+            //bwt->bwt_new[i * k + 2] = 0UL;
         }
 
         if (i != 0) {
@@ -204,13 +197,17 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
             bwt->bwt_new[i * k + 1] += bwt->bwt_new[(i - 1) * k + 1];
         }
 
-        //fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
-        //bwt->bwt_new[i * k + 0],
-        //bwt->bwt_new[i * k + 2],
-        //bwt->bwt_new[i * k + 3],
-        //bwt->bwt_new[i * k + 1]);
+        fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
+        bwt->bwt_new[i * k + 0],
+        bwt->bwt_new[i * k + 2],
+        bwt->bwt_new[i * k + 3],
+        bwt->bwt_new[i * k + 1]);
     }
 
+    fprintf(stderr, "bwt->L2[0]: %llu bwt->L2[1]: %llu bwt->L2[2]: %llu bwt->L2[3]: %llu bwt->L2[4]: %llu\n", bwt->L2[0],
+            bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
+
+exit(0);
     //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
     //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
     //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);

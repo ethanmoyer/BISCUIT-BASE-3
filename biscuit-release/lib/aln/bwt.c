@@ -69,7 +69,7 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 
     if ((k + 1) / 128)
         count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
-
+    fprintf(stderr, "count: %llu\n", count);
     if ((k + 1) == bwt->seq_len && c == 2 && count == 0)
         return 0;
 
@@ -77,10 +77,13 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 
     if ((k + 1) % 128 < 64) {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, ((k + 1) % 128));
+        fprintf(stderr, "count: %llu\n", count);
     } else {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64);
+        fprintf(stderr, "count: %llu\n", count);
         if ((k + 1) % 64 == 0) return count;
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 5], bwt->bwt_new[k/128 * 8 + 7], c, (k % 64) + 1);
+        fprintf(stderr, "count: %llu\n", count);
     }
     return count;
 }
@@ -104,9 +107,14 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
     bwtint_t x = k - (k > bwt->primary);
-
+    fprintf(stderr, "x: %llu\n", x);
     x = nucAtBWTinv(bwt, x);
+    fprintf(stderr, "x: %llu\n", x);
+    fprintf(stderr, "bwt_occ_new_index(bwt, k, x): %llu\n", bwt_occ_new_index(bwt, k, x));
+    fprintf(stderr, "bwt->L2[x]: %llu\n", bwt->L2[x]);
+
     x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x);
+    fprintf(stderr, "x: %llu\n", x);
     return k == bwt->primary ? 0 : x;
 }
 
@@ -127,17 +135,20 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
     isa = 0; sa = bwt->seq_len;
     int j = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
-        if (i > 3205648)
-            fprintf(stderr, "isa: %d\n", isa);
+        fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
         if (isa % intv == 0) {
             bwt->sa[isa / intv] = sa;
 
             j++;
         }
+        if (sa == 2631)
+            exit(0);
         --sa;
         isa = bwt_invPsi(bwt, isa);
     }
+
     fprintf(stderr, "j: %d\n", j);
+    exit(0);
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }

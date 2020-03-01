@@ -47,12 +47,6 @@ typedef struct {
     size_t size;
 } bwt_vector;
 
-typedef struct {
-    uint64_t *occurrences;
-    size_t rows;
-    size_t cols;
-} bwt_occ_matrix;
-
 typedef uint64_t bwtint_t; //unsigned long long 2^64
 
 //gives name to user defined data type --> bwt_t
