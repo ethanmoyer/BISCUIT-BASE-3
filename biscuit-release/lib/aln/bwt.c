@@ -325,8 +325,8 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
             bwtintv_t tmp = p->a[p->n - 1 - j];
             p->a[p->n - 1 - j] = p->a[j];
             p->a[j] = tmp;
-            fprintf(stderr, "p->a[j].x[0]: %llu p->a[j].x[1]: %llu p->a[j].x[2]: %llu\n", p->a[j].x[0], p->a[j].x[1], p->a[j].x[2]);
-            fprintf(stderr, "p->a[j].info: %llu\n", p->a[j].info);
+            //fprintf(stderr, "p->a[j].x[0]: %llu p->a[j].x[1]: %llu p->a[j].x[2]: %llu\n", p->a[j].x[0], p->a[j].x[1], p->a[j].x[2]);
+            //fprintf(stderr, "p->a[j].info: %llu\n", p->a[j].info);
         }
     }
 }
@@ -473,7 +473,7 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
 
     if (tmpvec == 0 || tmpvec[0] == 0) free(a[0].a);
     if (tmpvec == 0 || tmpvec[1] == 0) free(a[1].a);
-    fprintf(stderr, "ret: %llu\n", ret);
+    //fprintf(stderr, "ret: %llu\n", ret);
     return ret;
 }
 // this copy of bwt_extend works with bwt_smem1a
@@ -631,7 +631,7 @@ void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new);
     bwt->seq_len = bwt->L2[4];
-    fprintf(stderr, "bwt->bwt_size: %llu bwt->seq_len: %llu\n", bwt->bwt_size, bwt->seq_len);
+    //fprintf(stderr, "bwt->bwt_size: %llu bwt->seq_len: %llu\n", bwt->bwt_size, bwt->seq_len);
 
 
     err_fclose(fp);

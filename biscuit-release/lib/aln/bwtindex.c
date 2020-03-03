@@ -218,8 +218,8 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
 
     }
 
-    fprintf(stderr, "bwt->L2[0]: %llu bwt->L2[1]: %llu bwt->L2[2]: %llu bwt->L2[3]: %llu bwt->L2[4]: %llu\n", bwt->L2[0],
-            bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
+    //fprintf(stderr, "bwt->L2[0]: %llu bwt->L2[1]: %llu bwt->L2[2]: %llu bwt->L2[3]: %llu bwt->L2[4]: %llu\n", bwt->L2[0],
+    //        bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
 
     //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
     //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);

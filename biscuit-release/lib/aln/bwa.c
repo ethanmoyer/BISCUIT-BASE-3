@@ -471,8 +471,8 @@ void bwa_idx_load_bwt(const char *hint, uint8_t parent, bwt_t *bwt)
     strcat(strcpy(tmp, prefix), ".par.sa");  // partial suffix array (SA)
     bwt_restore_sa(tmp, bwt);
 
-      for (int i = 0; i < bwt->n_sa; i++)
-          fprintf(stderr, "bwt->sa[i]: %llu\n", bwt->sa[i]);
+      //for (int i = 0; i < bwt->n_sa; i++)
+          //fprintf(stderr, "bwt->sa[i]: %llu\n", bwt->sa[i]);
 
   } else {
     strcat(strcpy(tmp, prefix), ".dau.bwt"); // FM-index
