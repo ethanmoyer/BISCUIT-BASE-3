@@ -53,7 +53,7 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
             return __builtin_popcountll(top & bottom); //C
         case 2:
             partial_G = __builtin_popcountll(~top & ~bottom);
-            return k % 64 != 0 ? partial_G - 64 + k % 64 : partial_G; //G
+            return k % 64 != 0 ? partial_G - 64 + k : partial_G; //G
         case 3:
             return __builtin_popcountll(~top & bottom); //T
     }
@@ -69,7 +69,7 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 
     if ((k + 1) / 128)
         count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
-    fprintf(stderr, "count: %llu\n", count);
+    //fprintf(stderr, "count: %llu\n", count);
     if ((k + 1) == bwt->seq_len && c == 2 && count == 0)
         return 0;
 
@@ -77,13 +77,13 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 
     if ((k + 1) % 128 < 64) {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, ((k + 1) % 128));
-        fprintf(stderr, "count: %llu\n", count);
+        //fprintf(stderr, "count: %llu\n", count);
     } else {
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64);
-        fprintf(stderr, "count: %llu\n", count);
+        //fprintf(stderr, "count: %llu\n", count);
         if ((k + 1) % 64 == 0) return count;
         count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 5], bwt->bwt_new[k/128 * 8 + 7], c, (k % 64) + 1);
-        fprintf(stderr, "count: %llu\n", count);
+        //fprintf(stderr, "count: %llu\n", count);
     }
     return count;
 }
@@ -94,6 +94,8 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
     bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
     bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
+   // fprintf(stderr, "bet0: %llu\n", bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)]);
+    //fprintf(stderr, "bwt1: %llu\n", bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)]);
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
@@ -107,14 +109,14 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
     bwtint_t x = k - (k > bwt->primary);
-    fprintf(stderr, "x: %llu\n", x);
+    //fprintf(stderr, "x: %llu\n", x);
     x = nucAtBWTinv(bwt, x);
-    fprintf(stderr, "x: %llu\n", x);
-    fprintf(stderr, "bwt_occ_new_index(bwt, k, x): %llu\n", bwt_occ_new_index(bwt, k, x));
-    fprintf(stderr, "bwt->L2[x]: %llu\n", bwt->L2[x]);
+    //fprintf(stderr, "x: %llu\n", x);
+    //fprintf(stderr, "bwt_occ_new_index(bwt, k, x): %llu\n", bwt_occ_new_index(bwt, k, x));
+    //fprintf(stderr, "bwt->L2[x]: %llu\n\n", bwt->L2[x]);
 
     x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x);
-    fprintf(stderr, "x: %llu\n", x);
+    //fprintf(stderr, "x: %llu\n", x);
     return k == bwt->primary ? 0 : x;
 }
 
@@ -133,22 +135,24 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
     bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
     // calculate SA value
     isa = 0; sa = bwt->seq_len;
+    //fprintf(stderr, "bwt->L2[0]: %llu bwt->L2[1]: %llu bwt->L2[2]: %llu bwt->L2[3]: %llu bwt->L2[4]: %llu\n", bwt->L2[0],
+    //        bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
     int j = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
-        fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
+        //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
         if (isa % intv == 0) {
             bwt->sa[isa / intv] = sa;
 
             j++;
         }
-        if (sa == 2631)
-            exit(0);
+        //if (sa == 2631)
+         //  exit(0);
         --sa;
         isa = bwt_invPsi(bwt, isa);
     }
 
-    fprintf(stderr, "j: %d\n", j);
-    exit(0);
+    //fprintf(stderr, "j: %d\n", j);
+    //exit(0);
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }
@@ -514,7 +518,10 @@ void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt, ubyte_t I) {
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     //second argument is the number of bytes; third argument is the number of elements
-    err_fwrite(bwt->bwt_new, 8, bwt->bwt_size, fp);
+    //fprintf(stderr, "bwt->bwt_size + 8: %llu\n", bwt->bwt_size + 8);
+    //fprintf(stderr, "bwt->seq_len/8: %llu\n", bwt->seq_len/16 + 8 + 1);
+
+    err_fwrite(bwt->bwt_new, 8, bwt->seq_len/16 + 8 + 1, fp);
     err_fflush(fp);
     err_fclose(fp);
 }

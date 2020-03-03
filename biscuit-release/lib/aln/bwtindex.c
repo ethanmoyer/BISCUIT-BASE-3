@@ -98,6 +98,10 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
         err_fatal_simple("libdivsufsort is not compiled in.");
 #endif
     }
+
+    //for (int i = 0; i < bwt->seq_len; i++)
+    //    fprintf(stderr, "%llu", buf[i]);
+
     bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
     for (i = 0; i < bwt->seq_len; ++i)
         bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
@@ -137,12 +141,20 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 // The output after each 128 block is simply used for developmental purposes and debugging of the counts.
 void bwt_bwtupdate_core(bwt_t *bwt, int index) {
 
-    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2, 8);
+    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2 , 8);
 
     uint64_t j = 1UL;
     uint64_t x = 0;
     ubyte_t buf = 0;
-    for (bwtint_t i = 0; i < bwt->seq_len; ++i) {
+
+    //for (int i = 0; i < bwt->seq_len; i++)
+    //    if (i % 16 == 0)
+     //       fprintf(stderr, "bwt: %llu\n", bwt->bwt[i]);
+
+    for (bwtint_t i = 0; i < bwt->seq_len + 16; ++i) {
+        //if (i % 16 == 0)
+            //fprintf(stderr, "bwt: %llu\n", bwt->bwt[i/16]);
+
         buf = 0;
         buf = (bwt->bwt[i/16] >> (30 - 2 * i % 32)) & 3;
         x = j << (63 - (i % 64));
@@ -157,10 +169,10 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
     bwtint_t n = bwt->seq_len / 128 + 1; //1400 --> 700
     bwtint_t k = 8;
     for (bwtint_t i = 0; i < n - 1; i++) {
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
-        fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
-        fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
+        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
+        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
+        //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
+        //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 7]);
 
         //A
         bwt->bwt_new[i * k + 0] =
@@ -197,17 +209,17 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
             bwt->bwt_new[i * k + 1] += bwt->bwt_new[(i - 1) * k + 1];
         }
 
-        fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
-        bwt->bwt_new[i * k + 0],
-        bwt->bwt_new[i * k + 2],
-        bwt->bwt_new[i * k + 3],
-        bwt->bwt_new[i * k + 1]);
+        //fprintf(stderr, "i: %llu occurances: A: %llu G: %llu T: %llu C: %llu \n\n", i,
+        //bwt->bwt_new[i * k + 0],
+        //bwt->bwt_new[i * k + 2],
+        //bwt->bwt_new[i * k + 3],
+        //bwt->bwt_new[i * k + 1]);
+
     }
 
     fprintf(stderr, "bwt->L2[0]: %llu bwt->L2[1]: %llu bwt->L2[2]: %llu bwt->L2[3]: %llu bwt->L2[4]: %llu\n", bwt->L2[0],
             bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
 
-exit(0);
     //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 4]);
     //fprintf(stderr, "bwt1: %llu \n", bwt->bwt_new[i * k + 6]);
     //fprintf(stderr, "bwt0: %llu \n", bwt->bwt_new[i * k + 5]);
