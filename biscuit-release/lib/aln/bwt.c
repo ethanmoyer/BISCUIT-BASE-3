@@ -139,10 +139,10 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
     //        bwt->L2[1], bwt->L2[2], bwt->L2[3], bwt->L2[4]);
     int j = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
-        //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
+
         if (isa % intv == 0) {
             bwt->sa[isa / intv] = sa;
-
+            //fprintf(stderr, "sa: %llu isa: %llu\n", sa, isa);
             j++;
         }
         //if (sa == 2631)
@@ -159,10 +159,18 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
 
 bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k) {
     bwtint_t sa = 0, mask = bwt->sa_intv - 1;
+
+    //for (int i = 0; i < bwt->n_sa; i++)
+        //fprintf(stderr, "bwt->sa[i]: %llu\n", bwt->sa[i]);
+    //fprintf(stderr, "mask: %llu\n", mask);
+
     while (k % mask) { // != 0
         ++sa;
         k = bwt_invPsi(bwt, k);
+        fprintf(stderr, "sa: %llu k: %llu\n", sa, k);
+
     }
+    exit(0);
     /* without setting bwt->sa[0] = -1, the following line should be
        changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
     return sa + bwt->sa[k/bwt->sa_intv];
@@ -318,6 +326,7 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
             p->a[p->n - 1 - j] = p->a[j];
             p->a[j] = tmp;
             fprintf(stderr, "p->a[j].x[0]: %llu p->a[j].x[1]: %llu p->a[j].x[2]: %llu\n", p->a[j].x[0], p->a[j].x[1], p->a[j].x[2]);
+            fprintf(stderr, "p->a[j].info: %llu\n", p->a[j].info);
         }
     }
 }
@@ -520,7 +529,7 @@ void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt, ubyte_t I) {
     //fprintf(stderr, "bwt->bwt_size + 8: %llu\n", bwt->bwt_size + 8);
     //fprintf(stderr, "bwt->seq_len/8: %llu\n", bwt->seq_len/16 + 8 + 1);
 
-    err_fwrite(bwt->bwt_new, 8, bwt->seq_len/16 + 8 + 1, fp);
+    err_fwrite(bwt->bwt_new, 4, bwt->bwt_size, fp);
     err_fflush(fp);
     err_fclose(fp);
 }
@@ -622,6 +631,8 @@ void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
     fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new);
     bwt->seq_len = bwt->L2[4];
+    fprintf(stderr, "bwt->bwt_size: %llu bwt->seq_len: %llu\n", bwt->bwt_size, bwt->seq_len);
+
 
     err_fclose(fp);
 }

@@ -32,7 +32,7 @@ PROG = biscuit
 build: exportcf $(PROG)
 
 debug: CF_OPTIMIZE := 0
-debug: CFLAGS += -g -pg
+debug: CFLAGS += -g
 debug: CFLAGS := $(filter-out -O3,$(CFLAGS))
 debug: build
 

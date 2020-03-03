@@ -140,9 +140,10 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 // data structure.
 // The output after each 128 block is simply used for developmental purposes and debugging of the counts.
 void bwt_bwtupdate_core(bwt_t *bwt, int index) {
-
+    bwtint_t n_occ;
+    n_occ = (bwt->seq_len + OCC_INTERVAL - 1) / OCC_INTERVAL + 1;
     bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2 , 8);
-
+    bwt->bwt_size += n_occ * sizeof(bwtint_t);
     uint64_t j = 1UL;
     uint64_t x = 0;
     ubyte_t buf = 0;
