@@ -345,12 +345,10 @@ mem_chain_v mem_chain(
          // this is where we need to pay attention to
          // this directs the interval regions that are chained together here
          s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k);
-          //fprintf(stderr, "intv->x[0]: %llu, k: %llu\n", intv->x[0], k);
          s.print1 = k;
          s.print2 = intv->x[0];
          s.qbeg = intv->info>>32;
          s.score = s.len = slen;
-          //fprintf(stderr, "s.rbeg: %llu s.qbeg: %llu s.score: %llu\n", s.rbeg, s.qbeg, s.score);
 
          /* bridging multiple reference sequences or the forward-reverse boundary; TODO: split the seed; don't discard it!!! */
          int rid = bns_intv2rid(bns, s.rbeg, s.rbeg + s.len);
