@@ -151,7 +151,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
         isa = bwt_invPsi(bwt, isa);
     }
 
-    fprintf(stderr, "j: %d\n", j);
+    //fprintf(stderr, "j: %d\n", j);
     //exit(0);
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
@@ -164,13 +164,13 @@ bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k) {
         //fprintf(stderr, "bwt->sa[i]: %llu\n", bwt->sa[i]);
     //fprintf(stderr, "mask: %llu\n", mask);
 
-    while (k % mask) { // != 0
+    while (k & mask) { // != 0
         ++sa;
         k = bwt_invPsi(bwt, k);
-        fprintf(stderr, "sa: %llu k: %llu\n", sa, k);
+        //fprintf(stderr, "sa: %llu k: %llu\n", sa, k);
 
     }
-    exit(0);
+
     /* without setting bwt->sa[0] = -1, the following line should be
        changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
     return sa + bwt->sa[k/bwt->sa_intv];
