@@ -151,7 +151,7 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
         isa = bwt_invPsi(bwt, isa);
     }
 
-    //fprintf(stderr, "j: %d\n", j);
+    fprintf(stderr, "j: %d\n", j);
     //exit(0);
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
@@ -317,6 +317,7 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
             bwtintv_t tmp = p->a[p->n - 1 - j];
             p->a[p->n - 1 - j] = p->a[j];
             p->a[j] = tmp;
+            fprintf(stderr, "p->a[j].x[0]: %llu p->a[j].x[1]: %llu p->a[j].x[2]: %llu\n", p->a[j].x[0], p->a[j].x[1], p->a[j].x[2]);
         }
     }
 }
@@ -351,7 +352,7 @@ void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int
     //ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
 }
 
-void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c, uint8_t *q) {
+void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
     bwtint_t tk[4] = {0};
     bwtint_t tl[4] = {0};
     //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
@@ -396,15 +397,14 @@ void bwt_extend_old(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int 
     ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
 }
 
-int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
+int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
 
     int i, j, c, ret;
     bwtintv_t ik, ok[4];
     bwtintv_v a[2], *prev, *curr, *swap;
+
     mem->n = 0;
-
     if (q[x] > 3) return x + 1;
-
     if (min_intv < 1) min_intv = 1; // the interval size should be at least 1
     kv_init(a[0]); kv_init(a[1]);
     prev = tmpvec && tmpvec[0]? tmpvec[0] : &a[0]; // use the temporary vector if provided
@@ -413,17 +413,19 @@ int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, 
     ik.info = x + 1;
 
     for (i = x + 1, curr->n = 0; i < len; ++i) { // forward search
-        if (ik.x[2] < max_intv) { // an interval small enough, currently won't come here, max_intv is currently 0
+        if (ik.x[2] < max_intv) { // an interval small enough, currently won't come here
             kv_push(bwtintv_t, *curr, ik);
             break;
         } else if (q[i] < 4) { // an A/C/G/T base
-            c = 3 - q[i];
-            bwt_extend(bwtc, &ik, ok, 0, c);
+            c = 3 - q[i]; // complement of q[i]
+            bwt_extend_debug(bwtc, &ik, ok, 0, c);
+            //fprintf(stderr, "ok[c].x[2]: %llu\n", ok[c].x[2]);
             if (ok[c].x[2] != ik.x[2]) { // change of the interval size
                 kv_push(bwtintv_t, *curr, ik);
-                if (ok[c].x[2] < (unsigned) min_intv) { // no more matches
-                    break; // the interval size is too small to be extended further
-                }
+
+                //fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
+                // no more matches
+                if (ok[c].x[2] < (unsigned) min_intv) break; // the interval size is too small to be extended further
             }
             ik = ok[c]; ik.info = i + 1;
         } else { // an ambiguous base
@@ -431,28 +433,23 @@ int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, 
             break; // always terminate extension at an ambiguous base; in this case, i<len always stands
         }
     }
-
-    if (i == len) { // since we do the backwards search as the forwards search
-        kv_push(bwtintv_t, *curr, ik); // push the last interval if we reach the end
-    }
+    if (i == len) kv_push(bwtintv_t, *curr, ik); // push the last interval if we reach the end
     bwt_reverse_intvs(curr); // s.t. smaller intervals (i.e. longer matches) visited first
     ret = curr->a[0].info; // this will be the returned value
     swap = curr; curr = prev; prev = swap;
 
     for (i = x - 1; i >= -1; --i) { // backward search for MEMs
         c = i < 0? -1 : q[i] < 4? q[i] : -1; // c==-1 if i<0 or q[i] is an ambiguous base
-
-        for (j = 0, curr->n = 0; (unsigned) j < prev->n ; ++j) {
+        for (j = 0, curr->n = 0; (unsigned) j < prev->n; ++j) {
             bwtintv_t *p = &prev->a[j];
-
-            if (c >= 0 && ik.x[2] >= max_intv)
-                bwt_extend(bwt, p, ok, 1, c); // is_back == true
-
+            if (c >= 0 && ik.x[2] >= max_intv) bwt_extend_debug(bwt, p, ok, 1, c);
+            //fprintf(stderr, "ok[c].x[2]: %llu\n", ok[c].x[2]);
             if (c < 0 || ik.x[2] < (unsigned) max_intv || ok[c].x[2] < (unsigned) min_intv) { // keep the hit if reaching the beginning or an ambiguous base or the intv is small enough
                 if (curr->n == 0) { // test curr->n>0 to make sure there are no longer matches
                     if (mem->n == 0 || (unsigned) i + 1 < mem->a[mem->n-1].info>>32) { // skip contained matches
                         ik = *p; ik.info |= (uint64_t)(i + 1)<<32;
                         kv_push(bwtintv_t, *mem, ik);
+                        //fprintf(stderr, "ik.x[0]: %llu ik.x[1]: %llu ik.x[2]: %llu\n", ik.x[0], ik.x[1], ik.x[2]);
                     }
                 } // otherwise the match is contained in another longer match
             } else if (curr->n == 0 || ok[c].x[2] != curr->a[curr->n-1].x[2]) {
@@ -467,6 +464,7 @@ int bwt_smem1a (const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, 
 
     if (tmpvec == 0 || tmpvec[0] == 0) free(a[0].a);
     if (tmpvec == 0 || tmpvec[1] == 0) free(a[1].a);
+    fprintf(stderr, "ret: %llu\n", ret);
     return ret;
 }
 // this copy of bwt_extend works with bwt_smem1a
@@ -485,7 +483,8 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_debug(bwtc, &ik, ok, 0, c, q);
+            bwt_extend_debug(bwtc, &ik, ok, 0, c);
+            //fprintf(stderr, "ok[c].x[2]: %llu\n", ok[c].x[2]);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
@@ -601,8 +600,9 @@ bwt_t *bwt_restore_bwt_new(const char *fn) {
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
-    fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new); //change bwt->bwt_size<<2 with seq_len/8
     bwt->seq_len = bwt->L2[4];
+    fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new); //change bwt->bwt_size<<2 with seq_len/8
+
     err_fclose(fp);
 
     return bwt;

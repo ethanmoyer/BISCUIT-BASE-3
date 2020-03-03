@@ -199,7 +199,6 @@ static void mem_print_chain1(const bntseq_t *bns, const mem_chain_t *c) {
       printf("\t%d;%d;%d,%ld(%s:%c%ld)", s.score, s.len, s.qbeg,
              (long)s.rbeg, bns->anns[c->rid].name,
              "+-"[is_rev], (long)(pos - bns->anns[c->rid].offset) + 1);
-       printf("\tk: %lld; ik->x[0]: %lld", s.print1, s.print2);
    }
    printf("\tEXTRA");
    for (k = 0; k < c->seeds_extra.n; ++k) {
@@ -211,7 +210,6 @@ static void mem_print_chain1(const bntseq_t *bns, const mem_chain_t *c) {
       printf("\t%d;%d;%d,%ld(%s:%c%ld)", s.score, s.len, s.qbeg,
              (long)s.rbeg, bns->anns[c->rid].name,
              "+-"[is_rev], (long)(pos - bns->anns[c->rid].offset) + 1);
-       printf("\tk: %lld; ik->x[0]: %lld", s.print1, s.print2);
    }
    putchar('\n');
 }
