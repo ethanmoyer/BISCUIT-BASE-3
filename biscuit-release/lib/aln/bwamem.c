@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <limits.h>
 #include <math.h>
+#include <time.h>
+#include <stdio.h>
 #ifdef HAVE_PTHREAD
 #include <pthread.h>
 #endif
@@ -283,7 +285,7 @@ static void read_clipping(bseq1_t *seq, uint8_t *adaptor, int l_adaptor, const m
  */
  // Called in bwamem.c
 static void bis_worker1(void *data, int i, int tid) {
-   
+    clock_t t = clock();
    worker_t *w = (worker_t*)data;
    mem_alnreg_v *regs; const mem_opt_t *opt=w->opt;
 
@@ -347,7 +349,9 @@ static void bis_worker1(void *data, int i, int tid) {
                          &w->seqs[i<<1|1], w->intv_cache[tid], regs, 1);
       mem_merge_regions(opt, w->bns, w->pac, &w->seqs[i<<1|1], regs);
    }
-}
+     fprintf(stderr, "[%s] Aligned with %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
+
+ }
 
 /**
  * @param i i-th read is under consideration

@@ -305,35 +305,6 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 }
 
 // NOTE: $max_intv is not currently used in BWA-MEM
-
-void bwt_extend(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
-    //add old bwt_extend
-    //create test function for bwt_extend
-    bwtint_t tk[4] = {0};
-    bwtint_t tl[4] = {0};
-    //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
-    for (int i = 3; i != c - 1; i--) {
-        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
-        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
-        ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
-        ok[i].x[2] = tl[i] - tk[i];
-        if (i == 3)
-            ok[3].x[is_back] = ik->x[is_back] + (
-                    ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-        ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
-    }
-    // Implemented it all in one for loop... will need to test.
-    // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
-    //ok[3].x[is_back] = ik->x[is_back] + (
-    //      ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-    //for (int i = 3; i > c; --i) {
-    //}
-
-    //ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
-    //ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
-    //ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
-}
-
 void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
     bwtint_t tk[4] = {0};
     bwtint_t tl[4] = {0};
@@ -349,35 +320,8 @@ void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_bac
         if (i != 0)
             ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
     }
-    // Implemented it all in one for loop... will need to test.
-    // if i starts at c in bwt_occ_new_index_v2, then go from 3 to c in the stuff below
-    //ok[3].x[is_back] = ik->x[is_back] + (
-    //      ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-    //for (int i = 3; i > c; --i) {
-    //}
-
-    //ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
-    //ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
-    //ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
 }
 
-void bwt_extend_old(const bwt_t *bwt, const bwtintv_t *ik, bwtintv_t ok[4], int is_back)
-{
-    bwtint_t tk[4], tl[4];
-    int i;
-    for (i = 0; i != 4; ++i) {
-        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
-        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
-        ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
-        ok[i].x[2] = tl[i] - tk[i];
-    }
-
-    ok[3].x[is_back] = ik->x[is_back] + (
-            ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
-    ok[2].x[is_back] = ok[3].x[is_back] + ok[3].x[2];
-    ok[1].x[is_back] = ok[2].x[is_back] + ok[2].x[2];
-    ok[0].x[is_back] = ok[1].x[is_back] + ok[1].x[2];
-}
 
 int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
 
@@ -477,7 +421,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
  * Read/write BWT and SA *
  *************************/
 
-void bwt_dump_bwt(const char *fn, const bwt_t *bwt, ubyte_t I) {
+void bwt_dump_bwt(const char *fn, const bwt_t *bwt) {
     FILE *fp;
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
@@ -488,7 +432,7 @@ void bwt_dump_bwt(const char *fn, const bwt_t *bwt, ubyte_t I) {
     err_fclose(fp);
 }
 
-void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt, ubyte_t I) {
+void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt) {
     FILE *fp;
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);

@@ -123,7 +123,7 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 		return 1;
 	}
 	bwt = bwt_pac2bwt(argv[optind], use_is);
-	bwt_dump_bwt(argv[optind+1], bwt, 0);
+	bwt_dump_bwt(argv[optind+1], bwt);
 	bwt_destroy(bwt);
 	return 0;
 }
@@ -210,7 +210,7 @@ int bwa_bwtupdate(int argc, char *argv[]) // the "bwtupdate" command
     }
     bwt = bwt_restore_bwt(argv[1]);
     bwt_bwtupdate_core(bwt, 0);
-    bwt_dump_bwt(argv[1], bwt, 0);
+    bwt_dump_bwt(argv[1], bwt);
     bwt_destroy(bwt);
     return 0;
 }
@@ -303,7 +303,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
             bwt = bwt_pac2bwt(str, algo_type == 3);
-            bwt_dump_bwt(str2, bwt, 1);
+            bwt_dump_bwt(str2, bwt);
             bwt_destroy(bwt);
 
         }
@@ -318,7 +318,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         else if (algo_type == 1 || algo_type == 3) {
             bwt_t *bwt;
             bwt = bwt_pac2bwt(str, algo_type == 3);
-            bwt_dump_bwt(str2, bwt, 1);
+            bwt_dump_bwt(str2, bwt);
 
             bwt_destroy(bwt);
         }
@@ -331,7 +331,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         fprintf(stderr, "[%s] Update parent BWT... \n", __func__);
         bwt = bwt_restore_bwt(str);
         bwt_bwtupdate_core(bwt, 0);
-        bwt_dump_bwt_new(str, bwt, 0);
+        bwt_dump_bwt_new(str, bwt);
         bwt_destroy(bwt);
         fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
@@ -342,7 +342,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         fprintf(stderr, "[%s] Update daughter BWT... \n", __func__);
         bwt = bwt_restore_bwt(str);
         bwt_bwtupdate_core(bwt, 1);
-        bwt_dump_bwt_new(str, bwt, 0);
+        bwt_dump_bwt_new(str, bwt);
         bwt_destroy(bwt);
         fprintf(stderr, "[%s] %.2f sec\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
     }
