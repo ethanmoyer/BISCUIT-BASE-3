@@ -139,7 +139,7 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 void bwt_bwtupdate_core(bwt_t *bwt, int index) {
     bwtint_t n_occ;
     n_occ = (bwt->seq_len + OCC_INTERVAL - 1) / OCC_INTERVAL + 1;
-    bwt->bwt_new = (uint64_t*) calloc((bwt->seq_len / 128 + 1) * 32 , 8);
+    bwt->bwt_new = (uint64_t*) calloc((bwt->seq_len / 128 + 1) * 16 , 8);
     bwt->bwt_size += n_occ * sizeof(bwtint_t);
     uint64_t j = 1UL;
     uint64_t x = 0;
