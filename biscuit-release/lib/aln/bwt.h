@@ -131,13 +131,13 @@ extern "C" {
 
 	void bwt_bwtgen(const char *fn_pac, const char *fn_bwt); // from BWT-SW
 	void bwt_bwtgen2(const char *fn_pac, const char *fn_bwt, int block_size); // from BWT-SW
-	void bwt_cal_sa(bwt_t *bwt, int intv);
+	void bwt_cal_sa(bwt_t *bwt, int intv, uint8_t parent);
 
 	void bwt_bwtupdate_core(bwt_t *bwt, int index);
 
 	bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c);
 	void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4]);
-	bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k);
+	bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k, uint8_t parent);
 
 	// more efficient version of bwt_occ/bwt_occ4 for retrieving two close Occ values
 	void bwt_gen_cnt_table(bwt_t *bwt);
@@ -156,10 +156,10 @@ extern "C" {
 	 * Given a query _q_, collect potential SMEMs covering position _x_ and store them in _mem_.
 	 * Return the end of the longest exact match starting from _x_.
 	 */
-	int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
-	int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]);
+	int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], ubyte_t parent);
+	int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], ubyte_t parent);
 
-	int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem);
+	int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem, uint8_t parent);
 
 #ifdef __cplusplus
 }

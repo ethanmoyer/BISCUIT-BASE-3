@@ -42,10 +42,37 @@
 
 // This function is called to get the counts for the first k nucleotides. Here k is accepted as positioning starting at
 // 1.
-bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
+bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uint8_t parent) {
     uint64_t partial_G = 0;
     uint64_t top = seq0 >> (64 - k);
     uint64_t bottom = seq1 >> (64 - k);
+
+    if (parent) {
+        switch(c) {
+            case 0:
+                return __builtin_popcountll(top & ~bottom); //A
+            case 1:
+                return __builtin_popcountll(top & bottom); //C
+            case 2:
+                partial_G = __builtin_popcountll(~top & ~bottom);
+                return k % 64 != 0 ? partial_G - 64 + k : partial_G; //G
+            case 3:
+                return __builtin_popcountll(~top & bottom); //T
+        }
+    } else {
+        switch(c) {
+            case 0:
+                return __builtin_popcountll(top & ~bottom); //A
+            case 1:
+                return __builtin_popcountll(top & bottom); //C
+            case 2:
+                partial_G = __builtin_popcountll(~top & ~bottom);
+                return k % 64 != 0 ? partial_G - 64 + k : partial_G; //G
+            case 3:
+                return __builtin_popcountll(~top & bottom); //T
+        }
+    }
+
     switch(c) {
         case 0:
             return __builtin_popcountll(top & ~bottom); //A
@@ -61,7 +88,7 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k) {
 }
 // This is the bwt_occ equivalent for gathering counts when a position isn't divisible by 128.
 
-bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
+bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) {
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
     k -= (k >= bwt->primary);
 
@@ -75,11 +102,11 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c) {
     if ((k + 1) % 128 == 0) return count;
 
     if ((k + 1) % 128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, ((k + 1) % 128));
+        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, ((k + 1) % 128), parent);
     } else {
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64);
+        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64, parent);
         if ((k + 1) % 64 == 0) return count;
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 5], bwt->bwt_new[k/128 * 8 + 7], c, (k % 64) + 1);
+        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 5], bwt->bwt_new[k/128 * 8 + 7], c, (k % 64) + 1, parent);
     }
     return count;
 }
@@ -101,14 +128,14 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
 }
 
 // compute inverse CSA
-static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k) {
+static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     bwtint_t x = k - (k > bwt->primary);
     x = nucAtBWTinv(bwt, x);
-    x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x);
+    x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, parent);
     return k == bwt->primary ? 0 : x;
 }
 
-void bwt_cal_sa(bwt_t *bwt, int intv)
+void bwt_cal_sa(bwt_t *bwt, int intv, uint8_t parent)
 {
     bwtint_t isa, sa, i; // S(isa) = sa
     int intv_round = intv;
@@ -131,19 +158,19 @@ void bwt_cal_sa(bwt_t *bwt, int intv)
             j++;
         }
         --sa;
-        isa = bwt_invPsi(bwt, isa);
+        isa = bwt_invPsi(bwt, isa, parent);
     }
 
     if (isa % intv == 0) bwt->sa[isa/intv] = sa;
     bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
 }
 
-bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k) {
+bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     bwtint_t sa = 0, mask = bwt->sa_intv - 1;
 
     while (k & mask) { // != 0
         ++sa;
-        k = bwt_invPsi(bwt, k);
+        k = bwt_invPsi(bwt, k, parent);
     }
 
     /* without setting bwt->sa[0] = -1, the following line should be
@@ -305,13 +332,13 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 }
 
 // NOTE: $max_intv is not currently used in BWA-MEM
-void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c) {
+void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c, uint8_t parent) {
     bwtint_t tk[4] = {0};
     bwtint_t tl[4] = {0};
     //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
     for (int i = 3; i != c - 1; i--) {
-        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i);
-        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i);
+        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i, is_back);
+        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i, is_back);
         ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
         ok[i].x[2] = tl[i] - tk[i];
         if (i == 3)
@@ -323,7 +350,7 @@ void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_bac
 }
 
 
-int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
+int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], uint8_t parent) {
 
     int i, j, c, ret;
     bwtintv_t ik, ok[4];
@@ -344,7 +371,7 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
             break;
         } else if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_debug(bwtc, &ik, ok, 0, c);
+            bwt_extend_debug(bwtc, &ik, ok, 0, c, parent);
             if (ok[c].x[2] != ik.x[2]) { // change of the interval size
                 kv_push(bwtintv_t, *curr, ik);
 
@@ -366,7 +393,7 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
         c = i < 0? -1 : q[i] < 4? q[i] : -1; // c==-1 if i<0 or q[i] is an ambiguous base
         for (j = 0, curr->n = 0; (unsigned) j < prev->n; ++j) {
             bwtintv_t *p = &prev->a[j];
-            if (c >= 0 && ik.x[2] >= max_intv) bwt_extend_debug(bwt, p, ok, 1, c);
+            if (c >= 0 && ik.x[2] >= max_intv) bwt_extend_debug(bwt, p, ok, 1, c, parent);
             //fprintf(stderr, "ok[c].x[2]: %llu\n", ok[c].x[2]);
             if (c < 0 || ik.x[2] < (unsigned) max_intv || ok[c].x[2] < (unsigned) min_intv) { // keep the hit if reaching the beginning or an ambiguous base or the intv is small enough
                 if (curr->n == 0) { // test curr->n>0 to make sure there are no longer matches
@@ -391,11 +418,11 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
 }
 // this copy of bwt_extend works with bwt_smem1a
 // Called from memchain.c
-int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2]) {
-    return bwt_smem1a(bwt, bwtc, len, q, x, min_intv, 0, mem, tmpvec);
+int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], uint8_t parent) {
+    return bwt_smem1a(bwt, bwtc, len, q, x, min_intv, 0, mem, tmpvec, parent);
 }
 
-int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem) {
+int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem, uint8_t parent) {
     int i, c;
     bwtintv_t ik, ok[4];
 
@@ -405,7 +432,7 @@ int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8
     for (i = x + 1; i < len; ++i) { // forward search
         if (q[i] < 4) { // an A/C/G/T base
             c = 3 - q[i]; // complement of q[i]
-            bwt_extend_debug(bwtc, &ik, ok, 0, c);
+            bwt_extend_debug(bwtc, &ik, ok, 0, c, parent);
             if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
                 *mem = ok[c];
                 mem->info = (uint64_t)x<<32 | (i + 1);
@@ -437,7 +464,7 @@ void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt) {
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
-    err_fwrite(bwt->bwt_new, 4, bwt->bwt_size, fp);
+    err_fwrite(bwt->bwt_new, 8, (bwt->seq_len/128 + 1) * 8, fp);
     err_fflush(fp);
     err_fclose(fp);
 }
@@ -513,7 +540,8 @@ bwt_t *bwt_restore_bwt_new(const char *fn) {
     fp = xopen(fn, "rb");
     err_fseek(fp, 0, SEEK_END);
     bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
-    bwt->bwt_new = (uint64_t*)calloc(bwt->bwt_size, 8);
+    bwt->seq_len = err_ftell(fp) * 2;
+    bwt->bwt_new = (uint64_t*)calloc((bwt->seq_len/128 + 1) * 8, 8);
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
@@ -533,7 +561,8 @@ void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
     fp = xopen(fn, "rb");
     err_fseek(fp, 0, SEEK_END);
     bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
-    bwt->bwt_new = (uint64_t*)calloc(bwt->bwt_size, 8);
+    bwt->seq_len = err_ftell(fp) * 2;
+    bwt->bwt_new = (uint64_t*)calloc((bwt->seq_len/128 + 1) * 8, 8);
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);

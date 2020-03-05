@@ -139,7 +139,7 @@ int bwa_pac2bwt(int argc, char *argv[]) // the "pac2bwt" command; IMPORTANT: bwt
 void bwt_bwtupdate_core(bwt_t *bwt, int index) {
     bwtint_t n_occ;
     n_occ = (bwt->seq_len + OCC_INTERVAL - 1) / OCC_INTERVAL + 1;
-    bwt->bwt_new = (uint64_t*) calloc(bwt->seq_len/2 , 8);
+    bwt->bwt_new = (uint64_t*) calloc((bwt->seq_len/128 + 1) * 8 , 8);
     bwt->bwt_size += n_occ * sizeof(bwtint_t);
     uint64_t j = 1UL;
     uint64_t x = 0;
@@ -231,7 +231,7 @@ int bwa_bwt2sa(int argc, char *argv[]) // the "bwt2sa" command
 		return 1;
 	}
 	bwt = bwt_restore_bwt(argv[optind]);
-	bwt_cal_sa(bwt, sa_intv);
+	bwt_cal_sa(bwt, sa_intv, 1);
 	bwt_dump_sa(argv[optind+1], bwt);
 	bwt_destroy(bwt);
 	return 0;
@@ -365,7 +365,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         t = clock();
         fprintf(stderr, "[%s] Construct parent SA from BWT and Occ... ", __func__);
         bwt = bwt_restore_bwt_new(str);
-        bwt_cal_sa(bwt, 32);
+        bwt_cal_sa(bwt, 32, 1);
         bwt_dump_sa(str3, bwt);
         bwt_destroy(bwt);
         fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
@@ -377,7 +377,7 @@ int main_biscuit_index(int argc, char *argv[]) {
         t = clock();
         fprintf(stderr, "[%s] Construct daughter SA from BWT and Occ... ", __func__);
         bwt = bwt_restore_bwt_new(str);
-        bwt_cal_sa(bwt, 32);
+        bwt_cal_sa(bwt, 32, 0);
         bwt_dump_sa(str3, bwt);
         bwt_destroy(bwt);
         fprintf(stderr, "%.2f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);

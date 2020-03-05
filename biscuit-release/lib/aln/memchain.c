@@ -46,7 +46,7 @@
 #define intv_lt(a, b) ((a).info < (b).info)
 KSORT_INIT(mem_intv, bwtintv_t, intv_lt)
 // Called in memchain.c
-static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *seq, bwtintv_cache_t *intv_cache) {
+static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *seq, bwtintv_cache_t *intv_cache, uint8_t parent) {
 
   int k, x = 0, old_n;
   uint32_t i;
@@ -66,7 +66,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
     if (seq[x] < 4) {
 
        // returns end of seed on read
-      x = bwt_smem1(bwt, bwtc, len, seq, x, start_width, _mem, tmpv);
+      x = bwt_smem1(bwt, bwtc, len, seq, x, start_width, _mem, tmpv, parent);
 
       for (i = 0; i < _mem->n; ++i)
         if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
@@ -82,7 +82,7 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
     bwtintv_t *p = &mem->a[k];
     int start = p->info>>32, end = (int32_t)p->info;
     if (end - start < split_len || p->x[2] > (unsigned) opt->split_width) continue;
-    bwt_smem1(bwt, bwtc, len, seq, (start + end)>>1, p->x[2]+1, _mem, tmpv);
+    bwt_smem1(bwt, bwtc, len, seq, (start + end)>>1, p->x[2]+1, _mem, tmpv, parent);
     for (i = 0; i < _mem->n; ++i)
       if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
         kv_push(bwtintv_t, *mem, _mem->a[i]);
@@ -95,11 +95,11 @@ static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t
       if (seq[x] < 4) {
         if (1) {
           bwtintv_t m;
-          x = bwt_seed_strategy1(bwt, bwtc, len, seq, x, opt->min_seed_len, opt->max_mem_intv, &m);
+          x = bwt_seed_strategy1(bwt, bwtc, len, seq, x, opt->min_seed_len, opt->max_mem_intv, &m, parent);
           if (m.x[2] > 0) kv_push(bwtintv_t, *mem, m);
         } else { // for now, we never come to this block which is slower
             //we are making this faster
-          x = bwt_smem1a(bwt, bwtc, len, seq, x, start_width, opt->max_mem_intv, _mem, tmpv);
+          x = bwt_smem1a(bwt, bwtc, len, seq, x, start_width, opt->max_mem_intv, _mem, tmpv, parent);
 
           for (i = 0; i < _mem->n; ++i)
             kv_push(bwtintv_t, *mem, _mem->a[i]);
@@ -299,7 +299,7 @@ mem_chain_v mem_chain(
 
     // bseq contains both converted and unconverted sequence for the C>T and G>A, but mem_collect_intv only takes in one
    // them at a time.
-   mem_collect_intv(opt, &bwt[parent], &bwt[!parent], bseq->l_seq, bseq->bisseq[parent], _intv_cache);
+   mem_collect_intv(opt, &bwt[parent], &bwt[!parent], bseq->l_seq, bseq->bisseq[parent], _intv_cache, parent);
 
    /* loop over mem and compute l_rep - number of repetitive seeds */
    for (i = 0, b = e = l_rep = 0; i < _intv_cache->mem.n; ++i) {
@@ -344,7 +344,7 @@ mem_chain_v mem_chain(
          mem_seed_t s;
          // this is where we need to pay attention to
          // this directs the interval regions that are chained together here
-         s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k);
+         s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k, parent);
          s.print1 = k;
          s.print2 = intv->x[0];
          s.qbeg = intv->info>>32;
