@@ -464,7 +464,7 @@ void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt) {
     fp = xopen(fn, "wb");
     err_fwrite(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
-    err_fwrite(bwt->bwt_new, 8, (bwt->seq_len/128 + 1) * 8, fp);
+    err_fwrite(bwt->bwt_new, 4, bwt->bwt_size, fp);
     err_fflush(fp);
     err_fclose(fp);
 }
@@ -540,8 +540,7 @@ bwt_t *bwt_restore_bwt_new(const char *fn) {
     fp = xopen(fn, "rb");
     err_fseek(fp, 0, SEEK_END);
     bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
-    bwt->seq_len = err_ftell(fp) * 2;
-    bwt->bwt_new = (uint64_t*)calloc((bwt->seq_len/128 + 1) * 8, 8);
+    bwt->bwt_new = (uint64_t*)calloc(bwt->bwt_size, 8);
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
@@ -561,8 +560,7 @@ void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
     fp = xopen(fn, "rb");
     err_fseek(fp, 0, SEEK_END);
     bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
-    bwt->seq_len = err_ftell(fp) * 2;
-    bwt->bwt_new = (uint64_t*)calloc((bwt->seq_len/128 + 1) * 8, 8);
+    bwt->bwt_new = (uint64_t*)calloc(bwt->bwt_size, 8);
     err_fseek(fp, 0, SEEK_SET);
     err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
     err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
