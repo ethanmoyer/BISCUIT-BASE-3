@@ -91,22 +91,25 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uin
 bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) {
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
     k -= (k >= bwt->primary);
+    uint32_t index = k/128 * 8;
+    int k_mod_128 = k % 128;
+
+    k++;
 
     bwtint_t count = 0;
-
-    if ((k + 1) / 128)
-        count = bwt->bwt_new[((k + 1) / 128 - 1) * 8 + c];
-    if ((k + 1) == bwt->seq_len && c == 2 && count == 0)
+    if (k / 128)
+        count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
+    if (k == bwt->seq_len && c == 2 && count == 0)
         return 0;
 
-    if ((k + 1) % 128 == 0) return count;
+    if (k % 128 == 0) return count;
 
-    if ((k + 1) % 128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, ((k + 1) % 128), parent);
+    if (k_mod_128 < 64) {
+        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k % 128, parent);
     } else {
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 4], bwt->bwt_new[k/128 * 8 + 6], c, 64, parent);
-        if ((k + 1) % 64 == 0) return count;
-        count += builtin_popcountll(bwt->bwt_new[k/128 * 8 + 5], bwt->bwt_new[k/128 * 8 + 7], c, (k % 64) + 1, parent);
+        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
+        if (k % 64 == 0) return count;
+        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, (k % 64), parent);
     }
     return count;
 }

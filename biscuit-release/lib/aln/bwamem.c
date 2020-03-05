@@ -349,7 +349,7 @@ static void bis_worker1(void *data, int i, int tid) {
                          &w->seqs[i<<1|1], w->intv_cache[tid], regs, 1);
       mem_merge_regions(opt, w->bns, w->pac, &w->seqs[i<<1|1], regs);
    }
-     fprintf(stderr, "[%s] Aligned with %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
+     //fprintf(stderr, "[%s] Aligned with %.2f seconds elapse.\n", __func__, (float)(clock() - t) / CLOCKS_PER_SEC);
 
  }
 
