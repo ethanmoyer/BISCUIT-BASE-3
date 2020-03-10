@@ -47,7 +47,8 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uin
     uint64_t partial_A = 0;
     uint64_t top = seq0 >> (64 - k);
     uint64_t bottom = seq1 >> (64 - k);
-
+    //if (k > 64)
+    //    k = 64;
     if (parent) {
         switch(c) { // G>A
             case 0:
@@ -69,6 +70,7 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uin
                 return __builtin_popcountll(bottom); //T
         }
     }
+
     return 0;
 }
 // This is the bwt_occ equivalent for gathering counts when a position isn't divisible by 128.
@@ -84,27 +86,38 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
     bwtint_t count = 0;
     if (k / 128)
         count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
-    if (k == bwt->seq_len && c == 2 && count == 0)
-        return 0;
 
-    if (k % 128 == 0) return count; //% only works here?
-
+    if ((k & 127) == 0) return count; //% only works here?
+/* possible solution but doesnt work lol
+    count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
+    if (k & 127 > 64)
+        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
+    */
     if (k_mod_128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k % 128, parent);
+        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent); //k_mod_128
+        // wont work here?
     } else {
         count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
-        if (k % 64 == 0) return count;
-        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k % 64, parent);
+        if ((k & 63) == 0) return count;
+        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
     }
+
     return count;
 }
 
 // Retrieves the base at a specific position with the least amount of operations as possible (or the least
 // to my knowledge). There may be room for improvement.
-// Seg fault is here
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
-    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
+    bwtint_t top = (63 - k & 63);
+    bwtint_t bottom = top;
+    uint32_t index = k / 128 * 8;
+    if ((k & 127) < 64) {
+        top = (bwt->bwt_new[index + 4] >> top) & 1;
+        bottom = (bwt->bwt_new[index + 6] >> bottom) & 1;
+    } else {
+        top = (bwt->bwt_new[index + 5] >> top) & 1;
+        bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
+    }
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
@@ -323,15 +336,16 @@ static void bwt_reverse_intvs(bwtintv_v *p) {
 void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c, uint8_t parent) {
     bwtint_t tk[4] = {0};
     bwtint_t tl[4] = {0};
-    //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
+    uint8_t dir = is_back ^ parent;
+    uint8_t _is_back = !is_back;
     for (int i = 3; i != c - 1; i--) {
-        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i, is_back ^ parent);
-        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i, is_back  ^ parent);
-        ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
+        tk[i] = bwt_occ_new_index(bwt, ik->x[_is_back] - 1, i, dir);
+        tl[i] = bwt_occ_new_index(bwt, ik->x[_is_back] + ik->x[2] - 1, i, dir);
+        ok[i].x[_is_back] = bwt->L2[i] + 1 + tk[i];
         ok[i].x[2] = tl[i] - tk[i];
         if (i == 3)
             ok[3].x[is_back] = ik->x[is_back] + (
-                    ik->x[!is_back] <= bwt->primary && ik->x[!is_back] + ik->x[2] - 1 >= bwt->primary);
+                    ik->x[_is_back] <= bwt->primary && ik->x[_is_back] + ik->x[2] - 1 >= bwt->primary);
         if (i != 0)
             ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
     }
