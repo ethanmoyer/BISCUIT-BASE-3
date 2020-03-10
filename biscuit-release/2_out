@@ -1,0 +1,526 @@
+@SQ	SN:chr22	LN:51304566
+@PG	ID:biscuit	PN:biscuit	VN:0.3.12.20190519	CL:./biscuit align -v 8 hg19.fa.chr22 2_test.txt
+
+=====> [bis_worker1] Processing read 'DLZ38V1_0229:3:2203:18400:29674' <=====
+[mem_align1_core] === Seeding DLZ38V1_0229:3:2203:18400:29674 against (parent: 0)
+[mem_chain] Found 60 chains; Fraction of repetitive seeds: 0.000
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,4653812(chr22:+4653813)	k: 1; ik->x[0]: 89013153	25;25;40,4653812(chr22:+4653813)	k: 1; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=22	22;22;4,6070670(chr22:+6070671)	k: 0; ik->x[0]: 48525706	EXTRA
+** CHAIN: n=1, n_extra=0, weight=22	22;22;9,15295871(chr22:+15295872)	k: 0; ik->x[0]: 44352324	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,16988734(chr22:+16988735)	k: 7; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,17802515(chr22:+17802516)	k: 1; ik->x[0]: 87367935	EXTRA	21;21;38,17802515(chr22:+17802516)	k: 1; ik->x[0]: 87367935
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,19944469(chr22:+19944470)	k: 3; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;54,22465893(chr22:+22465894)	k: 0; ik->x[0]: 76576862	EXTRA
+** CHAIN: n=3, n_extra=0, weight=26	24;24;40,22964448(chr22:+22964449)	k: 14; ik->x[0]: 89013153	25;25;40,22964448(chr22:+22964449)	k: 14; ik->x[0]: 89013153	26;26;40,22964448(chr22:+22964449)	k: 0; ik->x[0]: 89013167	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,23665692(chr22:+23665693)	k: 4; ik->x[0]: 89013153	25;25;40,23665692(chr22:+23665693)	k: 4; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,25982163(chr22:+25982164)	k: 11; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;54,26087587(chr22:+26087588)	k: 2; ik->x[0]: 76576862	EXTRA
+** CHAIN: n=1, n_extra=0, weight=25	25;25;42,26977114(chr22:+26977115)	k: 0; ik->x[0]: 1607193	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,27018748(chr22:+27018749)	k: 6; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,28598762(chr22:+28598763)	k: 0; ik->x[0]: 87367935	EXTRA	21;21;38,28598762(chr22:+28598763)	k: 0; ik->x[0]: 87367935
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,29132821(chr22:+29132822)	k: 7; ik->x[0]: 89013153	25;25;40,29132821(chr22:+29132822)	k: 7; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,29767619(chr22:+29767620)	k: 0; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;19,31455007(chr22:+31455008)	k: 0; ik->x[0]: 14076740	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;55,31966657(chr22:+31966658)	k: 2; ik->x[0]: 1787751	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,32187803(chr22:+32187804)	k: 12; ik->x[0]: 89013153	25;25;40,32187803(chr22:+32187804)	k: 12; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,34050118(chr22:+34050119)	k: 10; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=22	22;22;13,34469342(chr22:+34469343)	k: 0; ik->x[0]: 23300695	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,35044408(chr22:+35044409)	k: 8; ik->x[0]: 89013153	25;25;40,35044408(chr22:+35044409)	k: 8; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,35995079(chr22:+35995080)	k: 2; ik->x[0]: 89013153	25;25;40,35995079(chr22:+35995080)	k: 2; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=1, weight=29	25;25;42,40178049(chr22:+40178050)	k: 2; ik->x[0]: 1607193	29;29;42,40178049(chr22:+40178050)	k: 1; ik->x[0]: 1607194	EXTRA	28;28;43,40178050(chr22:+40178051)	k: 2; ik->x[0]: 2547059
+** CHAIN: n=1, n_extra=0, weight=20	20;20;55,40294722(chr22:+40294723)	k: 0; ik->x[0]: 1787751	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,40787505(chr22:+40787506)	k: 11; ik->x[0]: 89013153	25;25;40,40787505(chr22:+40787506)	k: 11; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41081666(chr22:+41081667)	k: 6; ik->x[0]: 89013153	25;25;40,41081666(chr22:+41081667)	k: 6; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41539346(chr22:+41539347)	k: 9; ik->x[0]: 89013153	25;25;40,41539346(chr22:+41539347)	k: 9; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41675037(chr22:+41675038)	k: 10; ik->x[0]: 89013153	25;25;40,41675037(chr22:+41675038)	k: 10; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,43109109(chr22:+43109110)	k: 8; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,43444354(chr22:+43444355)	k: 5; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=2, n_extra=0, weight=24	20;20;0,44019622(chr22:+44019623)	k: 4; ik->x[0]: 4872037	24;24;0,44019622(chr22:+44019623)	k: 0; ik->x[0]: 4872041	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,55447438(chr22:-47161676)	k: 0; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,55923023(chr22:-46686090)	k: 2; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=2, n_extra=0, weight=24	23;23;39,56522854(chr22:-46086256)	k: 2; ik->x[0]: 45611732	24;24;39,56522854(chr22:-46086255)	k: 0; ik->x[0]: 45611734	EXTRA
+** CHAIN: n=2, n_extra=1, weight=29	25;25;42,56915714(chr22:-45693394)	k: 1; ik->x[0]: 1607193	29;29;42,56915714(chr22:-45693390)	k: 0; ik->x[0]: 1607194	EXTRA	28;28;43,56915715(chr22:-45693390)	k: 0; ik->x[0]: 2547059
+** CHAIN: n=1, n_extra=0, weight=19	19;19;31,61986831(chr22:-40622283)	k: 0; ik->x[0]: 101795746	EXTRA
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,63191306(chr22:-39417806)	k: 2; ik->x[0]: 87367935	EXTRA	21;21;38,63191306(chr22:-39417806)	k: 2; ik->x[0]: 87367935
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,64561965(chr22:-38047144)	k: 5; ik->x[0]: 89013153	25;25;40,64561965(chr22:-38047143)	k: 5; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,68702453(chr22:-33906657)	k: 3; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,69385338(chr22:-33223776)	k: 1; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,69455726(chr22:-33153383)	k: 3; ik->x[0]: 89013153	25;25;40,69455726(chr22:-33153382)	k: 3; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,69529821(chr22:-33079292)	k: 0; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,71688643(chr22:-30920466)	k: 13; ik->x[0]: 89013153	25;25;40,71688643(chr22:-30920465)	k: 13; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;18,72045726(chr22:-30563388)	k: 0; ik->x[0]: 79538357	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,72962739(chr22:-29646374)	k: 9; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=28	28;28;43,73855705(chr22:-28753400)	k: 1; ik->x[0]: 2547059	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,75298248(chr22:-27310865)	k: 3; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=2, n_extra=2, weight=26	23;23;49,75865615(chr22:-26743495)	k: 4; ik->x[0]: 77832705	26;26;49,75865615(chr22:-26743492)	k: 0; ik->x[0]: 77832709	EXTRA	19;19;54,75865620(chr22:-26743494)	k: 1; ik->x[0]: 76576862	20;20;55,75865621(chr22:-26743492)	k: 1; ik->x[0]: 1787751
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,78013847(chr22:-24595263)	k: 1; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=21	21;21;8,79175933(chr22:-23433179)	k: 0; ik->x[0]: 24466774	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,81809137(chr22:-20799972)	k: 0; ik->x[0]: 89013153	25;25;40,81809137(chr22:-20799971)	k: 0; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,83151147(chr22:-19457965)	k: 3; ik->x[0]: 87367935	EXTRA	21;21;38,83151147(chr22:-19457965)	k: 3; ik->x[0]: 87367935
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,84672951(chr22:-17936159)	k: 2; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=21	21;21;11,84674489(chr22:-17934623)	k: 0; ik->x[0]: 42173486	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,86302138(chr22:-16306976)	k: 2; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,87862392(chr22:-14746721)	k: 1; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;39,90235474(chr22:-12373636)	k: 1; ik->x[0]: 45611732	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;35,93465342(chr22:-9143768)	k: 0; ik->x[0]: 27024335	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;39,93820669(chr22:-8788441)	k: 0; ik->x[0]: 45611732	EXTRA
+[mem_flt_chained_seeds] 60 chains remained.
+** CHAIN: n=2, n_extra=1, weight=29	25;25;42,40178049(chr22:+40178050)	k: 2; ik->x[0]: 1607193	29;29;42,40178049(chr22:+40178050)	k: 1; ik->x[0]: 1607194	EXTRA	28;28;43,40178050(chr22:+40178051)	k: 2; ik->x[0]: 2547059
+** CHAIN: n=2, n_extra=1, weight=29	25;25;42,56915714(chr22:-45693394)	k: 1; ik->x[0]: 1607193	29;29;42,56915714(chr22:-45693390)	k: 0; ik->x[0]: 1607194	EXTRA	28;28;43,56915715(chr22:-45693390)	k: 0; ik->x[0]: 2547059
+** CHAIN: n=1, n_extra=0, weight=28	28;28;43,73855705(chr22:-28753400)	k: 1; ik->x[0]: 2547059	EXTRA
+** CHAIN: n=2, n_extra=2, weight=26	23;23;49,75865615(chr22:-26743495)	k: 4; ik->x[0]: 77832705	26;26;49,75865615(chr22:-26743492)	k: 0; ik->x[0]: 77832709	EXTRA	19;19;54,75865620(chr22:-26743494)	k: 1; ik->x[0]: 76576862	20;20;55,75865621(chr22:-26743492)	k: 1; ik->x[0]: 1787751
+** CHAIN: n=3, n_extra=0, weight=26	24;24;40,22964448(chr22:+22964449)	k: 14; ik->x[0]: 89013153	25;25;40,22964448(chr22:+22964449)	k: 14; ik->x[0]: 89013153	26;26;40,22964448(chr22:+22964449)	k: 0; ik->x[0]: 89013167	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,4653812(chr22:+4653813)	k: 1; ik->x[0]: 89013153	25;25;40,4653812(chr22:+4653813)	k: 1; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,40787505(chr22:+40787506)	k: 11; ik->x[0]: 89013153	25;25;40,40787505(chr22:+40787506)	k: 11; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41539346(chr22:+41539347)	k: 9; ik->x[0]: 89013153	25;25;40,41539346(chr22:+41539347)	k: 9; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,35995079(chr22:+35995080)	k: 2; ik->x[0]: 89013153	25;25;40,35995079(chr22:+35995080)	k: 2; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,35044408(chr22:+35044409)	k: 8; ik->x[0]: 89013153	25;25;40,35044408(chr22:+35044409)	k: 8; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41675037(chr22:+41675038)	k: 10; ik->x[0]: 89013153	25;25;40,41675037(chr22:+41675038)	k: 10; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,32187803(chr22:+32187804)	k: 12; ik->x[0]: 89013153	25;25;40,32187803(chr22:+32187804)	k: 12; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,64561965(chr22:-38047144)	k: 5; ik->x[0]: 89013153	25;25;40,64561965(chr22:-38047143)	k: 5; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,29132821(chr22:+29132822)	k: 7; ik->x[0]: 89013153	25;25;40,29132821(chr22:+29132822)	k: 7; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41081666(chr22:+41081667)	k: 6; ik->x[0]: 89013153	25;25;40,41081666(chr22:+41081667)	k: 6; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,69455726(chr22:-33153383)	k: 3; ik->x[0]: 89013153	25;25;40,69455726(chr22:-33153382)	k: 3; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=1, n_extra=0, weight=25	25;25;42,26977114(chr22:+26977115)	k: 0; ik->x[0]: 1607193	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,71688643(chr22:-30920466)	k: 13; ik->x[0]: 89013153	25;25;40,71688643(chr22:-30920465)	k: 13; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,23665692(chr22:+23665693)	k: 4; ik->x[0]: 89013153	25;25;40,23665692(chr22:+23665693)	k: 4; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,81809137(chr22:-20799972)	k: 0; ik->x[0]: 89013153	25;25;40,81809137(chr22:-20799971)	k: 0; ik->x[0]: 89013153	EXTRA
+** CHAIN: n=2, n_extra=0, weight=24	23;23;39,56522854(chr22:-46086256)	k: 2; ik->x[0]: 45611732	24;24;39,56522854(chr22:-46086255)	k: 0; ik->x[0]: 45611734	EXTRA
+** CHAIN: n=2, n_extra=0, weight=24	20;20;0,44019622(chr22:+44019623)	k: 4; ik->x[0]: 4872037	24;24;0,44019622(chr22:+44019623)	k: 0; ik->x[0]: 4872041	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,78013847(chr22:-24595263)	k: 1; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,84672951(chr22:-17936159)	k: 2; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;39,90235474(chr22:-12373636)	k: 1; ik->x[0]: 45611732	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;35,93465342(chr22:-9143768)	k: 0; ik->x[0]: 27024335	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,68702453(chr22:-33906657)	k: 3; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;39,93820669(chr22:-8788441)	k: 0; ik->x[0]: 45611732	EXTRA
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,29767619(chr22:+29767620)	k: 0; ik->x[0]: 77832705	EXTRA
+** CHAIN: n=1, n_extra=0, weight=22	22;22;13,34469342(chr22:+34469343)	k: 0; ik->x[0]: 23300695	EXTRA
+** CHAIN: n=1, n_extra=0, weight=22	22;22;4,6070670(chr22:+6070671)	k: 0; ik->x[0]: 48525706	EXTRA
+** CHAIN: n=1, n_extra=0, weight=22	22;22;9,15295871(chr22:+15295872)	k: 0; ik->x[0]: 44352324	EXTRA
+** CHAIN: n=1, n_extra=0, weight=21	21;21;11,84674489(chr22:-17934623)	k: 0; ik->x[0]: 42173486	EXTRA
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,83151147(chr22:-19457965)	k: 3; ik->x[0]: 87367935	EXTRA	21;21;38,83151147(chr22:-19457965)	k: 3; ik->x[0]: 87367935
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,17802515(chr22:+17802516)	k: 1; ik->x[0]: 87367935	EXTRA	21;21;38,17802515(chr22:+17802516)	k: 1; ik->x[0]: 87367935
+** CHAIN: n=1, n_extra=0, weight=21	21;21;8,79175933(chr22:-23433179)	k: 0; ik->x[0]: 24466774	EXTRA
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,63191306(chr22:-39417806)	k: 2; ik->x[0]: 87367935	EXTRA	21;21;38,63191306(chr22:-39417806)	k: 2; ik->x[0]: 87367935
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,28598762(chr22:+28598763)	k: 0; ik->x[0]: 87367935	EXTRA	21;21;38,28598762(chr22:+28598763)	k: 0; ik->x[0]: 87367935
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,87862392(chr22:-14746721)	k: 1; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,16988734(chr22:+16988735)	k: 7; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,75298248(chr22:-27310865)	k: 3; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,25982163(chr22:+25982164)	k: 11; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,72962739(chr22:-29646374)	k: 9; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;55,40294722(chr22:+40294723)	k: 0; ik->x[0]: 1787751	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,69529821(chr22:-33079292)	k: 0; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,27018748(chr22:+27018749)	k: 6; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;55,31966657(chr22:+31966658)	k: 2; ik->x[0]: 1787751	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,55923023(chr22:-46686090)	k: 2; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,34050118(chr22:+34050119)	k: 10; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,43444354(chr22:+43444355)	k: 5; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,43109109(chr22:+43109110)	k: 8; ik->x[0]: 4872037	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;18,72045726(chr22:-30563388)	k: 0; ik->x[0]: 79538357	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,69385338(chr22:-33223776)	k: 1; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;54,22465893(chr22:+22465894)	k: 0; ik->x[0]: 76576862	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,19944469(chr22:+19944470)	k: 3; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;31,61986831(chr22:-40622283)	k: 0; ik->x[0]: 101795746	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;19,31455007(chr22:+31455008)	k: 0; ik->x[0]: 14076740	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,55447438(chr22:-47161676)	k: 0; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,86302138(chr22:-16306976)	k: 2; ik->x[0]: 82630631	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;54,26087587(chr22:+26087588)	k: 2; ik->x[0]: 76576862	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=1, weight=29	25;25;42,40178049(chr22:+40178050)	k: 2; ik->x[0]: 1607193	29;29;42,40178049(chr22:+40178050)	k: 1; ik->x[0]: 1607194	EXTRA	28;28;43,40178050(chr22:+40178051)	k: 2; ik->x[0]: 2547059
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=1, weight=29	25;25;42,56915714(chr22:-45693394)	k: 1; ik->x[0]: 1607193	29;29;42,56915714(chr22:-45693390)	k: 0; ik->x[0]: 1607194	EXTRA	28;28;43,56915715(chr22:-45693390)	k: 0; ik->x[0]: 2547059
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=28	28;28;43,73855705(chr22:-28753400)	k: 1; ik->x[0]: 2547059	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=2, weight=26	23;23;49,75865615(chr22:-26743495)	k: 4; ik->x[0]: 77832705	26;26;49,75865615(chr22:-26743492)	k: 0; ik->x[0]: 77832709	EXTRA	19;19;54,75865620(chr22:-26743494)	k: 1; ik->x[0]: 76576862	20;20;55,75865621(chr22:-26743492)	k: 1; ik->x[0]: 1787751
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=3, n_extra=0, weight=26	24;24;40,22964448(chr22:+22964449)	k: 14; ik->x[0]: 89013153	25;25;40,22964448(chr22:+22964449)	k: 14; ik->x[0]: 89013153	26;26;40,22964448(chr22:+22964449)	k: 0; ik->x[0]: 89013167	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,4653812(chr22:+4653813)	k: 1; ik->x[0]: 89013153	25;25;40,4653812(chr22:+4653813)	k: 1; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,40787505(chr22:+40787506)	k: 11; ik->x[0]: 89013153	25;25;40,40787505(chr22:+40787506)	k: 11; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41539346(chr22:+41539347)	k: 9; ik->x[0]: 89013153	25;25;40,41539346(chr22:+41539347)	k: 9; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,35995079(chr22:+35995080)	k: 2; ik->x[0]: 89013153	25;25;40,35995079(chr22:+35995080)	k: 2; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,35044408(chr22:+35044409)	k: 8; ik->x[0]: 89013153	25;25;40,35044408(chr22:+35044409)	k: 8; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41675037(chr22:+41675038)	k: 10; ik->x[0]: 89013153	25;25;40,41675037(chr22:+41675038)	k: 10; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,32187803(chr22:+32187804)	k: 12; ik->x[0]: 89013153	25;25;40,32187803(chr22:+32187804)	k: 12; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,64561965(chr22:-38047144)	k: 5; ik->x[0]: 89013153	25;25;40,64561965(chr22:-38047143)	k: 5; ik->x[0]: 89013153	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [24;40,64561965] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   CATTGACCCTAATGTCCACTCACGGTGGTGTGGACAGATTAAAAACATAAAATTCATCTCTACCCCAAAGCGGTA
+*** [left_extend_seed_set_align_beg] Left query: ATTGATTTTAATGTTTGTGGATGGTGGTATAGATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=24; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   AGTTGAACCTGGGAGGC
+*** [right_extend_seed_set_align_end] Right query: GTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=24; score=25; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [0,75) <=> [64561924,64562000); score=25; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,29132821(chr22:+29132822)	k: 7; ik->x[0]: 89013153	25;25;40,29132821(chr22:+29132822)	k: 7; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,41081666(chr22:+41081667)	k: 6; ik->x[0]: 89013153	25;25;40,41081666(chr22:+41081667)	k: 6; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,69455726(chr22:-33153383)	k: 3; ik->x[0]: 89013153	25;25;40,69455726(chr22:-33153382)	k: 3; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=25	25;25;42,26977114(chr22:+26977115)	k: 0; ik->x[0]: 1607193	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,71688643(chr22:-30920466)	k: 13; ik->x[0]: 89013153	25;25;40,71688643(chr22:-30920465)	k: 13; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,23665692(chr22:+23665693)	k: 4; ik->x[0]: 89013153	25;25;40,23665692(chr22:+23665693)	k: 4; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=25	24;24;40,81809137(chr22:-20799972)	k: 0; ik->x[0]: 89013153	25;25;40,81809137(chr22:-20799971)	k: 0; ik->x[0]: 89013153	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=24	23;23;39,56522854(chr22:-46086256)	k: 2; ik->x[0]: 45611732	24;24;39,56522854(chr22:-46086255)	k: 0; ik->x[0]: 45611734	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=24	20;20;0,44019622(chr22:+44019623)	k: 4; ik->x[0]: 4872037	24;24;0,44019622(chr22:+44019623)	k: 0; ik->x[0]: 4872041	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,78013847(chr22:-24595263)	k: 1; ik->x[0]: 77832705	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,84672951(chr22:-17936159)	k: 2; ik->x[0]: 77832705	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;39,90235474(chr22:-12373636)	k: 1; ik->x[0]: 45611732	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;35,93465342(chr22:-9143768)	k: 0; ik->x[0]: 27024335	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,68702453(chr22:-33906657)	k: 3; ik->x[0]: 77832705	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;39,93820669(chr22:-8788441)	k: 0; ik->x[0]: 45611732	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=23	23;23;49,29767619(chr22:+29767620)	k: 0; ik->x[0]: 77832705	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=22	22;22;13,34469342(chr22:+34469343)	k: 0; ik->x[0]: 23300695	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [22;13,34469342] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   TTAGTCGTTGTGACCCGATCC
+*** [left_extend_seed_set_align_beg] Left query: TATAGATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=23; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   ATACGGATCTCAGCTCAAATGTCACCTCCTCAGGGAGGCTGCTCTGACCTCTTGTCTATAAGAGCTCTTCAGTGA
+*** [right_extend_seed_set_align_end] Right query: AGTTATCGGGAGGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=23; score=24; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [0,36) <=> [34469329,34469365); score=24; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=22	22;22;4,6070670(chr22:+6070671)	k: 0; ik->x[0]: 48525706	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=22	22;22;9,15295871(chr22:+15295872)	k: 0; ik->x[0]: 44352324	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=21	21;21;11,84674489(chr22:-17934623)	k: 0; ik->x[0]: 42173486	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,83151147(chr22:-19457965)	k: 3; ik->x[0]: 87367935	EXTRA	21;21;38,83151147(chr22:-19457965)	k: 3; ik->x[0]: 87367935
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,17802515(chr22:+17802516)	k: 1; ik->x[0]: 87367935	EXTRA	21;21;38,17802515(chr22:+17802516)	k: 1; ik->x[0]: 87367935
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=21	21;21;8,79175933(chr22:-23433179)	k: 0; ik->x[0]: 24466774	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [21;8,79175933] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   TGTCGACCAAG
+*** [left_extend_seed_set_align_beg] Left query: ATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=21; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   GACTGGGGCAGAAGGGAGATGGGTCAGGGGCTCTCCAGCATCCCACACTTACTTGCTAAACCATGGCTTTGATTCTGGCACTTGGGC
+*** [right_extend_seed_set_align_end] Right query: AATTTTAGTTATCGGGAGGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=21; score=23; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [0,31) <=> [79175925,79175956); score=23; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,63191306(chr22:-39417806)	k: 2; ik->x[0]: 87367935	EXTRA	21;21;38,63191306(chr22:-39417806)	k: 2; ik->x[0]: 87367935
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=21	21;21;38,28598762(chr22:+28598763)	k: 0; ik->x[0]: 87367935	EXTRA	21;21;38,28598762(chr22:+28598763)	k: 0; ik->x[0]: 87367935
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,87862392(chr22:-14746721)	k: 1; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,16988734(chr22:+16988735)	k: 7; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,75298248(chr22:-27310865)	k: 3; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,25982163(chr22:+25982164)	k: 11; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,72962739(chr22:-29646374)	k: 9; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;55,40294722(chr22:+40294723)	k: 0; ik->x[0]: 1787751	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,69529821(chr22:-33079292)	k: 0; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,27018748(chr22:+27018749)	k: 6; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;55,31966657(chr22:+31966658)	k: 2; ik->x[0]: 1787751	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,55923023(chr22:-46686090)	k: 2; ik->x[0]: 4872037	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [20;0,55923023] @ chr22 <---
+*** [right_extend_seed_set_align_end] Right ref:   AAGGCCCAGGAGCCTGAAAGAGCAGGACGTGTTTACGTACCCAGGTAGCTTAGCAAGGCTAAAAGGGAGTGGGCTGGGAAGGGTGGGAGGTTGGGCCTGGGGTGG
+*** [right_extend_seed_set_align_end] Right query: GGTGTTTGTAATTTTAGTTATCGGGAGGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=20; score=20; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [0,20) <=> [55923023,55923043); score=20; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,34050118(chr22:+34050119)	k: 10; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,43444354(chr22:+43444355)	k: 5; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;0,43109109(chr22:+43109110)	k: 8; ik->x[0]: 4872037	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;18,72045726(chr22:-30563388)	k: 0; ik->x[0]: 79538357	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,69385338(chr22:-33223776)	k: 1; ik->x[0]: 82630631	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;54,22465893(chr22:+22465894)	k: 0; ik->x[0]: 76576862	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,19944469(chr22:+19944470)	k: 3; ik->x[0]: 82630631	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [19;34,19944469] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   ACAAAAGGTATTTATATGACGTTCATTGTAGTCACTTTACTCTGAGAATTTTTAGGAAATTTT
+*** [left_extend_seed_set_align_beg] Left query: TTTAATGTTTGTGGATGGTGGTATAGATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=19; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   TTTGAGACGGAGTCTCACTCTGTTACCCAGGCTGGAGTG
+*** [right_extend_seed_set_align_end] Right query: GTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=19; score=19; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [34,53) <=> [19944469,19944488); score=19; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;31,61986831(chr22:-40622283)	k: 0; ik->x[0]: 101795746	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;19,31455007(chr22:+31455008)	k: 0; ik->x[0]: 14076740	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [19;19,31455007] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   CTTTTTTCTTTCTATTAATAAGTTGGTTATAGG
+*** [left_extend_seed_set_align_beg] Left query: TGGTGGTATAGATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=19; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   GAGTCTTACTCTGTTGCCTAGACTGGAGTGCAATGGCACGATCTTGGCTCACTGCAACCTCTACCTCCT
+*** [right_extend_seed_set_align_end] Right query: TATCGGGAGGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=19; score=19; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [19,38) <=> [31455007,31455026); score=19; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,55447438(chr22:-47161676)	k: 0; ik->x[0]: 82630631	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;34,86302138(chr22:-16306976)	k: 2; ik->x[0]: 82630631	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;54,26087587(chr22:+26087588)	k: 2; ik->x[0]: 76576862	EXTRA
+[mem_align1_core] === Seeding DLZ38V1_0229:3:2203:18400:29674 against (parent: 1)
+[mem_chain] Found 33 chains; Fraction of repetitive seeds: 0.000
+** CHAIN: n=2, n_extra=0, weight=27	25;25;21,16918038(chr22:+16918039)	k: 5; ik->x[0]: 44922512	26;26;22,16918039(chr22:+16918040)	k: 3; ik->x[0]: 73637568	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,19940335(chr22:+19940336)	k: 5; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,20495982(chr22:+20495983)	k: 0; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,25250679(chr22:+25250680)	k: 3; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=2, n_extra=2, weight=28	26;26;20,28003661(chr22:+28003662)	k: 2; ik->x[0]: 37881393	28;28;20,28003661(chr22:+28003662)	k: 1; ik->x[0]: 37881394	EXTRA	25;25;21,28003662(chr22:+28003663)	k: 4; ik->x[0]: 44922512	26;26;22,28003663(chr22:+28003664)	k: 2; ik->x[0]: 73637568
+** CHAIN: n=1, n_extra=0, weight=19	19;19;36,29458098(chr22:+29458099)	k: 0; ik->x[0]: 46303903	EXTRA
+** CHAIN: n=1, n_extra=0, weight=25	25;25;21,32152777(chr22:+32152778)	k: 2; ik->x[0]: 44922512	EXTRA
+** CHAIN: n=2, n_extra=0, weight=35	34;34;40,33511320(chr22:+33511321)	k: 3; ik->x[0]: 82982006	35;35;40,33511320(chr22:+33511321)	k: 2; ik->x[0]: 82982007	EXTRA
+** CHAIN: n=2, n_extra=5, weight=38	35;35;10,34568504(chr22:+34568505)	k: 0; ik->x[0]: 60141820	38;38;10,34568504(chr22:+34568505)	k: 0; ik->x[0]: 60141820	EXTRA	33;33;12,34568506(chr22:+34568507)	k: 0; ik->x[0]: 68599660	26;26;20,34568514(chr22:+34568515)	k: 1; ik->x[0]: 37881393	28;28;20,34568514(chr22:+34568515)	k: 0; ik->x[0]: 37881394	25;25;21,34568515(chr22:+34568516)	k: 3; ik->x[0]: 44922512	26;26;22,34568516(chr22:+34568517)	k: 1; ik->x[0]: 73637568
+** CHAIN: n=1, n_extra=1, weight=35	35;35;10,39164548(chr22:+39164549)	k: 1; ik->x[0]: 60141820	EXTRA	33;33;12,39164550(chr22:+39164551)	k: 3; ik->x[0]: 68599660
+** CHAIN: n=1, n_extra=1, weight=34	34;34;40,39429112(chr22:+39429113)	k: 0; ik->x[0]: 82982006	EXTRA	20;20;46,39429118(chr22:+39429119)	k: 6; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=0, weight=25	25;25;21,39523581(chr22:+39523582)	k: 1; ik->x[0]: 44922512	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,42157211(chr22:+42157212)	k: 1; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,44093517(chr22:+44093518)	k: 2; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,45915911(chr22:+45915912)	k: 4; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,48480367(chr22:+48480368)	k: 7; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=34	34;34;8,49119177(chr22:+49119178)	k: 1; ik->x[0]: 30504255	EXTRA
+** CHAIN: n=1, n_extra=0, weight=34	34;34;8,51512127(chr22:-51096972)	k: 3; ik->x[0]: 30504255	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,51799734(chr22:-50809379)	k: 12; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=1, weight=30	30;30;45,53868117(chr22:-48740986)	k: 2; ik->x[0]: 9713802	EXTRA	20;20;46,53868118(chr22:-48740995)	k: 10; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,58309910(chr22:-44299203)	k: 4; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,61340522(chr22:-41268578)	k: 2; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,62036845(chr22:-40572255)	k: 1; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,63141575(chr22:-39467538)	k: 5; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=1, weight=26	26;26;20,64030563(chr22:-38578544)	k: 0; ik->x[0]: 37881393	EXTRA	25;25;21,64030564(chr22:-38578544)	k: 0; ik->x[0]: 44922512
+** CHAIN: n=2, n_extra=2, weight=35	34;34;40,68192388(chr22:-34416711)	k: 1; ik->x[0]: 82982006	35;35;40,68192388(chr22:-34416710)	k: 0; ik->x[0]: 82982007	EXTRA	30;30;45,68192393(chr22:-34416710)	k: 0; ik->x[0]: 9713802	20;20;46,68192394(chr22:-34416719)	k: 8; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=0, weight=26	26;26;22,70562037(chr22:-32047070)	k: 0; ik->x[0]: 73637568	EXTRA
+** CHAIN: n=2, n_extra=2, weight=39	36;36;3,71401427(chr22:-31207670)	k: 2; ik->x[0]: 13030601	39;39;3,71401427(chr22:-31207667)	k: 2; ik->x[0]: 13030601	EXTRA	39;39;3,71401427(chr22:-31207667)	k: 2; ik->x[0]: 13030601	34;34;8,71401432(chr22:-31207667)	k: 2; ik->x[0]: 30504255
+** CHAIN: n=2, n_extra=1, weight=39	36;36;3,72082388(chr22:-30526709)	k: 1; ik->x[0]: 13030601	39;39;3,72082388(chr22:-30526706)	k: 1; ik->x[0]: 13030601	EXTRA	39;39;3,72082388(chr22:-30526706)	k: 1; ik->x[0]: 13030601
+** CHAIN: n=2, n_extra=2, weight=39	36;36;3,77933416(chr22:-24675681)	k: 0; ik->x[0]: 13030601	39;39;3,77933416(chr22:-24675678)	k: 0; ik->x[0]: 13030601	EXTRA	39;39;3,77933416(chr22:-24675678)	k: 0; ik->x[0]: 13030601	34;34;8,77933421(chr22:-24675678)	k: 0; ik->x[0]: 30504255
+** CHAIN: n=2, n_extra=2, weight=35	34;34;40,79955871(chr22:-22653228)	k: 2; ik->x[0]: 82982006	35;35;40,79955871(chr22:-22653227)	k: 1; ik->x[0]: 82982007	EXTRA	30;30;45,79955876(chr22:-22653227)	k: 1; ik->x[0]: 9713802	20;20;46,79955877(chr22:-22653236)	k: 9; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=1, weight=30	30;30;45,82463170(chr22:-20145933)	k: 3; ik->x[0]: 9713802	EXTRA	20;20;46,82463171(chr22:-20145942)	k: 11; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=0, weight=36	36;36;3,86270996(chr22:-16338101)	k: 3; ik->x[0]: 13030601	EXTRA
+[mem_flt_chained_seeds] 33 chains remained.
+** CHAIN: n=2, n_extra=2, weight=39	36;36;3,77933416(chr22:-24675681)	k: 0; ik->x[0]: 13030601	39;39;3,77933416(chr22:-24675678)	k: 0; ik->x[0]: 13030601	EXTRA	39;39;3,77933416(chr22:-24675678)	k: 0; ik->x[0]: 13030601	34;34;8,77933421(chr22:-24675678)	k: 0; ik->x[0]: 30504255
+** CHAIN: n=2, n_extra=1, weight=39	36;36;3,72082388(chr22:-30526709)	k: 1; ik->x[0]: 13030601	39;39;3,72082388(chr22:-30526706)	k: 1; ik->x[0]: 13030601	EXTRA	39;39;3,72082388(chr22:-30526706)	k: 1; ik->x[0]: 13030601
+** CHAIN: n=2, n_extra=2, weight=39	36;36;3,71401427(chr22:-31207670)	k: 2; ik->x[0]: 13030601	39;39;3,71401427(chr22:-31207667)	k: 2; ik->x[0]: 13030601	EXTRA	39;39;3,71401427(chr22:-31207667)	k: 2; ik->x[0]: 13030601	34;34;8,71401432(chr22:-31207667)	k: 2; ik->x[0]: 30504255
+** CHAIN: n=2, n_extra=5, weight=38	35;35;10,34568504(chr22:+34568505)	k: 0; ik->x[0]: 60141820	38;38;10,34568504(chr22:+34568505)	k: 0; ik->x[0]: 60141820	EXTRA	33;33;12,34568506(chr22:+34568507)	k: 0; ik->x[0]: 68599660	26;26;20,34568514(chr22:+34568515)	k: 1; ik->x[0]: 37881393	28;28;20,34568514(chr22:+34568515)	k: 0; ik->x[0]: 37881394	25;25;21,34568515(chr22:+34568516)	k: 3; ik->x[0]: 44922512	26;26;22,34568516(chr22:+34568517)	k: 1; ik->x[0]: 73637568
+** CHAIN: n=1, n_extra=0, weight=36	36;36;3,86270996(chr22:-16338101)	k: 3; ik->x[0]: 13030601	EXTRA
+** CHAIN: n=2, n_extra=2, weight=35	34;34;40,79955871(chr22:-22653228)	k: 2; ik->x[0]: 82982006	35;35;40,79955871(chr22:-22653227)	k: 1; ik->x[0]: 82982007	EXTRA	30;30;45,79955876(chr22:-22653227)	k: 1; ik->x[0]: 9713802	20;20;46,79955877(chr22:-22653236)	k: 9; ik->x[0]: 33937692
+** CHAIN: n=2, n_extra=2, weight=35	34;34;40,68192388(chr22:-34416711)	k: 1; ik->x[0]: 82982006	35;35;40,68192388(chr22:-34416710)	k: 0; ik->x[0]: 82982007	EXTRA	30;30;45,68192393(chr22:-34416710)	k: 0; ik->x[0]: 9713802	20;20;46,68192394(chr22:-34416719)	k: 8; ik->x[0]: 33937692
+** CHAIN: n=2, n_extra=0, weight=35	34;34;40,33511320(chr22:+33511321)	k: 3; ik->x[0]: 82982006	35;35;40,33511320(chr22:+33511321)	k: 2; ik->x[0]: 82982007	EXTRA
+** CHAIN: n=1, n_extra=1, weight=35	35;35;10,39164548(chr22:+39164549)	k: 1; ik->x[0]: 60141820	EXTRA	33;33;12,39164550(chr22:+39164551)	k: 3; ik->x[0]: 68599660
+** CHAIN: n=1, n_extra=0, weight=34	34;34;8,49119177(chr22:+49119178)	k: 1; ik->x[0]: 30504255	EXTRA
+** CHAIN: n=1, n_extra=0, weight=34	34;34;8,51512127(chr22:-51096972)	k: 3; ik->x[0]: 30504255	EXTRA
+** CHAIN: n=1, n_extra=1, weight=34	34;34;40,39429112(chr22:+39429113)	k: 0; ik->x[0]: 82982006	EXTRA	20;20;46,39429118(chr22:+39429119)	k: 6; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,45915911(chr22:+45915912)	k: 4; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,19940335(chr22:+19940336)	k: 5; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,61340522(chr22:-41268578)	k: 2; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,62036845(chr22:-40572255)	k: 1; ik->x[0]: 68599660	EXTRA
+** CHAIN: n=1, n_extra=1, weight=30	30;30;45,82463170(chr22:-20145933)	k: 3; ik->x[0]: 9713802	EXTRA	20;20;46,82463171(chr22:-20145942)	k: 11; ik->x[0]: 33937692
+** CHAIN: n=1, n_extra=1, weight=30	30;30;45,53868117(chr22:-48740986)	k: 2; ik->x[0]: 9713802	EXTRA	20;20;46,53868118(chr22:-48740995)	k: 10; ik->x[0]: 33937692
+** CHAIN: n=2, n_extra=2, weight=28	26;26;20,28003661(chr22:+28003662)	k: 2; ik->x[0]: 37881393	28;28;20,28003661(chr22:+28003662)	k: 1; ik->x[0]: 37881394	EXTRA	25;25;21,28003662(chr22:+28003663)	k: 4; ik->x[0]: 44922512	26;26;22,28003663(chr22:+28003664)	k: 2; ik->x[0]: 73637568
+** CHAIN: n=2, n_extra=0, weight=27	25;25;21,16918038(chr22:+16918039)	k: 5; ik->x[0]: 44922512	26;26;22,16918039(chr22:+16918040)	k: 3; ik->x[0]: 73637568	EXTRA
+** CHAIN: n=1, n_extra=1, weight=26	26;26;20,64030563(chr22:-38578544)	k: 0; ik->x[0]: 37881393	EXTRA	25;25;21,64030564(chr22:-38578544)	k: 0; ik->x[0]: 44922512
+** CHAIN: n=1, n_extra=0, weight=26	26;26;22,70562037(chr22:-32047070)	k: 0; ik->x[0]: 73637568	EXTRA
+** CHAIN: n=1, n_extra=0, weight=25	25;25;21,39523581(chr22:+39523582)	k: 1; ik->x[0]: 44922512	EXTRA
+** CHAIN: n=1, n_extra=0, weight=25	25;25;21,32152777(chr22:+32152778)	k: 2; ik->x[0]: 44922512	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,20495982(chr22:+20495983)	k: 0; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,25250679(chr22:+25250680)	k: 3; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,42157211(chr22:+42157212)	k: 1; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,63141575(chr22:-39467538)	k: 5; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,58309910(chr22:-44299203)	k: 4; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,51799734(chr22:-50809379)	k: 12; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,48480367(chr22:+48480368)	k: 7; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,44093517(chr22:+44093518)	k: 2; ik->x[0]: 33937692	EXTRA
+** CHAIN: n=1, n_extra=0, weight=19	19;19;36,29458098(chr22:+29458099)	k: 0; ik->x[0]: 46303903	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=2, weight=39	36;36;3,77933416(chr22:-24675681)	k: 0; ik->x[0]: 13030601	39;39;3,77933416(chr22:-24675678)	k: 0; ik->x[0]: 13030601	EXTRA	39;39;3,77933416(chr22:-24675678)	k: 0; ik->x[0]: 13030601	34;34;8,77933421(chr22:-24675678)	k: 0; ik->x[0]: 30504255
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=1, weight=39	36;36;3,72082388(chr22:-30526709)	k: 1; ik->x[0]: 13030601	39;39;3,72082388(chr22:-30526706)	k: 1; ik->x[0]: 13030601	EXTRA	39;39;3,72082388(chr22:-30526706)	k: 1; ik->x[0]: 13030601
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=2, weight=39	36;36;3,71401427(chr22:-31207670)	k: 2; ik->x[0]: 13030601	39;39;3,71401427(chr22:-31207667)	k: 2; ik->x[0]: 13030601	EXTRA	39;39;3,71401427(chr22:-31207667)	k: 2; ik->x[0]: 13030601	34;34;8,71401432(chr22:-31207667)	k: 2; ik->x[0]: 30504255
+** ---> [mem_chain2region1] Extending from seed(0) [36;3,71401427] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   GTTA
+*** [left_extend_seed_set_align_beg] Left query: AAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=36; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   CTTGGGAGGCTGAGGCAGGAGAATCACTTGAACCTGGGAGGCAGAGGTTGCAGTGAGCTGCGATTGT
+*** [right_extend_seed_set_align_end] Right query: ATCGGGAGGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=36; score=58; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [0,75) <=> [71401424,71401499); score=58; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=5, weight=38	35;35;10,34568504(chr22:+34568505)	k: 0; ik->x[0]: 60141820	38;38;10,34568504(chr22:+34568505)	k: 0; ik->x[0]: 60141820	EXTRA	33;33;12,34568506(chr22:+34568507)	k: 0; ik->x[0]: 68599660	26;26;20,34568514(chr22:+34568515)	k: 1; ik->x[0]: 37881393	28;28;20,34568514(chr22:+34568515)	k: 0; ik->x[0]: 37881394	25;25;21,34568515(chr22:+34568516)	k: 3; ik->x[0]: 44922512	26;26;22,34568516(chr22:+34568517)	k: 1; ik->x[0]: 73637568
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=36	36;36;3,86270996(chr22:-16338101)	k: 3; ik->x[0]: 13030601	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [36;3,86270996] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   TTAA
+*** [left_extend_seed_set_align_beg] Left query: AAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=36; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   CCCTGGGAGGCTGAGGCAGAATAATCCCTTGAACCCAGGAGGCAGGGGTTGCGATGAGCCGAGATCT
+*** [right_extend_seed_set_align_end] Right query: ATCGGGAGGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=36; score=49; bandwidth=100; max_off_diagonal_dist=1
+*** [mem_chain2region1] Added alignment region: [0,75) <=> [86270993,86271069); score=49; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=2, weight=35	34;34;40,79955871(chr22:-22653228)	k: 2; ik->x[0]: 82982006	35;35;40,79955871(chr22:-22653227)	k: 1; ik->x[0]: 82982007	EXTRA	30;30;45,79955876(chr22:-22653227)	k: 1; ik->x[0]: 9713802	20;20;46,79955877(chr22:-22653236)	k: 9; ik->x[0]: 33937692
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=2, weight=35	34;34;40,68192388(chr22:-34416711)	k: 1; ik->x[0]: 82982006	35;35;40,68192388(chr22:-34416710)	k: 0; ik->x[0]: 82982007	EXTRA	30;30;45,68192393(chr22:-34416710)	k: 0; ik->x[0]: 9713802	20;20;46,68192394(chr22:-34416719)	k: 8; ik->x[0]: 33937692
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=35	34;34;40,33511320(chr22:+33511321)	k: 3; ik->x[0]: 82982006	35;35;40,33511320(chr22:+33511321)	k: 2; ik->x[0]: 82982007	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=35	35;35;10,39164548(chr22:+39164549)	k: 1; ik->x[0]: 60141820	EXTRA	33;33;12,39164550(chr22:+39164551)	k: 3; ik->x[0]: 68599660
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=34	34;34;8,49119177(chr22:+49119178)	k: 1; ik->x[0]: 30504255	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=34	34;34;8,51512127(chr22:-51096972)	k: 3; ik->x[0]: 30504255	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=34	34;34;40,39429112(chr22:+39429113)	k: 0; ik->x[0]: 82982006	EXTRA	20;20;46,39429118(chr22:+39429119)	k: 6; ik->x[0]: 33937692
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,45915911(chr22:+45915912)	k: 4; ik->x[0]: 68599660	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,19940335(chr22:+19940336)	k: 5; ik->x[0]: 68599660	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,61340522(chr22:-41268578)	k: 2; ik->x[0]: 68599660	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=33	33;33;12,62036845(chr22:-40572255)	k: 1; ik->x[0]: 68599660	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=30	30;30;45,82463170(chr22:-20145933)	k: 3; ik->x[0]: 9713802	EXTRA	20;20;46,82463171(chr22:-20145942)	k: 11; ik->x[0]: 33937692
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=30	30;30;45,53868117(chr22:-48740986)	k: 2; ik->x[0]: 9713802	EXTRA	20;20;46,53868118(chr22:-48740995)	k: 10; ik->x[0]: 33937692
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=2, weight=28	26;26;20,28003661(chr22:+28003662)	k: 2; ik->x[0]: 37881393	28;28;20,28003661(chr22:+28003662)	k: 1; ik->x[0]: 37881394	EXTRA	25;25;21,28003662(chr22:+28003663)	k: 4; ik->x[0]: 44922512	26;26;22,28003663(chr22:+28003664)	k: 2; ik->x[0]: 73637568
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=2, n_extra=0, weight=27	25;25;21,16918038(chr22:+16918039)	k: 5; ik->x[0]: 44922512	26;26;22,16918039(chr22:+16918040)	k: 3; ik->x[0]: 73637568	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=1, weight=26	26;26;20,64030563(chr22:-38578544)	k: 0; ik->x[0]: 37881393	EXTRA	25;25;21,64030564(chr22:-38578544)	k: 0; ik->x[0]: 44922512
+** ---> [mem_chain2region1] Extending from seed(0) [26;20,64030563] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   GCGGTGATGCGGGTCGATTAAAAAACATAAAAATC
+*** [left_extend_seed_set_align_beg] Left query: ATGGTGGTATAGATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=29; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   AGGCTGACGCAGGAGAATCGCTTGAATCCGGGAGGCGGAGGTTGCAGTGAGCG
+*** [right_extend_seed_set_align_end] Right query: GGATGAGGTAGGAGAATCGTTTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=29; score=45; bandwidth=100; max_off_diagonal_dist=1
+*** [mem_chain2region1] Added alignment region: [0,75) <=> [64030543,64030619); score=45; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=26	26;26;22,70562037(chr22:-32047070)	k: 0; ik->x[0]: 73637568	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=25	25;25;21,39523581(chr22:+39523582)	k: 1; ik->x[0]: 44922512	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=25	25;25;21,32152777(chr22:+32152778)	k: 2; ik->x[0]: 44922512	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,20495982(chr22:+20495983)	k: 0; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,25250679(chr22:+25250680)	k: 3; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,42157211(chr22:+42157212)	k: 1; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,63141575(chr22:-39467538)	k: 5; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,58309910(chr22:-44299203)	k: 4; ik->x[0]: 33937692	EXTRA
+** ---> [mem_chain2region1] Extending from seed(0) [20;46,58309910] @ chr22 <---
+*** [left_extend_seed_set_align_beg] Left ref:   AGGACTCATCGTGGGTCGATTAAAAACCATAAAAATCATCTTTACCCCAAAGTGGTACAATCGGTCCTACCAGAGTTAGAGGACTGG
+*** [left_extend_seed_set_align_beg] Left query: AGGGCTATTGATTTTAATGTTTGTGGATGGTGGTATAGATTGAAAA
+*** [left_extend_seed_set_align_beg] Left extension: prev_score=-1; score=23; bandwidth=100; max_off_diagonal_dist=0
+*** [right_extend_seed_set_align_end] Right ref:   GTGAACCCAGGAG
+*** [right_extend_seed_set_align_end] Right query: TTGAATTCG
+*** [right_extend_seed_set_align_end] Right extension: prev_score=23; score=28; bandwidth=100; max_off_diagonal_dist=0
+*** [mem_chain2region1] Added alignment region: [43,75) <=> [58309907,58309939); score=28; {left,right}_bandwidth={100,100}
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,51799734(chr22:-50809379)	k: 12; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,48480367(chr22:+48480368)	k: 7; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=20	20;20;46,44093517(chr22:+44093518)	k: 2; ik->x[0]: 33937692	EXTRA
+[mem_chain2region] ---> Convert following chain to region <---
+** CHAIN: n=1, n_extra=0, weight=19	19;19;36,29458098(chr22:+29458099)	k: 0; ik->x[0]: 46303903	EXTRA
+[mem_merge_regions] 10 regions remain after merging duplicated regions
+** 10 regions.
+** 25, [0,75) <=> [64561924,64562000,chr22,38047132) sec: 0, bss: 0, parent: 0
+** 23, [0,31) <=> [79175925,79175956,chr22,23433176) sec: 0, bss: 0, parent: 0
+** 20, [0,20) <=> [55923023,55923043,chr22,46686089) sec: 0, bss: 0, parent: 0
+** 58, [0,75) <=> [71401424,71401499,chr22,31207633) sec: 0, bss: 1, parent: 1
+** 49, [0,75) <=> [86270993,86271069,chr22,16338063) sec: 0, bss: 1, parent: 1
+** 45, [0,75) <=> [64030543,64030619,chr22,38578513) sec: 0, bss: 1, parent: 1
+** 28, [43,75) <=> [58309907,58309939,chr22,44299193) sec: 0, bss: 1, parent: 1
+** 24, [0,36) <=> [34469329,34469365,chr22,34469329) sec: 0, bss: 1, parent: 0
+** 19, [34,53) <=> [19944469,19944488,chr22,19944469) sec: 0, bss: 1, parent: 0
+** 19, [19,38) <=> [31455007,31455026,chr22,31455007) sec: 0, bss: 1, parent: 0
+
+=====> [bis_worker2] Finalizing SE read 'DLZ38V1_0229:3:2203:18400:29674' <=====
+[mem_mark_primary_se] Before marking
+** 10 regions.
+** 25, [0,75) <=> [64561924,64562000) sec: 0, bss: 0, parent: 0
+** 23, [0,31) <=> [79175925,79175956) sec: 0, bss: 0, parent: 0
+** 20, [0,20) <=> [55923023,55923043) sec: 0, bss: 0, parent: 0
+** 58, [0,75) <=> [71401424,71401499) sec: 0, bss: 1, parent: 1
+** 49, [0,75) <=> [86270993,86271069) sec: 0, bss: 1, parent: 1
+** 45, [0,75) <=> [64030543,64030619) sec: 0, bss: 1, parent: 1
+** 28, [43,75) <=> [58309907,58309939) sec: 0, bss: 1, parent: 1
+** 24, [0,36) <=> [34469329,34469365) sec: 0, bss: 1, parent: 0
+** 19, [34,53) <=> [19944469,19944488) sec: 0, bss: 1, parent: 0
+** 19, [19,38) <=> [31455007,31455026) sec: 0, bss: 1, parent: 0
+[mem_mark_primary_se] 1st round marking
+** 10 regions.
+** 58, [0,75) <=> [71401424,71401499) sec: -1, bss: 1, parent: 1
+** 49, [0,75) <=> [86270993,86271069) sec: 0, bss: 1, parent: 1
+** 45, [0,75) <=> [64030543,64030619) sec: 0, bss: 1, parent: 1
+** 28, [43,75) <=> [58309907,58309939) sec: 0, bss: 1, parent: 1
+** 25, [0,75) <=> [64561924,64562000) sec: 0, bss: 0, parent: 0
+** 24, [0,36) <=> [34469329,34469365) sec: 0, bss: 1, parent: 0
+** 23, [0,31) <=> [79175925,79175956) sec: 0, bss: 0, parent: 0
+** 20, [0,20) <=> [55923023,55923043) sec: 0, bss: 0, parent: 0
+** 19, [19,38) <=> [31455007,31455026) sec: 0, bss: 1, parent: 0
+** 19, [34,53) <=> [19944469,19944488) sec: 0, bss: 1, parent: 0
+[mem_mark_primary_se] 2nd round marking
+** 10 regions.
+** 58, [0,75) <=> [71401424,71401499) sec: -1, bss: 1, parent: 1
+** 49, [0,75) <=> [86270993,86271069) sec: 0, bss: 1, parent: 1
+** 45, [0,75) <=> [64030543,64030619) sec: 0, bss: 1, parent: 1
+** 28, [43,75) <=> [58309907,58309939) sec: 0, bss: 1, parent: 1
+** 25, [0,75) <=> [64561924,64562000) sec: 0, bss: 0, parent: 0
+** 24, [0,36) <=> [34469329,34469365) sec: 0, bss: 1, parent: 0
+** 23, [0,31) <=> [79175925,79175956) sec: 0, bss: 0, parent: 0
+** 20, [0,20) <=> [55923023,55923043) sec: 0, bss: 0, parent: 0
+** 19, [19,38) <=> [31455007,31455026) sec: 0, bss: 1, parent: 0
+** 19, [34,53) <=> [19944469,19944488) sec: 0, bss: 1, parent: 0
+[mem_alnreg_setSAM] Generate cigar for
+** 58, [0,75) <=> [71401424,71401499,chr22,31207633) sec: -1, bss: 1, parent: 1
+* Global bandwidth: 17
+* Global ref:   GTCCAAGTTCACTAAGAGGACGGAGTCGGAGGGTTCATCGACCCTAATGTCCGCGGGTGGTGGTGTGGGCCGGTT
+* Global query: GCTTAAGTTTGCTAAGAGGATGGAGTAGGAGGGCTATTGATTTTAATGTTTGTGGATGGTGGTATAGATTGAAAA
+[mem_alnreg_setSAM] w=20, global_sc=27, local_sc=51
+* Global bandwidth: 17
+* Global ref:   GTCCAAGTTCACTAAGAGGACGGAGTCGGAGGGTTCATCGACCCTAATGTCCGCGGGTGGTGGTGTGGGCCGGTT
+* Global query: GCTTAAGTTTGCTAAGAGGATGGAGTAGGAGGGCTATTGATTTTAATGTTTGTGGATGGTGGTATAGATTGAAAA
+[mem_alnreg_setSAM] w=40, global_sc=27, local_sc=51
+[mem_alnreg_setSAM] Generate cigar for
+** 49, [0,75) <=> [86270993,86271069,chr22,16338063) sec: 0, bss: 1, parent: 1
+* Global bandwidth: 17
+* Global ref:   ACCCAAGTTCCCTAATAAGACGGAGTCGGAGGGTCCCTCGACCCTAATGTCCGTGGACGGTGGTACAGACCGATTA
+* Global query: GCTTAAGTTTGCTAAGAGGATGGAGTAGGAGGGCTATTGATTTTAATGTTTGTGGATGGTGGTATAGATTGAAAA
+[mem_alnreg_setSAM] w=27, global_sc=44, local_sc=44
+DLZ38V1_0229:3:2203:18400:29674	16	chr22	31207634	19	33M1D38M1I3M	*	0	0	CGAATTCAAACGATTCTCCTACCTCATCCTCCCGATAACTAAAATTACAAACACCTACCACCATATCTAACTTTT	9:;;;;;;;<<<<<<<<<<<;<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<;;<<<;<;;;;;;:::::999999	NM:i:13	MD:Z:1A8T15G6^A0A21C7C1C1C3C0A0A0	ZC:i:14	ZR:i:1	AS:i:58	XS:i:49	XL:i:75	XA:Z:chr22,-16338064,33M1D42M,9	XB:Z:1,0	YD:A:r
