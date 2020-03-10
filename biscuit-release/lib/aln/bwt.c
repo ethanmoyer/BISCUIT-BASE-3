@@ -44,45 +44,30 @@
 // 1.
 bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uint8_t parent) {
     uint64_t partial_G = 0;
+    uint64_t partial_A = 0;
     uint64_t top = seq0 >> (64 - k);
     uint64_t bottom = seq1 >> (64 - k);
 
     if (parent) {
-        switch(c) {
+        switch(c) { // G>A
             case 0:
-                return __builtin_popcountll(top & ~bottom); //A
+                partial_A = __builtin_popcountll(~bottom);
+                return k != 64 ? partial_A - 64 + k : partial_A; //A
             case 1:
                 return __builtin_popcountll(top & bottom); //C
-            case 2:
-                partial_G = __builtin_popcountll(~top & ~bottom);
-                return k % 64 != 0 ? partial_G - 64 + k : partial_G; //G
             case 3:
                 return __builtin_popcountll(~top & bottom); //T
         }
     } else {
-        switch(c) {
+        switch(c) { // C>T
             case 0:
-                return __builtin_popcountll(top & ~bottom); //A
-            case 1:
-                return __builtin_popcountll(top & bottom); //C
+                return __builtin_popcountll(top); //A
             case 2:
                 partial_G = __builtin_popcountll(~top & ~bottom);
-                return k % 64 != 0 ? partial_G - 64 + k : partial_G; //G
+                return k != 64 ? partial_G - 64 + k : partial_G; //G
             case 3:
-                return __builtin_popcountll(~top & bottom); //T
+                return __builtin_popcountll(bottom); //T
         }
-    }
-
-    switch(c) {
-        case 0:
-            return __builtin_popcountll(top & ~bottom); //A
-        case 1:
-            return __builtin_popcountll(top & bottom); //C
-        case 2:
-            partial_G = __builtin_popcountll(~top & ~bottom);
-            return k % 64 != 0 ? partial_G - 64 + k : partial_G; //G
-        case 3:
-            return __builtin_popcountll(~top & bottom); //T
     }
     return 0;
 }
@@ -92,7 +77,7 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
     k -= (k >= bwt->primary);
     uint32_t index = k/128 * 8;
-    int k_mod_128 = k % 128;
+    int k_mod_128 = k & 127;
 
     k++;
 
@@ -102,14 +87,14 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
     if (k == bwt->seq_len && c == 2 && count == 0)
         return 0;
 
-    if (k % 128 == 0) return count;
+    if (k % 128 == 0) return count; //% only works here?
 
     if (k_mod_128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k % 128, parent);
+        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
     } else {
         count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
-        if (k % 64 == 0) return count;
-        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, (k % 64), parent);
+        if (k & 63 == 0) return count;
+        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
     }
     return count;
 }
@@ -118,8 +103,8 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
 // to my knowledge). There may be room for improvement.
 // Seg fault is here
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
-    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
+    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k & 127) < 64 ? 4 : 5)] >> (63 - k & 63)) & 1;
+    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k & 127) < 64 ? 6 : 7)] >> (63 - k & 63)) & 1;
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
@@ -134,7 +119,7 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     bwtint_t x = k - (k > bwt->primary);
     x = nucAtBWTinv(bwt, x);
-    x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, parent);
+    x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, !parent);
     return k == bwt->primary ? 0 : x;
 }
 
@@ -340,8 +325,8 @@ void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_bac
     bwtint_t tl[4] = {0};
     //bwt_occ_new_index_v2(bwt, ik->x[!is_back] - 1, ik->x[!is_back] + ik->x[2] - 1, tk, tl, c);
     for (int i = 3; i != c - 1; i--) {
-        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i, is_back);
-        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i, is_back);
+        tk[i] = bwt_occ_new_index(bwt, ik->x[!is_back] - 1, i, is_back ^ parent);
+        tl[i] = bwt_occ_new_index(bwt, ik->x[!is_back] + ik->x[2] - 1, i, is_back  ^ parent);
         ok[i].x[!is_back] = bwt->L2[i] + 1 + tk[i];
         ok[i].x[2] = tl[i] - tk[i];
         if (i == 3)
