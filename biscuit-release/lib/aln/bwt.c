@@ -90,11 +90,11 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
     if (k % 128 == 0) return count; //% only works here?
 
     if (k_mod_128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
+        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k % 128, parent);
     } else {
         count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
-        if (k & 63 == 0) return count;
-        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
+        if (k % 64 == 0) return count;
+        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k % 64, parent);
     }
     return count;
 }
@@ -103,8 +103,8 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
 // to my knowledge). There may be room for improvement.
 // Seg fault is here
 int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
-    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k & 127) < 64 ? 4 : 5)] >> (63 - k & 63)) & 1;
-    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k & 127) < 64 ? 6 : 7)] >> (63 - k & 63)) & 1;
+    bwtint_t top = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 4 : 5)] >> (63 - k % 64)) & 1;
+    bwtint_t bottom = (bwt->bwt_new[k/128 * 8 + ((k % 128) < 64 ? 6 : 7)] >> (63 - k % 64)) & 1;
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
