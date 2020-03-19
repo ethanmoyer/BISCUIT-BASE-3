@@ -43,31 +43,25 @@
 // This function is called to get the counts for the first k nucleotides. Here k is accepted as positioning starting at
 // 1.
 bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uint8_t parent) {
-    uint64_t partial_G = 0;
-    uint64_t partial_A = 0;
-    uint64_t top = seq0 >> (64 - k);
-    uint64_t bottom = seq1 >> (64 - k);
-    //if (k > 64)
-    //    k = 64;
+    int shift = 64 - k;
+
     if (parent) {
         switch(c) { // G>A
             case 0:
-                partial_A = __builtin_popcountll(~bottom);
-                return k != 64 ? partial_A - 64 + k : partial_A; //A
+                return __builtin_popcountll(~seq1 >> shift); //A
             case 1:
-                return __builtin_popcountll(top & bottom); //C
+                return __builtin_popcountll(seq0 >> shift & seq1 >> shift); //C
             case 3:
-                return __builtin_popcountll(~top & bottom); //T
+                return __builtin_popcountll(~(seq0 >> shift) & seq1 >> shift); //T
         }
     } else {
         switch(c) { // C>T
             case 0:
-                return __builtin_popcountll(top); //A
+                return __builtin_popcountll(seq0 >> shift); //A
             case 2:
-                partial_G = __builtin_popcountll(~top & ~bottom);
-                return k != 64 ? partial_G - 64 + k : partial_G; //G
+                return __builtin_popcountll(~seq0 >> shift & ~seq1 >> shift); //G
             case 3:
-                return __builtin_popcountll(bottom); //T
+                return __builtin_popcountll(seq1 >> shift); //T
         }
     }
 
@@ -88,7 +82,7 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
         count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
 
     if ((k & 127) == 0) return count; //% only works here?
-/* possible solution but doesnt work lol
+    /* possible solution but doesnt work lol
     count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
     if (k & 127 > 64)
         count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
@@ -151,12 +145,10 @@ void bwt_cal_sa(bwt_t *bwt, int intv, uint8_t parent)
     bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
     // calculate SA value
     isa = 0; sa = bwt->seq_len;
-    int j = 0;
     for (i = 0; i < bwt->seq_len; ++i) {
 
         if (isa % intv == 0) {
             bwt->sa[isa / intv] = sa;
-            j++;
         }
         --sa;
         isa = bwt_invPsi(bwt, isa, parent);
