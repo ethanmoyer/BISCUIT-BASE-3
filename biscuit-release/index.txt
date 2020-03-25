@@ -10,12 +10,2354 @@ ssh moyerej@respublica-an01.research.chop.edu
 
 git fetch --all; git reset --hard origin/master; make purge; make
 
-NM:i:0	MD:Z:58	ZC:i:0	ZR:i:10	AS:i:58	XS:i:58	XL:i:58	XA:Z:test_seq,+1211,58M,0
-NM:i:0  MD:Z:58 ZC:i:0  ZR:i:10 AS:i:58 XS:i:58 XL:i:58 XA:Z:test_seq,+1211,58M,0
+New
 
+callgrind_annotate --auto=yes callgrind.out.4325
+--------------------------------------------------------------------------------
+Profile data file 'callgrind.out.4325' (creator: callgrind-3.15.0)
+--------------------------------------------------------------------------------
+I1 cache:
+D1 cache:
+LL cache:
+Timerange: Basic block 0 - 8505207198
+Trigger: Program termination
+Profiled target:  ./biscuit align hg19.fa.chr22 1.txt (PID 4325, part 1)
+Events recorded:  Ir sysCount sysTime
+Events shown:     Ir sysCount sysTime
+Event sort order: Ir sysCount sysTime
+Thresholds:       99 0 0
+Include dirs:
+User annotated:
+Auto-annotation:  on
 
-001111110100100 0011100010011000011100111110000001111111001111111
-110000001011011 1100011100000001100000000001111110000000000000000
+--------------------------------------------------------------------------------
+Ir             sysCount sysTime
+--------------------------------------------------------------------------------
+75,941,296,133   49,586  78,088  PROGRAM TOTALS
 
-110000001011011
-001111110100100
+--------------------------------------------------------------------------------
+Ir             sysCount sysTime  file:function
+--------------------------------------------------------------------------------
+23,211,349,818    3,396       7  lib/aln/ksw.c:ksw_extend2 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+10,357,345,041    6,362       8  ???:__mcount_internal [/usr/lib64/libc-2.17.so]
+ 8,733,696,248    3,409       5  lib/aln/bwt.c:bwt_occ_new_index [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 6,682,157,180    6,402       6  ???:mcount [/usr/lib64/libc-2.17.so]
+ 5,363,630,549    2,971  11,553  lib/aln/bwt.c:builtin_popcountll [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 4,610,404,870    1,431       1  lib/aln/bwt.c:bwt_extend_debug [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 2,565,434,600    1,229       .  ???:__popcountdi2 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 2,553,922,399      167       .  lib/aln/memchain.c:mem_chain_flt [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 1,775,332,045      691       2  lib/aln/bntseq.c:bns_get_seq [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 1,530,989,828      286       .  lib/aln/bwt.c:bwt_smem1a [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 1,507,247,704      440       .  lib/aln/bwt.c:nucAtBWTinv [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+ 1,127,561,245      872       2  lib/aln/bwt.c:bwt_invPsi [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   937,792,032      100       .  lib/aln/ksw.c:ksw_global2 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   523,936,112      213       1  ???:_int_malloc [/usr/lib64/libc-2.17.so]
+   359,621,338      153       1  lib/aln/memchain.c:left_extend_seed_set_align_beg [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   343,569,435       65       .  ???:_int_free [/usr/lib64/libc-2.17.so]
+   327,465,932      463       .  lib/aln/bwt.c:bwt_sa [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   320,074,771       96       .  lib/aln/memchain.c:__kb_getp_aux_chn [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   292,710,027      133       .  lib/aln/memchain.c:mem_chain2region1 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   221,264,970       79       .  lib/aln/memchain.c:mem_chain [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   203,997,216      114       .  lib/aln/memchain.c:asymmetric_flt_seed [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+   114,357,602       94       .  ???:malloc [/usr/lib64/ld-2.17.so]
+   101,845,531       24       .  ???:calloc [/usr/lib64/ld-2.17.so]
+    95,567,996       48       .  lib/aln/memchain.c:kb_intervalp_chn [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    91,748,115       74       .  lib/aln/bntseq.c:bns_pos2rid [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    85,062,915       29       .  lib/aln/bwt.c:bwt_seed_strategy1 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    79,399,175       40       1  ???:free [/usr/lib64/ld-2.17.so]
+    73,142,178       31       .  lib/aln/memchain.c:mem_chain_reference_span [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    70,271,006       15       .  lib/aln/bwt.c:bwt_reverse_intvs [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    69,454,432      333       1  lib/aln/mem_alnreg.c:__ks_insertsort_mem_ars2 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    67,116,112       17       .  lib/aln/memchain.c:cal_max_gap [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    66,206,336       24       .  lib/aln/bntseq.c:bns_fetch_seq [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    64,021,140        9       .  lib/aln/memchain.c:merge_seed_to_chain [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    60,531,222       19       .  lib/aln/memchain.c:__kb_putp_aux_chn'2 [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    60,132,092      158       .  lib/aln/mem_alnreg.c:__ks_insertsort_mem_ars_hash [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    59,769,519       16       .  lib/aln/memchain.c:mem_chain_weight [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    58,710,084       11       .  lib/aln/memchain.c:__ks_insertsort_mem_flt [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    55,547,195       15       .  lib/aln/mem_alnreg.c:mem_sort_deduplicate [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    49,088,379      173       .  lib/aln/mem_alnreg.c:__ks_insertsort_mem_ars [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    48,379,300       29       .  lib/aln/memchain.c:mem_chain2region [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    47,938,462       38       .  lib/aln/bntseq.h:bns_depos [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    42,225,756       17       .  lib/aln/memchain.c:ks_introsort_mem_flt [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    38,740,514       57       .  lib/aln/bntseq.c:bns_intv2rid [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    38,138,568        7       .  lib/aln/memchain.c:right_extend_seed_set_align_end [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    38,042,095       25       .  lib/aln/memchain.c:__kb_putp_aux_chn [/mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/biscuit]
+    37,480,857       10       .  ???:malloc_consolidate [/usr/lib64/libc-2.17.so]
+    37,388,339       28       1  ???:__GI_memset [/usr/lib64/libc-2.17.so]
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: lib/aln/bwt.c
+--------------------------------------------------------------------------------
+Ir            sysCount sysTime
+
+-- line 37 ----------------------------------------
+            .        .       .  #include "kvec.h"
+            .        .       .
+            .        .       .  #ifdef USE_MALLOC_WRAPPERS
+            .        .       .  #  include "malloc_wrap.h"
+            .        .       .  #endif
+            .        .       .
+            .        .       .  // This function is called to get the counts for the first k nucleotides. Here k is accepted as positioning starting at
+            .        .       .  // 1.
+1,498,990,910    1,495  11,552  bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uint8_t parent) {
+7,644,853,656    5,727       6  => ???:mcount (149,899,091x)
+  749,495,455        .       .      int shift = 64 - k;
+            .        .       .
+  299,798,182        .       .      if (parent) {
+  475,145,840        .       .          switch(c) { // G>A
+            .        .       .              case 0:
+  251,992,026        .       .                  return __builtin_popcountll(~seq1 >> shift); //A
+  458,167,320      208       .  => ???:__popcountdi2 (22,908,366x)
+            .        .       .              case 1:
+  264,260,190        .       .                  return __builtin_popcountll(seq0 >> shift & seq1 >> shift); //C
+  352,346,920      159       .  => ???:__popcountdi2 (17,617,346x)
+            .        .       .              case 3:
+  514,784,480        .       .                  return __builtin_popcountll(~(seq0 >> shift) & seq1 >> shift); //T
+  605,628,800      306       .  => ???:__popcountdi2 (30,281,440x)
+            .        .       .          }
+            .        .       .      } else {
+  335,236,618        .       .          switch(c) { // C>T
+            .        .       .              case 0:
+  104,874,165        .       .                  return __builtin_popcountll(seq0 >> shift); //A
+  233,053,700      116       .  => ???:__popcountdi2 (11,652,685x)
+            .        .       .              case 2:
+  270,640,206        .       .                  return __builtin_popcountll(~seq0 >> shift & ~seq1 >> shift); //G
+  300,711,340      148       .  => ???:__popcountdi2 (15,035,567x)
+            .        .       .              case 3:
+  276,986,934        .       .                  return __builtin_popcountll(seq1 >> shift); //T
+  615,526,520      292       .  => ???:__popcountdi2 (30,776,326x)
+            .        .       .          }
+            .        .       .      }
+            .        .       .
+   21,627,361        .       .      return 0;
+  299,798,182    1,476       1  }
+            .        .       .  // This is the bwt_occ equivalent for gathering counts when a position isn't divisible by 128.
+            .        .       .
+  909,787,104    1,001       3  bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) {
+5,155,460,271    3,841       5  => ???:mcount (101,087,456x)
+            .        .       .      // bwt starts indexing at 0, so calculations involving k are handled accordingly.
+  606,524,736        .       .      k -= (k >= bwt->primary);
+  404,349,824        .       .      uint32_t index = k/128 * 8;
+  303,262,368        .       .      int k_mod_128 = k & 127;
+            .        .       .
+  101,087,456        .       .      k++;
+            .        .       .
+  101,087,456        .       .      bwtint_t count = 0;
+  202,174,912        .       .      if (k / 128)
+1,299,027,795        .       .          count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
+            .        .       .
+  405,887,570        .       .      if ((k & 127) == 0) return count; //% only works here?
+            .        .       .      /* possible solution but doesnt work lol
+            .        .       .      count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
+            .        .       .      if (k & 127 > 64)
+            .        .       .          count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
+            .        .       .      */
+  200,637,166        .       .      if (k_mod_128 < 64) {
+1,319,189,950      462       .          count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent); //k_mod_128
+5,268,205,839    3,336       3  => lib/aln/bwt.c:builtin_popcountll (50,738,075x)
+            .        .       .          // wont work here?
+            .        .       .      } else {
+1,140,351,684      459       1          count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
+5,152,856,483    3,328  11,553  => lib/aln/bwt.c:builtin_popcountll (49,580,508x)
+  198,322,032        .       .          if ((k & 63) == 0) return count;
+1,239,512,700      490       .          count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
+5,152,856,483    3,263       3  => lib/aln/bwt.c:builtin_popcountll (49,580,508x)
+            .        .       .      }
+            .        .       .
+  100,318,583        .       .      return count;
+  202,174,912      997       1  }
+            .        .       .
+            .        .       .  // Retrieves the base at a specific position with the least amount of operations as possible (or the least
+            .        .       .  // to my knowledge). There may be room for improvement.
+  138,068,724      212       .  int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
+1,173,584,159      856       2  => ???:mcount (23,011,454x)
+   92,045,816        .       .      bwtint_t top = (63 - k & 63);
+   46,022,908        .       .      bwtint_t bottom = top;
+   92,045,816        .       .      uint32_t index = k / 128 * 8;
+   92,045,816        .       .      if ((k & 127) < 64) {
+  160,959,652        .       .          top = (bwt->bwt_new[index + 4] >> top) & 1;
+  172,456,770        .       .          bottom = (bwt->bwt_new[index + 6] >> bottom) & 1;
+            .        .       .      } else {
+  161,200,704        .       .          top = (bwt->bwt_new[index + 5] >> top) & 1;
+  161,200,704        .       .          bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
+            .        .       .      }
+   92,045,816        .       .      bwtint_t p = top | bottom;
+   46,022,908        .       .      if (p == 0)
+    4,450,596        .       .          return 2; //return G
+  103,930,780        .       .      else if (~top & bottom)
+   17,691,986        .       .          return 3; //return T
+   59,700,815        .       .      else if (top & ~bottom)
+   18,789,644        .       .          return 0; //return A
+    2,545,341        .       .      return p; //return C
+   46,022,908      228       .  }
+            .        .       .
+            .        .       .  // compute inverse CSA
+  207,103,086      213       .  static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
+1,173,584,159      914       1  => ???:mcount (23,011,454x)
+  207,103,086        .       .      bwtint_t x = k - (k > bwt->primary);
+  161,080,178      217       1      x = nucAtBWTinv(bwt, x);
+2,680,831,863    1,296       2  => lib/aln/bwt.c:nucAtBWTinv (23,011,454x)
+  322,160,356      238       .      x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, !parent);
+6,871,753,696    3,913       4  => lib/aln/bwt.c:bwt_occ_new_index (23,011,454x)
+  138,068,723        .       .      return k == bwt->primary ? 0 : x;
+   92,045,816      204       1  }
+            .        .       .
+            .        .       .  void bwt_cal_sa(bwt_t *bwt, int intv, uint8_t parent)
+            .        .       .  {
+            .        .       .      bwtint_t isa, sa, i; // S(isa) = sa
+            .        .       .      int intv_round = intv;
+            .        .       .
+            .        .       .      kv_roundup32(intv_round);
+            .        .       .      xassert(intv_round == intv, "SA sample interval is not a power of 2.");
+-- line 139 ----------------------------------------
+-- line 153 ----------------------------------------
+            .        .       .          --sa;
+            .        .       .          isa = bwt_invPsi(bwt, isa, parent);
+            .        .       .      }
+            .        .       .
+            .        .       .      if (isa % intv == 0) bwt->sa[isa/intv] = sa;
+            .        .       .      bwt->sa[0] = (bwtint_t)-1; // before this line, bwt->sa[0] = bwt->seq_len
+            .        .       .  }
+            .        .       .
+    6,706,665       10       .  bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k, uint8_t parent) {
+   38,004,440       27       .  => ???:mcount (745,185x)
+    4,471,110        .       .      bwtint_t sa = 0, mask = bwt->sa_intv - 1;
+            .        .       .
+  119,528,380      218       .      while (k & mask) { // != 0
+   23,011,454        .       .          ++sa;
+  161,080,178      224       .          k = bwt_invPsi(bwt, k, parent);
+11,853,730,963    6,995       9  => lib/aln/bwt.c:bwt_invPsi (23,011,454x)
+            .        .       .      }
+            .        .       .
+            .        .       .      /* without setting bwt->sa[0] = -1, the following line should be
+            .        .       .         changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
+    9,687,405        .       .      return sa + bwt->sa[k/bwt->sa_intv];
+    2,980,740       11       .  }
+            .        .       .
+            .        .       .  void bwt_gen_cnt_table(bwt_t *bwt) {
+            .        .       .      int i, j;
+            .        .       .      for (i = 0; i != 256; ++i) {
+            .        .       .          uint32_t x = 0;
+            .        .       .          for (j = 0; j != 4; ++j)
+            .        .       .              x |= (((i&3) == j) + ((i>>2&3) == j) + ((i>>4&3) == j) + (i>>6 == j)) << (j<<3);
+            .        .       .          bwt->cnt_table[i] = x;
+-- line 180 ----------------------------------------
+-- line 308 ----------------------------------------
+            .        .       .      *k0 = k; *l0 = l;
+            .        .       .      return l - k + 1;
+            .        .       .  }
+            .        .       .
+            .        .       .  /*********************
+            .        .       .   * Bidirectional BWT *
+            .        .       .   *********************/
+            .        .       .
+      932,750        1       .  static void bwt_reverse_intvs(bwtintv_v *p) {
+    9,514,060        9       .  => ???:mcount (186,550x)
+      746,200        .       .      if (p->n > 1) {
+            .        .       .          int j;
+    9,550,854       10       .          for (j = 0; (unsigned) j < p->n>>1; ++j) {
+   19,218,861        .       .              bwtintv_t tmp = p->a[p->n - 1 - j];
+   25,287,975        .       .              p->a[p->n - 1 - j] = p->a[j];
+   14,161,266        .       .              p->a[j] = tmp;
+            .        .       .          }
+            .        .       .      }
+      373,100        4       .  }
+            .        .       .
+            .        .       .  // NOTE: $max_intv is not currently used in BWA-MEM
+  177,515,470      168       .  void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_back, int c, uint8_t parent) {
+  823,026,285      642       .  => ???:mcount (16,137,770x)
+   64,551,080        .       .      bwtint_t tk[4] = {0};
+   64,551,080        .       .      bwtint_t tl[4] = {0};
+   80,688,850        .       .      uint8_t dir = is_back ^ parent;
+   48,413,310        .       .      uint8_t _is_back = !is_back;
+  292,016,625      361       .      for (int i = 3; i != c - 1; i--) {
+  507,494,013      370       1          tk[i] = bwt_occ_new_index(bwt, ik->x[_is_back] - 1, i, dir);
+11,256,108,843    6,605       6  => lib/aln/bwt.c:bwt_occ_new_index (39,038,001x)
+  624,608,016      359       .          tl[i] = bwt_occ_new_index(bwt, ik->x[_is_back] + ik->x[2] - 1, i, dir);
+11,335,212,785    6,659  11,559  => lib/aln/bwt.c:bwt_occ_new_index (39,038,001x)
+  702,684,018        .       .          ok[i].x[_is_back] = bwt->L2[i] + 1 + tk[i];
+  585,570,015        .       .          ok[i].x[2] = tl[i] - tk[i];
+   78,076,002        .       .          if (i == 3)
+  177,515,470        .       .              ok[3].x[is_back] = ik->x[is_back] + (
+  262,180,673        .       .                      ik->x[_is_back] <= bwt->primary && ik->x[_is_back] + ik->x[2] - 1 >= bwt->primary);
+   78,076,002        .       .          if (i != 0)
+  834,188,706        .       .              ok[i - 1].x[is_back] = ok[i].x[is_back] + ok[i].x[2];
+            .        .       .      }
+   32,275,540      173       .  }
+            .        .       .
+            .        .       .
+    1,119,300        1       .  int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], uint8_t parent) {
+    4,757,030        6       .  => ???:mcount (93,275x)
+            .        .       .
+            .        .       .      int i, j, c, ret;
+            .        .       .      bwtintv_t ik, ok[4];
+            .        .       .      bwtintv_v a[2], *prev, *curr, *swap;
+            .        .       .
+      186,550        .       .      mem->n = 0;
+      652,925        .       .      if (q[x] > 3) return x + 1;
+      186,550        .       .      if (min_intv < 1) min_intv = 1; // the interval size should be at least 1
+      746,200        .       .      kv_init(a[0]); kv_init(a[1]);
+      932,750        .       .      prev = tmpvec && tmpvec[0]? tmpvec[0] : &a[0]; // use the temporary vector if provided
+    1,026,025        .       .      curr = tmpvec && tmpvec[1]? tmpvec[1] : &a[1];
+    4,383,925        .       .      bwt_set_intv(bwt, bwtc, q[x], ik); // the initial interval of a single base
+      373,100        .       .      ik.info = x + 1;
+            .        .       .
+    8,697,975       18       .      for (i = x + 1, curr->n = 0; i < len; ++i) { // forward search
+    4,926,930        .       .          if (ik.x[2] < max_intv) { // an interval small enough, currently won't come here
+            .        .       .              kv_push(bwtintv_t, *curr, ik);
+            .        .       .              break;
+   11,496,170        .       .          } else if (q[i] < 4) { // an A/C/G/T base
+   16,417,440        .       .              c = 3 - q[i]; // complement of q[i]
+   16,417,440       15       .              bwt_extend_debug(bwtc, &ik, ok, 0, c, parent);
+3,071,502,193    1,692       1  => lib/aln/bwt.c:bwt_extend_debug (1,641,744x)
+   14,775,696        .       .              if (ok[c].x[2] != ik.x[2]) { // change of the interval size
+   35,898,137        .       .                  kv_push(bwtintv_t, *curr, ik);
+        2,950        .       .  => ???:realloc (7x)
+            .        .       .
+            .        .       .                  // no more matches
+   15,677,864        .       .                  if (ok[c].x[2] < (unsigned) min_intv) break; // the interval size is too small to be extended further
+            .        .       .              }
+   26,718,900        .       .              ik = ok[c]; ik.info = i + 1;
+            .        .       .          } else { // an ambiguous base
+       13,018        .       .              kv_push(bwtintv_t, *curr, ik);
+          566        .       .              break; // always terminate extension at an ambiguous base; in this case, i<len always stands
+            .        .       .          }
+            .        .       .      }
+      801,120        .       .      if (i == len) kv_push(bwtintv_t, *curr, ik); // push the last interval if we reach the end
+      279,825        3       .      bwt_reverse_intvs(curr); // s.t. smaller intervals (i.e. longer matches) visited first
+   57,335,004       18       .  => lib/aln/bwt.c:bwt_reverse_intvs (93,275x)
+      373,100        .       .      ret = curr->a[0].info; // this will be the returned value
+      559,650        .       .      swap = curr; curr = prev; prev = swap;
+            .        .       .
+    4,363,155       10       .      for (i = x - 1; i >= -1; --i) { // backward search for MEMs
+   22,847,303        .       .          c = i < 0? -1 : q[i] < 4? q[i] : -1; // c==-1 if i<0 or q[i] is an ambiguous base
+  108,150,223      112       .          for (j = 0, curr->n = 0; (unsigned) j < prev->n; ++j) {
+   94,539,123        .       .              bwtintv_t *p = &prev->a[j];
+  197,394,261      127       .              if (c >= 0 && ik.x[2] >= max_intv) bwt_extend_debug(bwt, p, ok, 1, c, parent);
+22,356,224,941   12,223      14  => lib/aln/bwt.c:bwt_extend_debug (13,106,391x)
+            .        .       .              //fprintf(stderr, "ok[c].x[2]: %llu\n", ok[c].x[2]);
+  223,607,043        .       .              if (c < 0 || ik.x[2] < (unsigned) max_intv || ok[c].x[2] < (unsigned) min_intv) { // keep the hit if reaching the beginning or an ambiguous base or the intv is small enough
+    6,019,690        .       .                  if (curr->n == 0) { // test curr->n>0 to make sure there are no longer matches
+   20,365,034        .       .                      if (mem->n == 0 || (unsigned) i + 1 < mem->a[mem->n-1].info>>32) { // skip contained matches
+    8,697,952        .       .                          ik = *p; ik.info |= (uint64_t)(i + 1)<<32;
+   12,503,413        .       .                          kv_push(bwtintv_t, *mem, ik);
+        3,754        .       .  => ???:realloc (5x)
+            .        .       .                      }
+            .        .       .                  } // otherwise the match is contained in another longer match
+  225,747,660        .       .              } else if (curr->n == 0 || ok[c].x[2] != curr->a[curr->n-1].x[2]) {
+   95,372,608        .       .                  ok[c].info = p->info;
+  333,804,257        .       .                  kv_push(bwtintv_t, *curr, ok[c]);
+        1,484        .       .  => ???:realloc (6x)
+            .        .       .              }
+            .        .       .          }
+    5,537,715        .       .          if (curr->n == 0) break;
+    7,607,010        .       .          swap = curr; curr = prev; prev = swap;
+            .        .       .      }
+      279,825        .       .      bwt_reverse_intvs(mem); // s.t. sorted by the start coordinate
+   22,450,062        6       .  => lib/aln/bwt.c:bwt_reverse_intvs (93,275x)
+            .        .       .
+      559,650        .       .      if (tmpvec == 0 || tmpvec[0] == 0) free(a[0].a);
+      652,925        .       .      if (tmpvec == 0 || tmpvec[1] == 0) free(a[1].a);
+       93,275        .       .      return ret;
+      186,550        .       .  }
+            .        .       .  // this copy of bwt_extend works with bwt_smem1a
+            .        .       .  // Called from memchain.c
+    1,119,300        1       .  int bwt_smem1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], uint8_t parent) {
+    4,757,035        .       .  => ???:mcount (93,275x)
+    1,399,125        3       .      return bwt_smem1a(bwt, bwtc, len, q, x, min_intv, 0, mem, tmpvec, parent);
+27,043,267,246   14,231      15  => lib/aln/bwt.c:bwt_smem1a (93,275x)
+      186,550        .       .  }
+            .        .       .
+      939,828        1       .  int bwt_seed_strategy1(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_len, int max_intv, bwtintv_t *mem, uint8_t parent) {
+    3,994,274        4       .  => ???:mcount (78,319x)
+            .        .       .      int i, c;
+            .        .       .      bwtintv_t ik, ok[4];
+            .        .       .
+      469,914        .       .      memset(mem, 0, sizeof(bwtintv_t));
+    1,096,466        .       .  => ???:__GI_memset (78,319x)
+      548,233        .       .      if (q[x] > 3) return x + 1;
+    3,680,993        .       .      bwt_set_intv(bwt, bwtc, q[x], ik); // the initial interval of a single base
+    7,199,603       13       .      for (i = x + 1; i < len; ++i) { // forward search
+    9,731,407        .       .          if (q[i] < 4) { // an A/C/G/T base
+   13,896,350        .       .              c = 3 - q[i]; // complement of q[i]
+   13,896,350       13       .              bwt_extend_debug(bwtc, &ik, ok, 0, c, parent);
+2,597,025,649    1,422  11,551  => lib/aln/bwt.c:bwt_extend_debug (1,389,635x)
+   15,627,200        .       .              if (ok[c].x[2] < (unsigned) max_intv && i - x >= min_len) {
+      831,054        .       .                  *mem = ok[c];
+      593,610        .       .                  mem->info = (uint64_t)x<<32 | (i + 1);
+      178,083        .       .                  return i + 1;
+            .        .       .              }
+   17,293,562        .       .              ik = ok[c];
+        1,698        .       .          } else return i + 1;
+            .        .       .      }
+       18,392        .       .      return len;
+      156,638        2       .  }
+            .        .       .
+            .        .       .  /*************************
+            .        .       .   * Read/write BWT and SA *
+            .        .       .   *************************/
+            .        .       .
+            .        .       .  void bwt_dump_bwt(const char *fn, const bwt_t *bwt) {
+            .        .       .      FILE *fp;
+            .        .       .      fp = xopen(fn, "wb");
+-- line 447 ----------------------------------------
+-- line 470 ----------------------------------------
+            .        .       .      err_fwrite(bwt->L2+1, sizeof(bwtint_t), 4, fp);
+            .        .       .      err_fwrite(&bwt->sa_intv, sizeof(bwtint_t), 1, fp);
+            .        .       .      err_fwrite(&bwt->seq_len, sizeof(bwtint_t), 1, fp);
+            .        .       .      err_fwrite(bwt->sa + 1, sizeof(bwtint_t), bwt->n_sa - 1, fp);
+            .        .       .      err_fflush(fp);
+            .        .       .      err_fclose(fp);
+            .        .       .  }
+            .        .       .
+           28        .       .  static bwtint_t fread_fix(FILE *fp, bwtint_t size, void *a) { // Mac/Darwin has a bug when reading data longer than 2GB. This function fixes this issue by reading data in small chunks
+          214        .       .  => ???:mcount (4x)
+            4        .       .      const int bufsize = 0x1000000; // 16M block
+            4        .       .      bwtint_t offset = 0;
+           48        .       .      while (size) {
+          112        .       .          int x = (unsigned) bufsize < size ? bufsize : (int) size;
+          234        .       .          if ((x = err_fread_noeof(a + offset, 1, x, fp)) == 0) break;
+       28,591       49     588  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (18x)
+          108        .       .          size -= x; offset += x;
+            .        .       .      }
+            4        .       .      return offset;
+            8        .       .  }
+            .        .       .
+           14        .       .  void bwt_restore_sa(const char *fn, bwt_t *bwt) {
+          112        .       .  => ???:mcount (2x)
+            .        .       .      char skipped[256];
+            .        .       .      FILE *fp;
+            .        .       .      bwtint_t primary;
+            .        .       .
+           12        .       .      fp = xopen(fn, "rb");
+        1,319        2       2  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_xopen_core (2x)
+           14        .       .      err_fread_noeof(&primary, sizeof(bwtint_t), 1, fp);
+        1,005        6       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (2x)
+           10        .       .      xassert(primary == bwt->primary, "SA-BWT inconsistency: primary is not the same.");
+           14        .       .      err_fread_noeof(skipped, sizeof(bwtint_t), 4, fp); // skip
+          425        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (2x)
+           14        .       .      err_fread_noeof(&bwt->sa_intv, sizeof(bwtint_t), 1, fp);
+          405        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (2x)
+           14        .       .      err_fread_noeof(&primary, sizeof(bwtint_t), 1, fp);
+          405        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (2x)
+           10        .       .      xassert(primary == bwt->seq_len, "SA-BWT inconsistency: seq_len is not the same.");
+            .        .       .
+           30        .       .      bwt->n_sa = (bwt->seq_len + bwt->sa_intv) / bwt->sa_intv;
+           18        .       .      bwt->sa = (bwtint_t*)calloc(bwt->n_sa, sizeof(bwtint_t));
+          592        2       .  => ???:calloc (2x)
+            6        .       .      bwt->sa[0] = -1;
+           22        .       .      fread_fix(fp, sizeof(bwtint_t) * (bwt->n_sa - 1), bwt->sa + 1);
+        6,951       11      23  => lib/aln/bwt.c:fread_fix (2x)
+            6        .       .      err_fclose(fp);
+        1,129        4       2  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fclose (2x)
+            8        .       .  }
+            .        .       .
+            .        .       .  // bwt_restore_bwt and bwt_restore_bwt2 were changed so that they restore the correct data structure (bwt->bwt).
+            .        .       .  bwt_t *bwt_restore_bwt(const char *fn) {
+            .        .       .      bwt_t *bwt;
+            .        .       .      FILE *fp;
+            .        .       .
+            .        .       .      bwt = (bwt_t*)calloc(1, sizeof(bwt_t));
+            .        .       .      fp = xopen(fn, "rb");
+-- line 515 ----------------------------------------
+-- line 543 ----------------------------------------
+            .        .       .      fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new); //change bwt->bwt_size<<2 with seq_len/8
+            .        .       .
+            .        .       .      err_fclose(fp);
+            .        .       .
+            .        .       .      return bwt;
+            .        .       .  }
+            .        .       .  // whats the difference between bwt_restore_bwt and bwt_restore_bwt2?
+            .        .       .  // bwt_restore_bwt2 is used because bwt is already connected to idx
+           12        .       .  void bwt_restore_bwt2(const char *fn, bwt_t *bwt) {
+          112        .       .  => ???:mcount (2x)
+            .        .       .      FILE *fp;
+           12        .       .      memset(bwt, 0, sizeof(bwt_t));
+          291        .       .  => ???:__GI_memset (2x)
+            .        .       .      /* bwt = (bwt_t*)calloc(1, sizeof(bwt_t)); */
+           12        .       .      fp = xopen(fn, "rb");
+        1,319        2       2  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_xopen_core (2x)
+           10        .       .      err_fseek(fp, 0, SEEK_END);
+        2,401       10       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fseek (2x)
+           16        .       .      bwt->bwt_size = (err_ftell(fp) - sizeof(bwtint_t) * 5) >> 2;
+        1,830        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_ftell (2x)
+           14        .       .      bwt->seq_len = err_ftell(fp) * 2;
+          335        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_ftell (2x)
+           24        .       .      bwt->bwt_new = (uint64_t*)calloc((bwt->seq_len/128 + 1) * 16, 8);
+          592        2       .  => ???:calloc (2x)
+           10        .       .      err_fseek(fp, 0, SEEK_SET);
+          493        2       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fseek (2x)
+           14        .       .      err_fread_noeof(&bwt->primary, sizeof(bwtint_t), 1, fp);
+        2,222        2       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (2x)
+           14        .       .      err_fread_noeof(bwt->L2+1, sizeof(bwtint_t), 4, fp);
+          425        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fread_noeof (2x)
+           18        .       .      fread_fix(fp, bwt->bwt_size<<2, bwt->bwt_new);
+       22,404       38     565  => lib/aln/bwt.c:fread_fix (2x)
+            8        .       .      bwt->seq_len = bwt->L2[4];
+            .        .       .      //fprintf(stderr, "bwt->bwt_size: %llu bwt->seq_len: %llu\n", bwt->bwt_size, bwt->seq_len);
+            .        .       .
+            .        .       .
+            6        .       .      err_fclose(fp);
+        1,129        4      16  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fclose (2x)
+            4        .       .  }
+            .        .       .
+            .        .       .  void bwt_destroy(bwt_t *bwt) {
+            .        .       .      if (bwt == 0) return;
+            .        .       .      if (bwt->sa) free(bwt->sa);
+            .        .       .      if (bwt->bwt_new) free(bwt->bwt_new);
+            .        .       .      if (bwt->bwt) free(bwt->bwt);
+            .        .       .      free(bwt);
+            .        .       .  }-- line 577 ----------------------------------------
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: lib/aln/memchain.c
+--------------------------------------------------------------------------------
+Ir          sysCount sysTime
+
+-- line 39 ----------------------------------------
+          .        .       .  /* Initial collection of SA intervals.
+          .        .       .   * put seeds (bwtintv_t) into intv_cache (shared among reads for saving allocation)
+          .        .       .   * @param opt mapping options
+          .        .       .   * @param bwt, bwtc bwt index
+          .        .       .   * @param len read length
+          .        .       .   * @param seq read sequence, 0-3 for A-T
+          .        .       .   * @return intv_cache (intv_cache->mem for a vector of bwtintv).  */
+          .        .       .  #define intv_lt(a, b) ((a).info < (b).info)
+ 29,375,528       12       .  KSORT_INIT(mem_intv, bwtintv_t, intv_lt)
+     18,020        .       .  => lib/aln/memchain.c:__ks_insertsort_mem_intv (47x)
+      2,402        .       .  => ???:mcount (47x)
+          .        .       .  // Called in memchain.c
+    239,952        .       .  static void mem_collect_intv(const mem_opt_t *opt, const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *seq, bwtintv_cache_t *intv_cache, uint8_t parent) {
+  1,019,801        .       .  => ???:mcount (19,996x)
+          .        .       .
+     19,996        .       .    int k, x = 0, old_n;
+          .        .       .    uint32_t i;
+          .        .       .    //max interval is either 2 or 1, why does it matter?
+    139,972        .       .    int start_width = (opt->flag & MEM_F_SELF_OVLP)? 2 : 1;
+    239,952        .       .    int split_len = (int)(opt->min_seed_len * opt->split_factor + .499);
+          .        .       .
+     59,988        .       .    bwtintv_v *_mem = &intv_cache->_mem;
+     39,992        .       .    bwtintv_v *mem = &intv_cache->mem;
+     59,988        .       .    bwtintv_v **tmpv = intv_cache->tmpv;
+          .        .       .
+          .        .       .    // no seeds to begin with
+     39,992        .       .    mem->n = 0;
+          .        .       .
+          .        .       .    // first pass: find all SMEMs, only keep seeds with length >= min_seed_len
+    336,001        2       .    while (x < len) { // when seed end reaches read end
+    597,373        .       .      if (seq[x] < 4) {
+          .        .       .
+          .        .       .         // returns end of seed on read
+  1,271,055        1       .        x = bwt_smem1(bwt, bwtc, len, seq, x, start_width, _mem, tmpv, parent);
+21,572,875,362   11,368      12  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bwt.c:bwt_smem1 (84,737x)
+          .        .       .
+  3,612,034        7       .        for (i = 0; i < _mem->n; ++i)
+  9,780,460        .       .          if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
+  7,151,251        .       .            kv_push(bwtintv_t, *mem, _mem->a[i]);
+      1,497        .       .  => ???:realloc (5x)
+          .        .       .
+        602        .       .      } else ++x;
+          .        .       .
+          .        .       .    }
+          .        .       .
+          .        .       .    // second pass: find MEMs inside a long SMEM
+     59,988        .       .    old_n = mem->n;
+  1,121,572        .       .    for (k = 0; k < old_n; ++k) {
+  1,787,786        .       .      bwtintv_t *p = &mem->a[k];
+  1,787,786        .       .      int start = p->info>>32, end = (int32_t)p->info;
+  1,841,387        .       .      if (end - start < split_len || p->x[2] > (unsigned) opt->split_width) continue;
+    196,374        .       .      bwt_smem1(bwt, bwtc, len, seq, (start + end)>>1, p->x[2]+1, _mem, tmpv, parent);
+5,477,853,894    2,867       3  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bwt.c:bwt_smem1 (8,538x)
+    387,360        .       .      for (i = 0; i < _mem->n; ++i)
+  1,091,980        .       .        if ((uint32_t)_mem->a[i].info - (_mem->a[i].info>>32) >= (unsigned) opt->min_seed_len)
+  1,430,462        .       .          kv_push(bwtintv_t, *mem, _mem->a[i]);
+      6,913        3       .  => ???:realloc (5x)
+          .        .       .    }
+          .        .       .
+          .        .       .    // third pass: LAST-like
+     79,984        .       .    if (opt->max_mem_intv > 0) {
+     19,996        .       .      x = 0;
+    315,049        .       .      while (x < len) {
+    548,485        .       .        if (seq[x] < 4) {
+          .        .       .          if (1) {
+          .        .       .            bwtintv_t m;
+  1,488,061        .       .            x = bwt_seed_strategy1(bwt, bwtc, len, seq, x, opt->min_seed_len, opt->max_mem_intv, &m, parent);
+2,687,179,304    1,455  11,551  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bwt.c:bwt_seed_strategy1 (78,319x)
+    839,815        .       .            if (m.x[2] > 0) kv_push(bwtintv_t, *mem, m);
+          .        .       .          } else { // for now, we never come to this block which is slower
+          .        .       .              //we are making this faster
+          .        .       .            x = bwt_smem1a(bwt, bwtc, len, seq, x, start_width, opt->max_mem_intv, _mem, tmpv, parent);
+          .        .       .
+          .        .       .            for (i = 0; i < _mem->n; ++i)
+          .        .       .              kv_push(bwtintv_t, *mem, _mem->a[i]);
+          .        .       .          }
+         36        .       .        } else ++x;
+          .        .       .      }
+          .        .       .    }
+          .        .       .    // sort
+    139,972        .       .    ks_introsort(mem_intv, mem->n, mem->a);
+ 50,508,051       18       .  => lib/aln/memchain.c:ks_introsort_mem_intv (19,996x)
+          .        .       .
+     39,992        .       .  }
+          .        .       .
+          .        .       .
+          .        .       .  /**************
+          .        .       .   * mem_seed_t *
+          .        .       .   **************/
+          .        .       .
+          .        .       .  /* filtering seed if it violates asymmetric scoring */
+          .        .       .  /* static int asymmetric_flt_seed( */
+-- line 121 ----------------------------------------
+-- line 138 ----------------------------------------
+          .        .       .  /*       } */
+          .        .       .  /*    } */
+          .        .       .  /*    free(ref); */
+          .        .       .  /*    return 0; */
+          .        .       .  /* } */
+          .        .       .
+          .        .       .  // filter seed with T(ref)>C(read) or A(ref)>G(read)
+          .        .       .  static int asymmetric_flt_seed(
+  5,297,648       10       .     const uint8_t *rseq, const uint8_t *query, const mem_seed_t *s, int64_t rbeg) {
+ 33,772,511       20       .  => ???:mcount (662,206x)
+          .        .       .
+          .        .       .     int i;
+          .        .       .     const uint8_t *r;
+ 62,831,744       93       .     for (i=0, r=rseq + s->rbeg - rbeg; i<s->len; ++i, ++r) {
+ 89,177,540        .       .        if ((*r == 3 && query[s->qbeg+i] == 1) ||
+ 44,299,008        .       .            (*r == 0 && query[s->qbeg+i] == 2))
+    809,316        .       .           return 1;
+          .        .       .     }
+    257,548        .       .     return 0;
+  1,324,412       11       .  }
+          .        .       .
+          .        .       .
+          .        .       .  /***************
+          .        .       .   * mem_chain_t *
+          .        .       .   ***************/
+          .        .       .
+          .        .       .  /* chain weight is defined as:
+          .        .       .   * min(seeds_base_cov_ref, seeds_base_cov_query) */
+  2,744,895        3       .  int mem_chain_weight(const mem_chain_t *c) {
+ 27,997,934       16       .  => ???:mcount (548,979x)
+          .        .       .    int64_t end;
+    548,979        .       .    int w = 0, tmp;
+          .        .       .    unsigned j;
+          .        .       .    /* base coverage in query */
+  7,961,490        6       .    for (j = 0, end = 0; j < c->seeds.n; ++j) {
+  5,354,487        .       .      const mem_seed_t *s = c->seeds.a + j;
+  5,177,727        .       .      if (s->qbeg >= end) w += s->len;
+    785,325        .       .      else if (s->qbeg + s->len > end) w += s->qbeg + s->len - end;
+  5,949,430        .       .      end = end > s->qbeg + s->len? end : s->qbeg + s->len;
+          .        .       .    }
+  1,646,937        .       .    tmp = w; w = 0;
+          .        .       .    /* base coverage in reference */
+  7,961,490        4       .    for (j = 0, end = 0; j < c->seeds.n; ++j) {
+  5,354,487        .       .      const mem_seed_t *s = c->seeds.a + j;
+  4,587,904        .       .      if (s->rbeg >= end) w += s->len;
+    806,127        .       .      else if (s->rbeg + s->len > end) w += s->rbeg + s->len - end;
+  5,949,430        .       .      end = end > s->rbeg + s->len? end : s->rbeg + s->len;
+          .        .       .    }
+          .        .       .    /* smaller of query coverage and reference coverage */
+  2,195,916        .       .    w = w < tmp? w : tmp;
+  1,646,937        .       .    return w < 1<<30? w : (1<<30)-1;
+  1,097,958        3       .  }
+          .        .       .
+          .        .       .  static void mem_print_chain1(const bntseq_t *bns, const mem_chain_t *c) {
+          .        .       .     printf("** CHAIN: n=%zu, n_extra=%zu, weight=%d",
+          .        .       .            c->seeds.n, c->seeds_extra.n, mem_chain_weight(c));
+          .        .       .     unsigned k;
+          .        .       .     for (k = 0; k < c->seeds.n; ++k) {
+          .        .       .        bwtint_t pos;
+          .        .       .        int is_rev;
+-- line 195 ----------------------------------------
+-- line 227 ----------------------------------------
+          .        .       .   ************/
+          .        .       .
+          .        .       .  /* test "mem_seed_t *s" against the last seed from the lower side
+          .        .       .   * in "mem_chain_t *c". If the distance is close enough, merge s into c.
+          .        .       .   * return 1 if the seed is merged into the chain
+          .        .       .   *
+          .        .       .   * Note that c->seeds were sorted by positions and lower than s. */
+          .        .       .  static int merge_seed_to_chain(
+  5,822,901        6       .     const mem_opt_t *opt, int64_t l_pac, mem_chain_t *c, const mem_seed_t *s, int seed_rid) {
+ 32,996,444       24       .  => ???:mcount (646,989x)
+          .        .       .
+  7,116,879        .       .     const mem_seed_t *last = c->seeds.a + c->seeds.n-1;
+          .        .       .
+          .        .       .     // different chr; request a new chain
+  2,587,956        .       .     if (seed_rid != c->rid) return 0;
+          .        .       .
+          .        .       .     // contained seed (on both reference and query); do nothing, and report merged
+ 12,814,801        .       .     if (s->qbeg >= c->seeds.a[0].qbeg && s->qbeg + s->len <= last->qbeg + last->len &&
+  4,959,095        .       .         s->rbeg >= c->seeds.a[0].rbeg && s->rbeg + s->len <= last->rbeg + last->len) {
+  6,862,084        .       .        kv_push(mem_seed_t, c->seeds_extra, *s);
+ 27,601,490      493       .  => ???:realloc (97,112x)
+    300,484        .       .        return 1; // added to backup
+          .        .       .     }
+          .        .       .
+          .        .       .     // don't chain if on different strand
+  4,300,226        .       .     if ((last->rbeg < l_pac || c->seeds.a[0].rbeg < l_pac) && s->rbeg >= l_pac) return 0;
+          .        .       .
+          .        .       .     // grow the chain if
+          .        .       .     // 1) position on ref and query are both within opt->max_chain_gap away from last seed
+          .        .       .     // 2) the distances from last is similar (within opt->w) between on ref and on query
+  3,634,344        .       .     int64_t qdist = s->qbeg - last->qbeg; // always non-negtive
+  3,180,051        .       .     int64_t rdist = s->rbeg - last->rbeg;
+  8,173,370        .       .     if (rdist >= 0 && qdist - rdist <= opt->w && rdist - qdist <= opt->w
+    919,280        .       .         && qdist - last->len < opt->max_chain_gap && rdist - last->len < opt->max_chain_gap) {
+  1,555,434        .       .        kv_push(mem_seed_t, c->seeds, *s);
+  2,453,910       45       .  => ???:realloc (5,222x)
+     91,928        .       .        return 1; // chain growed
+          .        .       .     }
+    408,329        .       .     return 0; // not merged, request to add a new chain
+  1,293,978        3       .  }
+          .        .       .
+          .        .       .
+          .        .       .  /*********************************************************
+          .        .       .   * Cluster seeds (bwtintv_t) into a chain (mem_chain_v).
+          .        .       .   * Each chain contains one or more seeds.
+          .        .       .   *********************************************************/
+          .        .       .
+          .        .       .  #include "kbtree.h"
+          .        .       .  #define mem_getbss(parent, bns, rb) ((rb>bns->l_pac)==(parent)?1:0)
+          .        .       .  #define chain_cmp(a, b) (((b).pos < (a).pos) - ((a).pos < (b).pos))
+564,355,458      204       .  KBTREE_INIT(chn, mem_chain_t, chain_cmp)
+465,926,602    1,010       5  => lib/aln/memchain.c:__kb_putp_aux_chn (548,979x)
+ 27,997,934       16       .  => ???:mcount (548,979x)
+ 19,088,098       36       .  => lib/aln/memchain.c:__kb_split_chn (27,541x)
+  8,585,116       15       .  => ???:calloc (27,541x)
+          .        .       .  // Called in bwamem.c
+          .        .       .  mem_chain_v mem_chain(
+          .        .       .     const mem_opt_t *opt, const bwt_t *bwt, const bntseq_t *bns,
+    240,000        .       .     bseq1_t *bseq, void *intv_cache, uint8_t parent) {
+  1,020,005        1       .  => ???:mcount (20,000x)
+          .        .       .
+          .        .       .     /* aux->mem -> kbtree_t(chn) *tree -> mem_chain_v chain */
+          .        .       .     uint32_t i;
+          .        .       .     int b, e, l_rep;
+     60,000        .       .     int64_t l_pac = bns->l_pac;
+          .        .       .     bwtintv_cache_t *_intv_cache;
+          .        .       .
+          .        .       .     mem_chain_v chains;
+     80,000        .       .     kv_init(chains);
+    120,032        .       .     if (bseq->l_seq < opt->min_seed_len) return chains; // if the query is shorter than the seed length, no match
+          .        .       .
+          .        .       .     /* B-tree of mem_chain_t, the following build tree of
+          .        .       .      * mem_chain_t first and then recover the mem_chain_v */
+          .        .       .     kbtree_t(chn) *tree;
+     59,988        .       .     tree = kb_init(chn, KB_DEFAULT_SIZE);
+ 10,682,457        8       .  => lib/aln/memchain.c:kb_init_chn (19,996x)
+          .        .       .
+          .        .       .     /* if cache is not given, create a temporary one */
+     79,984        .       .     _intv_cache = intv_cache ? (bwtintv_cache_t*) intv_cache : bwtintv_cache_init();
+          .        .       .
+          .        .       .     /* generate bwtintv_v (seeds) in _intv_cache->mem */
+          .        .       .
+          .        .       .      // bseq contains both converted and unconverted sequence for the C>T and G>A, but mem_collect_intv only takes in one
+          .        .       .     // them at a time.
+    629,874        .       .     mem_collect_intv(opt, &bwt[parent], &bwt[!parent], bseq->l_seq, bseq->bisseq[parent], _intv_cache, parent);
+29,826,209,515   15,721  11,566  => lib/aln/memchain.c:mem_collect_intv (19,996x)
+          .        .       .
+          .        .       .     /* loop over mem and compute l_rep - number of repetitive seeds */
+  2,216,202        .       .     for (i = 0, b = e = l_rep = 0; i < _intv_cache->mem.n; ++i) {
+  1,976,250        .       .        bwtintv_t *intv = &_intv_cache->mem.a[i];
+  2,634,975        .       .        if (intv->x[2] <= opt->max_occ) continue; // skip unique seeds
+        175        .       .        int sb = (intv->info>>32), se = (uint32_t)intv->info;
+         85        .       .        if (sb > e) l_rep += e - b, b = sb, e = se;
+         96        .       .        else e = e > se ? e : se;
+          .        .       .     }
+     99,980        .       .     l_rep += e - b; // length of reads covered by repetitive seeds
+          .        .       .
+          .        .       .     /* cluster seeds into chains
+          .        .       .      * find the closest chain from the lower side in kbtree_t(chn) *tree
+          .        .       .      * if closest chain is nonexistent, then add the new seed as a new chain in the tree.
+          .        .       .      * Note _intv_cache->mem is sorted by position. so this would work. */
+  2,116,222        2       .     for (i = 0; i < _intv_cache->mem.n; ++i) {
+          .        .       .        /* change bwtintv_t into mem_seed_t s */
+  1,976,250        .       .        bwtintv_t *intv = &_intv_cache->mem.a[i];
+  2,964,375        .       .        int slen = (uint32_t)intv->info - (intv->info>>32); /* seed length */
+          .        .       .        uint32_t count; uint64_t k;
+          .        .       .        // if (slen < opt->min_seed_len) continue;
+          .        .       .        // ignore if too short or too repetitive
+          .        .       .
+          .        .       .        /* if the number of positions is small (small p->x[2])
+          .        .       .         * visit every position in the interval
+          .        .       .         * otherwise, look at max_occ positions at most (sampling is arbitrary).
+          .        .       .         * This is to avoid highly repetitive regions. High max_occ increase sensitivity. */
+          .        .       .
+          .        .       .        // int step = intv->x[2] > opt->max_occ? intv->x[2] / opt->max_occ : 1;
+          .        .       .        // for (k = count = 0; k < intv->x[2] && count < opt->max_occ; k += step, ++count) {
+          .        .       .
+          .        .       .        // when there are few hits, keep visiting to the end
+          .        .       .        // when there are enough hits, then cap number of visits at opt->max_occ
+  9,757,599        .       .        for (k = count = 0; k < intv->x[2] && count < opt->max_occ &&
+  2,651,295        9       .                ((count > 5 && k < opt->max_occ) || count <= 5); ++k) {
+          .        .       .
+          .        .       .           mem_chain_t tmp;    // the chain that hold the key for query
+          .        .       .           mem_chain_t *lower; // lower bound interval in B-tree
+          .        .       .           mem_chain_t *upper; // upper bound interval in B-tree
+          .        .       .
+          .        .       .           /* this is the base coordinate in the forward-reverse reference */
+          .        .       .           mem_seed_t s;
+          .        .       .           // this is where we need to pay attention to
+          .        .       .           // this directs the interval regions that are chained together here
+ 15,648,885        6       .           s.rbeg = tmp.pos = bwt_sa(&bwt[parent], intv->x[0] + k, parent);
+12,219,201,335    7,485       9  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bwt.c:bwt_sa (745,185x)
+  1,490,370        .       .           s.print1 = k;
+  2,235,555        .       .           s.print2 = intv->x[0];
+  2,980,740        .       .           s.qbeg = intv->info>>32;
+  2,980,740        .       .           s.score = s.len = slen;
+          .        .       .
+          .        .       .           /* bridging multiple reference sequences or the forward-reverse boundary; TODO: split the seed; don't discard it!!! */
+  7,451,850        2       .           int rid = bns_intv2rid(bns, s.rbeg, s.rbeg + s.len);
+330,875,824      260       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bntseq.c:bns_intv2rid (745,185x)
+  1,490,370        .       .           if (rid < 0) continue;
+          .        .       .
+          .        .       .           /* force to a certain strand */
+          .        .       .           // Note that there are marginal cases where the seed span the boundary
+          .        .       .           // of the two converted references. Now these are discarded.
+  4,471,110        .       .           if ((opt->bsstrand & 1) &&
+          .        .       .               mem_getbss(parent, bns, s.rbeg) != opt->bsstrand>>1) continue;
+          .        .       .
+          .        .       .           /* filter seeds that do not conform to the assymetric scoring matrix
+          .        .       .            * This turns out to be a very time-consuming step.
+          .        .       .            * I am going to filter the chain instead of filtering seeds */
+          .        .       .           /* if (asymmetric_flt_seed(&s, pac, bns, bseq)) continue; */
+          .        .       .
+    745,185        .       .           int to_add = 0;
+  2,980,740        .       .           if (kb_size(tree)) {
+  4,352,628        8       .              kb_intervalp(chn, tree, &tmp, &lower, &upper); // find the closest chain
+406,316,068      207       .  => lib/aln/memchain.c:kb_intervalp_chn (725,438x)
+          .        .       .              // merge with the chain in the lower side, because bwtintv_v is sorted by position
+  9,704,668        5       .              if (!lower || !merge_seed_to_chain(opt, l_pac, lower, &s, rid)) to_add = 1;
+127,072,984      571       .  => lib/aln/memchain.c:merge_seed_to_chain (646,989x)
+     19,747        .       .           } else to_add = 1;
+          .        .       .
+          .        .       .           /* new chain with one seed */
+  1,490,370        .       .           if (to_add) {
+    548,979        .       .              ++count;
+  2,195,916        .       .              kv_init(tmp.seeds);
+ 23,057,118        4       .              kv_push(mem_seed_t, tmp.seeds, s);
+119,515,898      648       .  => ???:realloc (548,979x)
+  2,195,916        .       .              kv_init(tmp.seeds_extra);
+  1,097,958        .       .              tmp.rid = rid;
+  9,881,622        .       .              tmp.is_alt = !!bns->anns[rid].is_alt;
+  2,744,895        5       .              kb_putp(chn, tree, &tmp);
+540,266,718    1,088       5  => lib/aln/memchain.c:kb_putp_chn (548,979x)
+          .        .       .           }
+          .        .       .        }
+          .        .       .     }
+     39,992        .       .     if (intv_cache == 0) bwtintv_cache_destroy(_intv_cache);
+          .        .       .
+          .        .       .     /* kbtree_t(chn) *tree to mem_chain_v *chain */
+    319,936        1       .     kv_resize(mem_chain_t, chains, kb_size(tree));
+ 11,121,856    1,419       3  => ???:realloc (19,996x)
+          .        .       .
+          .        .       .     /* traverse tree and build mem_chain_v *chain */
+          .        .       .  #define traverse_func(p_) (chains.a[chains.n++] = *(p_))
+ 71,864,202       19       .     __kb_traverse(mem_chain_t, tree, traverse_func);
+  2,484,095        1       .  => ???:free (19,996x)
+  6,027,510       42       .  => ???:calloc (19,996x)
+          .        .       .  #undef traverse_func
+          .        .       .
+ 10,001,598        9       .     for (i = 0; i < chains.n; ++i) chains.a[i].frac_rep = (float)l_rep / bseq->l_seq;
+     79,984        .       .     if (bwa_verbose >= 4) {
+          .        .       .        printf("[%s] Found %zu chains; Fraction of repetitive seeds: %.3f\n", __func__, chains.n, (float)l_rep / bseq->l_seq);
+          .        .       .        mem_print_chains(bns, &chains);
+          .        .       .     }
+          .        .       .
+ 11,330,542        9       .     kb_destroy(chn, tree);
+    149,933        .       .  => ???:realloc (274x)
+ 25,559,247        7       .  => ???:free (224,616x)
+  3,430,232        2       .  => ???:calloc (19,996x)
+          .        .       .
+    139,972        .       .     return chains;
+     60,000        .       .  }
+          .        .       .
+          .        .       .  /*******************
+          .        .       .   * Chain Filtering *
+          .        .       .   *******************/
+          .        .       .
+          .        .       .  #define chn_beg(ch) ((ch).seeds.a[0].qbeg)
+          .        .       .  #define chn_end(ch) ((ch).seeds.a[(ch).seeds.n-1].qbeg + (ch).seeds.a[(ch).seeds.n-1].len)
+          .        .       .
+          .        .       .  #define flt_lt(a, b) ((a).w > (b).w)
+100,935,840       28       .  KSORT_INIT(mem_flt, mem_chain_t, flt_lt) /* sort by chain weight */
+ 59,696,735       13       .  => lib/aln/memchain.c:__ks_insertsort_mem_flt (19,346x)
+ 14,657,472      384       .  => ???:malloc (19,346x)
+  2,445,545        .       .  => ???:free (19,346x)
+  1,007,102        .       .  => ???:mcount (19,747x)
+          .        .       .
+          .        .       .  /* filter whole chain by chain weight and overlap with existing chains */
+    120,000        .       .  void mem_chain_flt(const mem_opt_t *opt, mem_chain_v *chns) {
+  1,020,005        .       .  => ???:mcount (20,000x)
+          .        .       .
+     80,253        .       .    if (chns->n == 0) return; // no need to filter
+          .        .       .
+          .        .       .    uint32_t i, k;
+     59,241        .       .    kvec_t(int) to_keep = {0,0,0}; // this keeps int indices of the non-overlapping chains
+          .        .       .
+          .        .       .    /* set and filter by chain weight */
+  3,471,597        4       .    for (i = k = 0; i < chns->n; ++i) {
+  4,940,811        .       .      mem_chain_t *c = chns->a+i;
+  3,293,874        .       .      c->first = -1; c->kept = 0;
+  6,587,748        4       .      c->w = mem_chain_weight(c);
+ 87,767,453       32       .  => lib/aln/memchain.c:mem_chain_weight (548,979x)
+  4,391,832        .       .      if (c->w < opt->min_chain_weight) {
+          .        .       .         free(c->seeds.a);
+          .        .       .         free(c->seeds_extra.a);
+ 16,469,370        .       .      } else chns->a[k++] = *c;
+          .        .       .    }
+     59,241        .       .    chns->n = k;
+          .        .       .
+    138,229        .       .    ks_introsort(mem_flt, chns->n, chns->a); /* sort by chain weight */
+120,032,610      414       .  => lib/aln/memchain.c:ks_introsort_mem_flt (19,747x)
+          .        .       .
+          .        .       .    /* pairwise chain comparisons, decide which chain to discard by overlap */
+     98,735        .       .    chns->a[0].kept = 3;
+    473,928        1       .    kv_push(int, to_keep, 0);       /* always include the "heaviest" chain */
+  2,670,818        .       .  => ???:realloc (19,747x)
+  3,313,621        3       .    for (i = 1; i < chns->n; ++i) {
+    529,232        .       .      int large_overlap = 0;
+ 78,275,792      138       .      for (k = 0; k < to_keep.n; ++k) { /* compare with all included chains for overlap */
+          .        .       .
+135,238,464        .       .        mem_chain_t *ci = &chns->a[i];
+210,370,944        .       .        mem_chain_t *ck = &chns->a[to_keep.a[k]];
+135,238,464        .       .        int b_max = chn_beg(*ck) > chn_beg(*ci) ? chn_beg(*ck) : chn_beg(*ci);
+736,298,304        .       .        int e_min = chn_end(*ck) < chn_end(*ci) ? chn_end(*ck) : chn_end(*ci);
+          .        .       .
+          .        .       .        // have overlap; don't consider overlap where the kept chain is ALT while the current chain is primary
+101,188,093        .       .        if (e_min > b_max && (!ck->is_alt || ci->is_alt)) {
+325,429,909        .       .          int li = chn_end(*ci) - chn_beg(*ci);
+325,429,909        .       .          int lj = chn_end(*ck) - chn_beg(*ck);
+ 44,886,884        .       .          int min_l = li < lj ? li : lj;
+142,189,221        .       .          if (e_min - b_max >= min_l * opt->mask_level && // by default mask_level is 0.5
+ 18,750,290        .       .              min_l < opt->max_chain_gap) { // significant overlap
+  9,375,145        .       .            large_overlap = 1;
+ 38,964,718        .       .            if (ck->first < 0) ck->first = i; // keep the first shadowed hit s.t. mapq can be more accurate
+122,498,129        .       .            if (ci->w < ck->w * opt->drop_ratio && ck->w - ci->w >= opt->min_seed_len<<1)
+      6,416        .       .              break;
+          .        .       .          }
+          .        .       .        }
+          .        .       .      }
+  2,116,928        .       .      if (k == to_keep.n) { /* no overlap with any included chain, then keep the chain */
+  7,365,792        2       .        kv_push(int, to_keep, i);
+ 21,017,134       11       .  => ???:realloc (72,800x)
+  9,908,311        .       .        chns->a[i].kept = large_overlap ? 2 : 3;
+          .        .       .      }
+          .        .       .    }
+          .        .       .
+          .        .       .    /* when a chain is pointed by another chain,
+          .        .       .       the pointed chain is always kept */
+  2,831,297        5       .    for (i = 0; i < to_keep.n; ++i) {
+  7,595,882        .       .      mem_chain_t *c = chns->a + to_keep.a[i];
+  9,002,896        .       .      if (c->first >= 0) chns->a[c->first].kept = 1;
+          .        .       .    }
+     78,988        .       .    free(to_keep.a);
+  2,178,842        .       .  => ???:free (19,747x)
+          .        .       .
+          .        .       .    /* don't extend more than opt->max_chain_extend .kept=1/2 chains */
+  3,471,597        6       .    for (i = k = 0; i < chns->n; ++i) {
+ 13,150,520        .       .      if (chns->a[i].kept == 0 || chns->a[i].kept == 3) continue;
+  2,488,415        .       .      if (++k >= opt->max_chain_extend) break;
+          .        .       .    }
+    118,482        .       .    for (; i < chns->n; ++i)
+          .        .       .      if (chns->a[i].kept < 3)
+          .        .       .        chns->a[i].kept = 0;
+          .        .       .
+          .        .       .    /* actual filtering of chains */
+  3,471,597        4       .    for (i = k = 0; i < chns->n; ++i) {
+  4,940,811        .       .      mem_chain_t *c = chns->a+i;
+  2,744,895        .       .      if (c->kept == 0) {
+     31,780        .       .         free(c->seeds.a);
+    584,360        .       .  => ???:free (6,356x)
+     38,136        .       .         free(c->seeds_extra.a);
+    132,622        .       .  => ???:free (6,356x)
+ 16,278,690        .       .      } else chns->a[k++] = *c;
+          .        .       .    }
+          .        .       .
+     59,241        .       .    chns->n = k;
+          .        .       .
+     19,747        .       .    return;
+     40,000        .       .  }
+          .        .       .
+          .        .       .  /****************************
+          .        .       .   * Testing Seeds in a chain *
+          .        .       .   ****************************/
+          .        .       .
+          .        .       .  #define MEM_SHORT_EXT 50
+          .        .       .  #define MEM_SHORT_LEN 200
+          .        .       .  #define MEM_HSP_COEF 1.1f
+-- line 509 ----------------------------------------
+-- line 546 ----------------------------------------
+          .        .       .
+          .        .       .    return x.score;
+          .        .       .  }
+          .        .       .
+          .        .       .  /* filter seeds in each chain by seed extension score */
+          .        .       .  /* This function is rarely used for short reads */
+          .        .       .  void mem_flt_chained_seeds(
+          .        .       .     const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac,
+    220,000        .       .     const bseq1_t *s, mem_chain_v *chns, uint8_t parent) {
+  1,020,005        .       .  => ???:mcount (20,000x)
+          .        .       .
+    120,000        .       .     int l_query = s->l_seq; uint8_t *query = s->seq;
+    200,000        .       .     double min_l = opt->min_chain_weight ? MEM_HSP_COEF * opt->min_chain_weight : MEM_MINSC_COEF * log(l_query);
+  2,987,812        3       .  => ???:log (20,000x)
+    160,000        .       .     if (min_l > MEM_SEEDSW_COEF * l_query)
+     20,000        .       .        goto END_CHAIN_FLT; // don't run the following for short reads
+          .        .       .
+          .        .       .     int min_HSP_score = (int)(opt->a * min_l + .499);
+          .        .       .     unsigned u, j, k;
+          .        .       .     for (u = 0; u < chns->n; ++u) {
+          .        .       .        mem_chain_t *c = chns->a+u;
+          .        .       .        for (j = k = 0; j < c->seeds.n; ++j) {
+          .        .       .           mem_seed_t *s = c->seeds.a + j;
+          .        .       .           s->score = mem_seed_sw(opt, bns, pac, l_query, query, s, parent);
+-- line 567 ----------------------------------------
+-- line 569 ----------------------------------------
+          .        .       .              s->score = s->score < 0 ? s->len * opt->a : s->score;
+          .        .       .              c->seeds.a[k++] = *s;
+          .        .       .           }
+          .        .       .        }
+          .        .       .        c->seeds.n = k;
+          .        .       .     }
+          .        .       .
+          .        .       .  END_CHAIN_FLT:
+     80,000        .       .     if (bwa_verbose >= 4) {
+          .        .       .        printf("[%s] %zu chains remained.\n", __func__, chns->n);
+          .        .       .        mem_print_chains(bns, chns);
+          .        .       .     }
+     40,000        1       .  }
+          .        .       .
+          .        .       .  /*********************************
+          .        .       .   * mem_chain_t >>>> mem_alnreg_t *
+          .        .       .   *********************************/
+          .        .       .
+          .        .       .  // maximum length of a gap s.t. the alignment score is still positive
+          .        .       .  // it's then capped by 2*bandwidth (opt->w<<1)
+  7,191,012       10       .  static inline int cal_max_gap(const mem_opt_t *opt, int qlen) {
+ 61,123,622       46       .  => ???:mcount (1,198,502x)
+ 20,374,534        .       .    int l_del = (int)((double)(qlen * opt->a - opt->o_del) / opt->e_del + 1.);
+ 20,374,534        .       .    int l_ins = (int)((double)(qlen * opt->a - opt->o_ins) / opt->e_ins + 1.);
+  4,794,008        .       .    int l = l_del > l_ins ? l_del : l_ins;
+  4,794,008        .       .    l = l > 1 ? l : 1;
+  7,191,012        .       .    return l < opt->w<<1? l : opt->w<<1;
+  2,397,004        7       .  }
+          .        .       .
+          .        .       .  // identify the reference sequence span against which a seed chain should be aligned against
+  5,968,853        3       .  static void mem_chain_reference_span(const mem_opt_t *opt, int l_query, int64_t l_pac, const mem_chain_t *c, int64_t rmax[]) {
+ 27,673,778       29       .  => ???:mcount (542,623x)
+  2,170,492        .       .    rmax[0] = l_pac<<1;
+  1,627,869        .       .    rmax[1] = 0;
+          .        .       .
+          .        .       .    unsigned i;
+  7,327,519       10       .    for (i=0; i<c->seeds.n; ++i) {
+  5,293,737        .       .      const mem_seed_t *s = c->seeds.a + i;
+          .        .       .      // reference span for seed s: [b,e]
+  8,822,895        6       .      int64_t b = s->rbeg - (s->qbeg + cal_max_gap(opt, s->qbeg));
+ 62,936,656       34       .  => lib/aln/memchain.c:cal_max_gap (588,193x)
+ 17,057,597        6       .      int64_t e = s->rbeg + s->len + ((l_query - s->qbeg - s->len) + cal_max_gap(opt, l_query - s->qbeg - s->len));
+ 62,936,656       28       .  => lib/aln/memchain.c:cal_max_gap (588,193x)
+          .        .       .
+  4,117,351        .       .      rmax[0] = rmax[0] < b? rmax[0] : b;
+  5,293,737        .       .      rmax[1] = rmax[1] > e? rmax[1] : e;
+          .        .       .    }
+  3,798,361        .       .    rmax[0] = rmax[0] > 0 ? rmax[0] : 0;
+  5,426,230        .       .    rmax[1] = rmax[1] < l_pac<<1 ? rmax[1] : l_pac<<1;
+  3,524,412        .       .    if (rmax[0] < l_pac && l_pac < rmax[1]) { // crossing the forward-reverse boundary; then choose one side
+         10        .       .      if (c->seeds.a[0].rbeg < l_pac) rmax[1] = l_pac; // this works because all seeds are guaranteed to be on the same strand
+          .        .       .      else rmax[0] = l_pac;
+          .        .       .    }
+  2,713,115        6       .  }
+          .        .       .
+          .        .       .  /***********************
+          .        .       .   * seed extension left *
+          .        .       .   ***********************/
+          .        .       .
+          .        .       .  #define MAX_BAND_TRY  2
+          .        .       .
+          .        .       .  static void left_extend_seed_set_align_beg(
+          .        .       .      const mem_opt_t *opt, // option
+          .        .       .      const mem_seed_t *s,  // seed to extend
+          .        .       .      const uint8_t *query, // read sequence
+          .        .       .      uint8_t *rseq,        // reference sequence
+          .        .       .      int64_t rmax[],       // start and end coordinate of reference sequence
+          .        .       .      int *aw,              // bandwidth (output)
+          .        .       .      int parent,           // parent or daughter strand?
+  3,567,810        1       .      mem_alnreg_t *ar) {
+ 12,130,559        9       .  => ???:mcount (237,854x)
+          .        .       .
+    951,416        .       .    if (s->qbeg == 0) {
+    632,340        .       .      ar->score = ar->truesc = s->len * opt->a, ar->qb = 0, ar->rb = s->rbeg;
+          .        .       .      return;
+          .        .       .    }
+          .        .       .
+          .        .       .    // query sequence
+  1,419,068        1       .    uint8_t *qs = malloc(s->qbeg);
+ 21,291,604       10       .  => ???:malloc (202,724x)
+          .        .       .    int i;
+ 30,455,824       45       1    for (i = 0; i < s->qbeg; ++i)
+ 76,022,648        .       .      qs[i] = query[s->qbeg - 1 - i];
+          .        .       .
+          .        .       .    // reference sequence
+  1,419,068        .       .    int64_t tmp = s->rbeg - rmax[0];
+  1,013,620        .       .    uint8_t *rs = malloc(tmp);
+ 24,785,829       18       .  => ???:malloc (202,724x)
+ 55,297,859       97       .    for (i = 0; i < tmp; ++i)
+162,244,545        .       .      rs[i] = rseq[tmp - 1 - i];
+          .        .       .
+          .        .       .    int qle, tle, gtle, gscore;
+    810,896        2       .    for (i = 0; i < MAX_BAND_TRY; ++i) {
+    608,172        .       .      int prev = ar->score;
+  1,419,068        .       .      *aw = opt->w << i;
+          .        .       .
+    810,896        .       .      if (bwa_verbose >= 4) {
+          .        .       .        int j;
+          .        .       .        printf("*** [%s] Left ref:   ", __func__);
+          .        .       .        for (j = 0; j < tmp; ++j) putchar("ACGTN"[(int)rs[j]]); putchar('\n');
+          .        .       .        printf("*** [%s] Left query: ", __func__);
+          .        .       .        for (j = 0; j < s->qbeg; ++j) putchar("ACGTN"[(int)qs[j]]); putchar('\n');
+          .        .       .      }
+          .        .       .
+          .        .       .      int max_off; // max off diagonal distance
+ 10,703,442        3       .      ar->score = ksw_extend2(s->qbeg, qs, tmp, rs, 5, parent?opt->ctmat:opt->gamat, opt->o_del, opt->e_del, opt->o_ins, opt->e_ins, *aw, opt->pen_clip5, opt->zdrop, s->len * opt->a, &qle, &tle, &gtle, &gscore, &max_off);
+11,244,390,398    1,682       3  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/ksw.c:ksw_extend2 (202,724x)
+          .        .       .
+    810,896        .       .      if (bwa_verbose >= 4) { printf("*** [%s] Left extension: prev_score=%d; score=%d; bandwidth=%d; max_off_diagonal_dist=%d\n", __func__, prev, ar->score, *aw, max_off); fflush(stdout); }
+          .        .       .
+  3,040,860        .       .      if (ar->score == prev || max_off < (*aw>>1) + (*aw>>2)) break;
+          .        .       .    }
+          .        .       .
+          .        .       .    // check whether we prefer to reach the end of the query
+  1,689,828        .       .    if (gscore <= 0 || gscore <= ar->score - opt->pen_clip5) { // local extension
+    745,770        .       .      ar->qb = s->qbeg - qle;
+    870,065        .       .      ar->rb = s->rbeg - tle;
+    621,475        .       .      ar->truesc = ar->score;
+          .        .       .    } else { // to-end extension
+    156,858        .       .      ar->qb = 0;
+    549,003        .       .      ar->rb = s->rbeg - gtle;
+    235,287        .       .      ar->truesc = gscore;
+          .        .       .    }
+  1,621,792        4       .    free(qs); free(rs);
+ 36,394,152       11       .  => ???:free (405,448x)
+  1,902,832        .       .  }
+          .        .       .
+          .        .       .  /************************
+          .        .       .   * seed extension right *
+          .        .       .   ************************/
+          .        .       .  static void right_extend_seed_set_align_end(
+          .        .       .      const mem_opt_t *opt,  // option
+          .        .       .      const mem_seed_t *s,   // seed to extend
+          .        .       .      const uint8_t *query,  // read sequence
+          .        .       .      int l_query,           // read length
+          .        .       .      uint8_t *rseq,         // reference sequence
+          .        .       .      int64_t rmax[],        // start and end coordinate of reference sequence
+          .        .       .      int *aw,               // bandwidth (output)
+          .        .       .      int parent,            // parent or daughter strand
+  3,329,956        1       .      mem_alnreg_t *ar) {
+ 12,130,559        8       .  => ???:mcount (237,854x)
+          .        .       .
+  1,664,978        .       .    if (s->qbeg + s->len == l_query) {
+    337,848        .       .      ar->qe = l_query, ar->re = s->rbeg + s->len;
+          .        .       .      return;
+          .        .       .    }
+          .        .       .
+    629,100        .       .    int sc0 = ar->score;
+  1,258,200        .       .    int qe = s->qbeg + s->len;
+  2,306,700        .       .    int re = s->rbeg + s->len - rmax[0];
+    419,400        .       .    assert(re >= 0);
+          .        .       .
+          .        .       .    int qle, tle, gtle, gscore;
+          .        .       .    int i;
+    838,800        1       .    for (i = 0; i < MAX_BAND_TRY; ++i) {
+    629,100        .       .      int prev = ar->score;
+  1,467,900        .       .      *aw = opt->w << i;
+          .        .       .
+    838,800        .       .      if (bwa_verbose >= 4) {
+          .        .       .        int j;
+          .        .       .        printf("*** [%s] Right ref:   ", __func__);
+          .        .       .        for (j = 0; j < rmax[1] - rmax[0] - re; ++j) putchar("ACGTN"[(int)rseq[re+j]]); putchar('\n');
+          .        .       .        printf("*** [%s] Right query: ", __func__);
+          .        .       .        for (j = 0; j < l_query - qe; ++j) putchar("ACGTN"[(int)query[qe+j]]); putchar('\n');
+          .        .       .      }
+          .        .       .
+          .        .       .      int max_off;  // max off-diagonal distance
+ 14,007,936        3       .      ar->score = ksw_extend2(l_query - qe, query + qe, rmax[1] - rmax[0] - re, rseq + re, 5, parent?opt->ctmat:opt->gamat, opt->o_del, opt->e_del, opt->o_ins, opt->e_ins, *aw, opt->pen_clip3, opt->zdrop, sc0, &qle, &tle, &gtle, &gscore, &max_off);
+12,278,146,872    1,861       5  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/ksw.c:ksw_extend2 (209,700x)
+          .        .       .
+    838,800        .       .      if (bwa_verbose >= 4) { printf("*** [%s] Right extension: prev_score=%d; score=%d; bandwidth=%d; max_off_diagonal_dist=%d\n", __func__, prev, ar->score, *aw, max_off); fflush(stdout); }
+          .        .       .
+  1,452,512        .       .      if (ar->score == prev || max_off < (*aw>>1) + (*aw>>2)) break;
+          .        .       .    }
+          .        .       .
+          .        .       .    // similar to the above
+  1,749,148        .       .    if (gscore <= 0 || gscore <= ar->score - opt->pen_clip3) { // local extension
+    638,015        .       .      ar->qe = qe + qle;
+  1,276,030        .       .      ar->re = rmax[0] + re + tle;
+  1,148,427        .       .      ar->truesc += ar->score - sc0;
+          .        .       .    } else { // to-end extension
+    246,291        .       .      ar->qe = l_query;
+    820,970        .       .      ar->re = rmax[0] + re + gtle;
+    574,679        .       .      ar->truesc += gscore - sc0;
+          .        .       .    }
+  1,664,978        2       .  }
+          .        .       .
+          .        .       .
+          .        .       .  /* build mem_alnreg_v (arv) from mem_chain_t (c)
+          .        .       .   * mem_alnreg_t is constructed through banded SW and seed extension
+          .        .       .   *
+          .        .       .   * @param c mem_chain_t
+          .        .       .   * @param opt parameter
+          .        .       .   * @param bns reference meta
+          .        .       .   * @param pac reference
+          .        .       .   * @param l_query length of query
+          .        .       .   * @param query query sequence, raw WITHOUT bisulfite conversion */
+          .        .       .  // Called in memchain.c
+          .        .       .  void mem_chain2region1(
+          .        .       .     const mem_opt_t *opt, const bntseq_t *bns, uint8_t *rseq, int64_t rmax[], int rid,
+          .        .       .     int l_query, const uint8_t *query, mem_seed_v *seeds, mem_alnreg_v *regs,
+  7,557,043        6       .     uint8_t parent, uint32_t reg0, float frac_rep) {
+ 29,646,871       23       .  => ???:mcount (581,311x)
+          .        .       .
+          .        .       .     // sort seeds by score
+  4,069,177        8       .     uint64_t *srt = calloc(seeds->n, sizeof(uint64_t));
+ 80,943,149       30       .  => ???:calloc (581,311x)
+          .        .       .     unsigned i;
+  8,042,413        8       .     for (i = 0; i < seeds->n; ++i)
+ 12,581,914        .       .        srt[i] = (uint64_t)seeds->a[i].score<<32 | i;
+  3,487,866        5       .     ks_introsort_64(seeds->n, srt);
+229,111,737      144       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:ks_introsort_64 (581,311x)
+          .        .       .
+          .        .       .     int k; unsigned u;
+  6,055,795        5       .     for (k = seeds->n - 1; k >= 0; --k) { // loop from best scored seed to least
+  9,933,090        .       .        const mem_seed_t *s = seeds->a + (uint32_t)srt[k];
+          .        .       .
+  6,364,512        8       .        if (asymmetric_flt_seed(rseq, query, s, rmax[0])) continue;
+237,769,727      134       .  => lib/aln/memchain.c:asymmetric_flt_seed (662,206x)
+          .        .       .
+          .        .       .        // test whether extension has been made before
+ 41,451,596       63       .        for (u = reg0; u < regs->n; ++u) {
+ 59,266,809        .       .           mem_alnreg_t *reg = regs->a+u;
+          .        .       .           int64_t rd;
+          .        .       .           int qd, w, max_gap;
+          .        .       .
+          .        .       .           // not fully contained
+ 44,934,124        .       .           if (s->rbeg < reg->rb ||
+ 21,738,828        .       .               s->rbeg + s->len > reg->re ||
+    136,334        .       .               s->qbeg < reg->qb ||
+  6,711,352        .       .               s->qbeg + s->len > reg->qe) continue;
+          .        .       .
+          .        .       .           // this seed may give a better alignment
+    251,120        .       .           if (s->len - reg->seedlen0 > .1 * l_query) continue;
+          .        .       .
+          .        .       .           // The seed is "around" a previous hit.
+          .        .       .           // qd: distance ahead of the seed on query; rd: on reference
+    146,426        .       .           qd = s->qbeg - reg->qb;
+    146,426        .       .           rd = s->rbeg - reg->rb;
+    313,770        .       .           max_gap = cal_max_gap(opt, min(qd, rd)); // the maximal gap allowed in regions ahead of the seed
+  2,238,231        1       .  => lib/aln/memchain.c:cal_max_gap (20,918x)
+    188,262        .       .           w = min(max_gap, reg->w);
+    349,656        .       .           if (qd - rd < w && rd - qd < w) break;
+          .        .       .
+          .        .       .           // similar to the previous four lines, but this time we look at the region behind
+     11,980        .       .           qd = reg->qe - (s->qbeg + s->len);
+     13,178        .       .           rd = reg->re - (s->rbeg + s->len);
+     17,970        .       .           max_gap = cal_max_gap(opt, min(qd, rd));
+    128,191        .       .  => lib/aln/memchain.c:cal_max_gap (1,198x)
+     10,782        .       .           w = min(max_gap, reg->w);
+     15,327        .       .           if (qd - rd < w && rd - qd < w) break;
+          .        .       .        }
+          .        .       .
+          .        .       .        // the seed is (almost) contained in an existing alignment;
+          .        .       .        // further testing is needed to confirm it is not leading to a different aln
+  1,287,740        .       .        if (u < regs->n) {
+          .        .       .
+     79,996        .       .           if (bwa_verbose >= 4) {
+          .        .       .              printf(
+          .        .       .                 "** [%s] Seed(%d) [%ld;%ld,%ld] is almost contained in an existing alignment [%d,%d) <=> [%ld,%ld)\n",
+          .        .       .                 __func__, k, (long)s->len, (long)s->qbeg, (long)s->rbeg,
+          .        .       .                 regs->a[u].qb, regs->a[u].qe,
+          .        .       .                 (long)regs->a[u].rb, (long)regs->a[u].re);
+          .        .       .           }
+          .        .       .
+    329,943        .       .           for (i = k + 1; i < seeds->n; ++i) { // check overlapping seeds in the same chain
+    181,710        .       .              if (srt[i] == 0) continue;
+    289,324        .       .              const mem_seed_t *t = seeds->a + (uint32_t)srt[i];
+    206,660        .       .              if (t->len < s->len * .95) continue; // only check overlapping if t is long enough; TODO: more efficient by early stopping
+    162,410        .       .              if (s->qbeg <= t->qbeg &&
+    248,211        .       .                  s->qbeg + s->len - t->qbeg >= s->len>>2 &&
+    240,334        .       .                  t->qbeg - s->qbeg != t->rbeg - s->rbeg) break;
+          .        .       .
+    160,680        .       .              if (t->qbeg <= s->qbeg &&
+    247,421        .       .                  t->qbeg + t->len - s->qbeg >= s->len>>2 &&
+    240,412        .       .                  s->qbeg - t->qbeg != s->rbeg - t->rbeg) break;
+          .        .       .           }
+          .        .       .
+     99,995        .       .           if (i == seeds->n) { // no overlapping seeds; then skip extension
+    118,164        .       .              srt[k] = 0; // mark that seed extension has not been performed
+     19,694        .       .              continue;
+          .        .       .           }
+          .        .       .
+      1,220        .       .           if (bwa_verbose >= 4)
+          .        .       .              printf("** [%s] Seed(%d) might lead to a different alignment even though it is contained. Extension will be performed.\n", __func__, k);
+          .        .       .        }
+          .        .       .
+          .        .       .        /**** seed extension ****/
+          .        .       .        int aw[2]; // aw: actual bandwidth used in extension aw[0] - left extension; a[1] - right extension
+  5,503,919        1       .        mem_alnreg_t *reg = kv_pushp(mem_alnreg_t, *regs);
+ 35,292,182    3,513      16  => ???:realloc (42,256x)
+  1,427,124        4       .        memset(reg, 0, sizeof(mem_alnreg_t)); // reset every new mem_alnreg_t
+  7,338,368        3       .  => ???:__GI_memset (237,854x)
+  1,902,832        .       .        reg->w = aw[0] = aw[1] = opt->w;
+  1,427,124        .       .        reg->score = reg->truesc = -1;
+    713,562        .       .        reg->rid = rid;
+          .        .       .
+    951,416        .       .        if (bwa_verbose >= 4)
+          .        .       .           err_printf(
+          .        .       .              "** ---> [%s] Extending from seed(%d) [%ld;%ld,%ld] @ %s <---\n",
+          .        .       .              __func__, k, (long)s->len, (long)s->qbeg, (long)s->rbeg,
+          .        .       .              bns->anns[rid].name);
+          .        .       .
+  3,092,102        5       .        left_extend_seed_set_align_beg(opt, s, query, rseq, rmax, &aw[0], parent, reg);
+11,698,613,880    1,889       4  => lib/aln/memchain.c:left_extend_seed_set_align_beg (237,854x)
+  3,805,664        2       .        right_extend_seed_set_align_end(opt, s, query, l_query, rseq, rmax, &aw[1], parent, reg);
+12,328,415,999    1,876       5  => lib/aln/memchain.c:right_extend_seed_set_align_end (237,854x)
+          .        .       .
+  4,043,518        .       .        reg->bss = mem_getbss(parent, bns, reg->rb); /* set bisulfite strand */
+  2,378,540        .       .        reg->parent = parent;
+          .        .       .
+          .        .       .        // skip cross-boundary regions, very rare
+  4,043,518        .       .        if (mem_getbss(parent, bns, reg->re) != reg->bss) { /* cross boundary */
+          .        .       .           regs->n--;
+          .        .       .           continue;
+          .        .       .        }
+          .        .       .
+    951,416        .       .        if (bwa_verbose >= 4)
+          .        .       .           printf(
+          .        .       .              "*** [%s] Added alignment region: [%d,%d) <=> [%ld,%ld); score=%d; {left,right}_bandwidth={%d,%d}\n",
+          .        .       .              __func__, reg->qb, reg->qe, (long) reg->rb, (long)reg->re,
+          .        .       .              reg->score, aw[0], aw[1]);
+          .        .       .
+          .        .       .        /* compute seedcov */
+  4,038,504        2       .        for (i = 0, reg->seedcov = 0; i < seeds->n; ++i) {
+  2,846,727        .       .           const mem_seed_t *t = seeds->a + i;
+  2,525,942        .       .           if (t->qbeg >= reg->qb &&
+  2,821,964        .       .               t->qbeg + t->len <= reg->qe &&
+  1,820,826        .       .               t->rbeg >= reg->rb &&
+  2,295,064        .       .               t->rbeg + t->len <= reg->re) // seed fully contained
+  1,830,633        .       .              reg->seedcov += t->len; // this is not very accurate, but for approx. mapQ, this is good enough
+          .        .       .        }
+  1,427,124        .       .        reg->w = aw[0] > aw[1]? aw[0] : aw[1];
+    951,416        .       .        reg->seedlen0 = s->len; // length of best scored seed
+    713,562        .       .        reg->frac_rep = frac_rep;
+          .        .       .     }
+  2,325,244        5       .     free(srt);
+ 52,319,118       10       .  => ???:free (581,311x)
+  1,162,622       11       .  }
+          .        .       .  //called in bwamem.c
+          .        .       .  void mem_chain2region(
+          .        .       .     const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac,
+    260,000        .       .     bseq1_t *bseq, uint8_t parent, mem_chain_v *chns, mem_alnreg_v *regs) {
+  1,020,005        1       .  => ???:mcount (20,000x)
+          .        .       .
+     60,000        .       .     uint32_t reg0 = regs->n;
+          .        .       .     uint32_t i;
+  3,395,738        5       .     for (i = 0; i < chns->n; ++i) {
+  4,883,607        .       .        mem_chain_t *c = chns->a + i;
+  2,170,492        .       .        if (c->seeds.n == 0) continue;
+          .        .       .
+  2,170,492        .       .        if (bwa_verbose >= 4) {
+          .        .       .           err_printf("[%s] ---> Convert following chain to region <---\n", __func__);
+          .        .       .           mem_print_chain1(bns, c);
+          .        .       .        }
+          .        .       .
+          .        .       .        // get reference sequence that alignment can happen: [rmax[0], rmax[1]]
+          .        .       .        int64_t rmax[2]; int rid;
+  5,426,230        6       .        mem_chain_reference_span(opt, bseq->l_seq, bns->l_pac, c, rmax);
+226,689,268      122       .  => lib/aln/memchain.c:mem_chain_reference_span (542,623x)
+  7,054,099        5       .        uint8_t *rseq = bns_fetch_seq(bns, pac, &rmax[0], c->seeds.a[0].rbeg, &rmax[1], &rid);
+2,079,434,543      905       2  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bntseq.c:bns_fetch_seq (542,623x)
+          .        .       .        // assert(c->rid == rid);
+          .        .       .
+          .        .       .        /* convert chain to region */
+  1,627,869        .       .        uint32_t n0 = regs->n;
+ 14,108,198        7       .        mem_chain2region1(opt, bns, rseq, rmax, rid, bseq->l_seq, bseq->seq, &c->seeds, regs, parent, reg0, c->frac_rep);
+24,795,716,769    7,714      25  => lib/aln/memchain.c:mem_chain2region1 (542,623x)
+          .        .       .
+          .        .       .        // no region is generated, try the backup seeds
+  3,946,195        .       .        if (regs->n == n0 && c->seeds_extra.n > 0) {
+  1,005,888        .       .           mem_chain2region1(opt, bns, rseq, rmax, rid, bseq->l_seq, bseq->seq, &c->seeds_extra, regs, parent, reg0, c->frac_rep);
+198,810,711       59       .  => lib/aln/memchain.c:mem_chain2region1 (38,688x)
+          .        .       .        }
+  2,170,492        6       .        free(rseq);
+ 56,931,111       20       1  => ???:free (542,623x)
+          .        .       .     }
+    100,000        .       .  }
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: lib/aln/mem_alnreg.c
+--------------------------------------------------------------------------------
+Ir          sysCount sysTime
+
+-- line 34 ----------------------------------------
+          .        .       .  #include "utils.h"
+          .        .       .
+          .        .       .  /**********************
+          .        .       .   * Merge mem_alnreg_t *
+          .        .       .   **********************/
+          .        .       .
+          .        .       .  // sort by 1) bss; 2) ref end;
+          .        .       .  #define alnreg_slt2(a, b) ((a).bss < (b).bss || ((a).bss == (b).bss && ((a).re < (b).re)))
+ 97,572,442      418       1  KSORT_INIT(mem_ars2, mem_alnreg_t, alnreg_slt2)
+ 69,891,652      333       1  => lib/aln/mem_alnreg.c:__ks_insertsort_mem_ars2 (9,194x)
+ 17,743,695        3       .  => ???:malloc (9,194x)
+  1,171,162        1       .  => ???:free (9,194x)
+    485,576        .       .  => ???:mcount (9,521x)
+    259,645        .       .  => lib/aln/mem_alnreg.c:ks_combsort_mem_ars2 (18x)
+          .        .       .
+          .        .       .  // sort by 1) bss; 2) score; 3) ref begin; 4) query begin
+          .        .       .  #define alnreg_slt(a, b) ((a).bss < (b).bss || ((a).bss == (b).bss && ((a).score > (b).score || ((a).score == (b).score && ((a).rb < (b).rb || ((a).rb == (b).rb && (a).qb < (b).qb))))))
+101,205,815      224       .  KSORT_INIT(mem_ars, mem_alnreg_t, alnreg_slt)
+ 47,862,262      172       .  => lib/aln/mem_alnreg.c:__ks_insertsort_mem_ars (9,194x)
+ 18,507,713        8       .  => lib/aln/mem_alnreg.c:ks_combsort_mem_ars (568x)
+  2,425,510        .       .  => ???:malloc (9,194x)
+  1,170,997        1       .  => ???:free (9,194x)
+    485,576        .       .  => ???:mcount (9,521x)
+          .        .       .
+          .        .       .  #define PATCH_MAX_R_BW 0.05f
+          .        .       .  #define PATCH_MIN_SC_RATIO 0.90f
+          .        .       .
+          .        .       .  /* opt - options
+          .        .       .     bns - reference meta
+          .        .       .     pac - reference
+          .        .       .     query - read sequence
+          .        .       .     a - reg to merge, left on query
+          .        .       .     b - reg to merge, right on query
+          .        .       .     previously called mem_patch_reg
+          .        .       .
+          .        .       .     return the score for concatenating mem_alnreg_t *a and mem_alnreg_t *b */
+    665,964        .       .  static int mem_test_reg_concatenation(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac, uint8_t *query, const mem_alnreg_t *a, const mem_alnreg_t *b, int *_w) {
+  2,612,633        4       .  => ???:mcount (51,228x)
+          .        .       .
+    307,368        .       .    if (bns == 0 || pac == 0 || query == 0) return 0;
+          .        .       .
+    614,736        .       .    assert(a->rid == b->rid && a->rb <= b->rb);
+          .        .       .
+    475,674        .       .    if (a->rb < bns->l_pac && b->rb >= bns->l_pac) return 0; // on different strands
+          .        .       .
+    422,090        .       .    if (a->qb >= b->qb || a->qe >= b->qe || a->re >= b->re) return 0; // not colinear
+          .        .       .
+          .        .       .    // required bandwidth
+      4,665        .       .    int w = (a->re - b->rb) - (a->qe - b->qb);
+      1,244        .       .    w = w > 0 ? w : -w; // l = abs(l)
+          .        .       .
+          .        .       .    // relative bandwidth
+      9,952        .       .    double r = (double)(a->re - b->rb) / (b->re - a->rb) - (double)(a->qe - b->qb) / (b->qe - a->qb);
+      2,990        .       .    r = r > 0.? r : -r; // r = fabs(r)
+          .        .       .
+      1,244        .       .    if (bwa_verbose >= 4) printf("* potential hit merge between [%d,%d)<=>[%ld,%ld) and [%d,%d)<=>[%ld,%ld), @ %s; w=%d, r=%.4g\n", a->qb, a->qe, (long)a->rb, (long)a->re, b->qb, b->qe, (long)b->rb, (long)b->re, bns->anns[a->rid].name, w, r);
+          .        .       .
+      2,112        .       .    if (a->re < b->rb || a->qe < b->qb) { // no overlap on query or on ref
+      2,134        .       .      if (w > opt->w<<1 || r >= PATCH_MAX_R_BW) return 0; // the bandwidth or the relative bandwidth is too large
+        248        .       .    } else if (w > opt->w<<2 || r >= PATCH_MAX_R_BW*2) return 0; // more permissive if overlapping on both ref and query
+          .        .       .
+          .        .       .    // global alignment
+          6        .       .    w += a->w + b->w;
+         10        .       .    w = min(w, opt->w<<2);
+          .        .       .
+          4        .       .    if (bwa_verbose >= 4) printf("* test potential hit merge with global alignment; w=%d\n", w);
+          .        .       .
+          .        .       .    int score;
+         57        .       .    bis_bwa_gen_cigar2(a->parent?opt->ctmat:opt->gamat, opt->o_del, opt->e_del, opt->o_ins, opt->e_ins, w, bns->l_pac, pac, b->qe - a->qb, query + a->qb, a->rb, b->re, &score, 0, 0, 0, 0, 0, a->parent);
+     65,020        .       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bwa.c:bis_bwa_gen_cigar2 (1x)
+          .        .       .
+          .        .       .    // predicted score from query
+         34        .       .    int q_s = (int)((double)(b->qe - a->qb) / ((b->qe - b->qb) + (a->qe - a->qb)) * (b->score + a->score) + .499);
+          .        .       .    // predicted score from ref
+         34        .       .    int r_s = (int)((double)(b->re - a->rb) / ((b->re - b->rb) + (a->re - a->rb)) * (b->score + a->score) + .499);
+          .        .       .
+          4        .       .    if (bwa_verbose >= 4) printf("[%s] score=%d;(%d,%d)\n", __func__, score, q_s, r_s);
+          .        .       .
+         16        .       .    if ((double) score / max(q_s, r_s) < PATCH_MIN_SC_RATIO) return 0;
+          .        .       .
+          .        .       .    *_w = w;
+          .        .       .
+          .        .       .    return score;
+    307,368        .       .  }
+          .        .       .
+          .        .       .  /* sort deduplicate mem_alnreg_v
+          .        .       .     Note when used with bns==pac==query==0, there is no merge */
+     90,000        .       .  void mem_sort_deduplicate(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac, uint8_t *query, mem_alnreg_v *regs) {
+    510,005        .       .  => ???:mcount (10,000x)
+          .        .       .
+     40,000        .       .    if (regs->n <= 1)
+        479        .       .      return;
+          .        .       .
+          .        .       .    // sort by the END position, not START!
+     66,647        .       .    ks_introsort(mem_ars2, regs->n, regs->a);
+117,443,620      422       1  => lib/aln/mem_alnreg.c:ks_introsort_mem_ars2 (9,521x)
+          .        .       .
+          .        .       .    int i;
+  1,739,074        4       .    for (i = 0; (unsigned) i < regs->n; ++i)
+  3,088,254        .       .      regs->a[i].n_comp = 1;
+          .        .       .
+  1,672,427        4       .    for (i = 1; (unsigned) i < regs->n; ++i) {
+          .        .       .
+  2,280,370        .       .      mem_alnreg_t *p = regs->a+i;
+          .        .       .
+          .        .       .      // compare with all previous chains with the same bss (bisulfite conversion strand),
+          .        .       .      // rid (chromosome) and with opt->max_chain_gap distance from p
+          .        .       .      int j;
+  2,048,040        .       .      for (j = i - 1; j >= 0 &&
+  4,799,598        .       .          p->bss == regs->a[j].bss &&
+  3,835,776        1       .          p->rid == regs->a[j].rid &&
+  4,440,211        .       .          p->rb < regs->a[j].re + opt->max_chain_gap; --j) {
+          .        .       .
+    565,730        .       .        mem_alnreg_t *q = regs->a+j;
+          .        .       .
+    339,438        .       .        if (q->qe == q->qb) continue; // q was excluded
+          .        .       .
+    369,285        .       .        int64_t or = q->re - p->rb; // overlap length on the reference
+    740,603        .       .        int64_t oq = q->qb < p->qb ? q->qe - p->qb : p->qe - q->qb; // overlap length on the query
+    949,590        .       .        int64_t mr = min(q->re - q->rb, p->re - p->rb);   // min ref len in alignment
+  1,002,345        .       .        int64_t mq = min(q->qe - q->qb, p->qe - p->qb);   // min qry len in alignment
+          .        .       .
+          .        .       .        int score, w;
+    380,478        .       .        if (or > opt->mask_level_redun * mr && oq > opt->mask_level_redun * mq) { // one of the hits is redundant
+      9,084        .       .          if (p->score < q->score) {
+        530        .       .            p->qe = p->qb;
+          .        .       .            break;
+          .        .       .          } else {
+      4,224        .       .            q->qe = q->qb;
+          .        .       .          }
+    975,522        1       .        } else if (q->rb < p->rb && (score = mem_test_reg_concatenation(opt, bns, pac, query, q, p, &w)) > 0) {
+  5,495,607        4       .  => lib/aln/mem_alnreg.c:mem_test_reg_concatenation (51,228x)
+          .        .       .          // merge q into p
+          .        .       .          p->n_comp += q->n_comp + 1;
+          .        .       .          p->seedcov = p->seedcov > q->seedcov? p->seedcov : q->seedcov;
+          .        .       .          p->sub = max(p->sub, q->sub);
+          .        .       .          p->csub = max(p->csub, q->csub);
+          .        .       .          p->truesc = p->score = score;
+          .        .       .          // reset p's begin
+          .        .       .          p->qb = q->qb;
+-- line 158 ----------------------------------------
+-- line 160 ----------------------------------------
+          .        .       .          p->w = w;
+          .        .       .          // mark obsolete q
+          .        .       .          q->qb = q->qe;
+          .        .       .        }
+          .        .       .      }
+          .        .       .    }
+          .        .       .
+          .        .       .    int m;
+  1,748,595        1       .    for (i = 0, m = 0; (unsigned) i < regs->n; ++i) { // exclude obsolete hits
+  5,226,276        .       .      if (regs->a[i].qe > regs->a[i].qb) {
+    892,404        1       .        if (m != i) regs->a[m++] = regs->a[i];
+    232,232        .       .        else ++m;
+          .        .       .      }
+          .        .       .    }
+     38,084        .       .    regs->n = m;
+          .        .       .
+          .        .       .    // mark obsolete continguous identical hits (same score, same starting location)
+     66,647        .       .    ks_introsort(mem_ars, regs->n, regs->a);
+105,814,743      225       .  => lib/aln/mem_alnreg.c:ks_introsort_mem_ars (9,521x)
+  1,664,293        1       .    for (i = 1; (unsigned) i < regs->n; ++i) {
+  8,599,033        .       .      if (regs->a[i].score == regs->a[i-1].score && regs->a[i].rb == regs->a[i-1].rb && regs->a[i].qb == regs->a[i-1].qb)
+        100        .       .        regs->a[i].qe = regs->a[i].qb;
+          .        .       .    }
+          .        .       .
+  1,673,814        2       .    for (i = 1, m = 1; (unsigned) i < regs->n; ++i) { // exclude identical hits
+  4,991,250        .       .      if (regs->a[i].qe > regs->a[i].qb) {
+    682,326        .       .        if (m != i) regs->a[m++] = regs->a[i];
+    226,831        .       .        else ++m;
+          .        .       .      }
+          .        .       .    }
+     38,084        .       .    regs->n = m;
+          .        .       .
+      9,521        .       .    return;
+     20,000        .       .  }
+          .        .       .
+          .        .       .  // remove the first chain, what's the purpose?
+          .        .       .  static void mem_test_and_remove_exact(const mem_opt_t *opt, mem_alnreg_v *regs, int qlen) {
+          .        .       .    if (!(opt->flag & MEM_F_SELF_OVLP) || regs->n == 0 || regs->a[0].truesc != qlen * opt->a)
+          .        .       .      return;
+          .        .       .    memmove(regs->a, regs->a + 1, (regs->n - 1) * sizeof(mem_alnreg_t));
+          .        .       .    regs->n--;
+          .        .       .    return;
+          .        .       .  }
+          .        .       .
+          .        .       .  /* Merge Aligned Regions
+          .        .       .   * previously called mem_merge_reg1 */
+     90,000        .       .  void mem_merge_regions(const mem_opt_t *opt, const bntseq_t *bns, const uint8_t *pac, bseq1_t *bseq, mem_alnreg_v *regs) {
+    510,005        .       .  => ???:mcount (10,000x)
+          .        .       .
+          .        .       .    uint32_t i;
+     90,000        .       .    mem_sort_deduplicate(opt, bns, pac, bseq->seq, regs);
+284,811,170      666       1  => lib/aln/mem_alnreg.c:mem_sort_deduplicate (10,000x)
+          .        .       .
+     50,000        .       .    if (opt->flag & MEM_F_SELF_OVLP)
+          .        .       .      mem_test_and_remove_exact(opt, regs, bseq->l_seq);
+          .        .       .
+     40,000        .       .    if (bwa_verbose >= 4) {
+          .        .       .      printf("[%s] %ld regions remain after merging duplicated regions\n", __func__, regs->n);
+          .        .       .      mem_print_regions(bns, regs);
+          .        .       .    }
+          .        .       .
+          .        .       .    /* region is on ALT chromosomes */
+  1,490,122        2       .    for (i = 0; i < regs->n; ++i) {
+  2,130,183        .       .      mem_alnreg_t *p = &regs->a[i];
+  4,023,679        .       .      if (p->rid >= 0 && bns->anns[p->rid].is_alt)
+          .        .       .        p->is_alt = 1;
+          .        .       .    }
+     20,000        .       .  }
+          .        .       .
+          .        .       .
+          .        .       .
+          .        .       .  /*********************************
+          .        .       .   * Mark primary region.
+          .        .       .   * Two rounds of labeling were performed.
+          .        .       .   * The first round labels reg->secondary_all w.r.t. both primary and non-primary assembly regions.
+          .        .       .   * The second round labels reg->secondary w.r.t. only primary assembly regions.
+          .        .       .   * The primary alignment is the one that is not secondary to any other primary.
+          .        .       .   * An alignment is the secondary to another alignment when there is significant overlap
+          .        .       .   * on query and the scores are similar.
+          .        .       .   *********************************/
+          .        .       .
+          .        .       .  // sort by 1) score; 2) is_alt; 3) hash;
+          .        .       .  #define alnreg_hlt(a, b)  ((a).score > (b).score || ((a).score == (b).score && ((a).is_alt < (b).is_alt || ((a).is_alt == (b).is_alt && (a).hash < (b).hash))))
+ 87,075,117      218       .  KSORT_INIT(mem_ars_hash, mem_alnreg_t, alnreg_hlt)
+    484,969        2       .  => ???:mcount (9,509x)
+          .        .       .
+          .        .       .  // sort by 1) is_alt; 2) score; 3) hash;
+          .        .       .  #define alnreg_hlt2(a, b) ((a).is_alt < (b).is_alt || ((a).is_alt == (b).is_alt && ((a).score > (b).score || ((a).score == (b).score && (a).hash < (b).hash))))
+          .        .       .  KSORT_INIT(mem_ars_hash2, mem_alnreg_t, alnreg_hlt2)
+          .        .       .  typedef kvec_t(int) int_v;
+          .        .       .
+          .        .       .  // similar to the loop in mem_chain_flt()
+          .        .       .  // n_mark - the actual regions to mark, it was first set to the entire set in the 1st round and then restricted to the first several regions in the 2nd round.
+     78,536        .       .  static void mem_mark_primary_se_core(const mem_opt_t *opt, int n_mark, mem_alnreg_v *regs, int_v *z) {
+    500,672        .       .  => ???:mcount (9,817x)
+          .        .       .
+          .        .       .    // A rough estimate of the minimum score difference between primary and secondary alignment
+     58,902        .       .    int tmp = opt->a + opt->b;
+    117,804        .       .    tmp = max(opt->o_del + opt->e_del, tmp);
+    117,804        .       .    tmp = max(opt->o_ins + opt->e_ins, tmp);
+          .        .       .
+     19,634        .       .    z->n = 0;  // the indices of all primary alignments
+    333,778        .       .    kv_push(int, *z, 0);
+  1,309,586        .       .  => ???:realloc (9,817x)
+          .        .       .    int i;
+    956,565        5       .    for (i = 1; i < n_mark; ++i) {
+  2,268,700        .       .      mem_alnreg_t *a = regs->a + i;
+          .        .       .
+          .        .       .      // check if a is a subalignment of existing primary alignment
+          .        .       .      unsigned k;
+  1,960,570        2       .      for (k = 0; k < z->n; ++k) {
+  4,194,330        .       .        mem_alnreg_t *b = regs->a + z->a[k];
+          .        .       .
+  2,796,220        .       .        int b_max = max(a->qb, b->qb);
+  2,796,220        .       .        int e_min = min(a->qe, b->qe);
+    838,866        .       .        if (e_min > b_max) { // have overlap
+  4,346,496        .       .          int min_l = min(a->qe - a->qb, b->qe - b->qb);
+  2,656,192        .       .          if (e_min - b_max >= min_l * opt->mask_level) { // significant overlap
+          .        .       .            // set a as the secondary sub-alignment of b
+    931,936        .       .            if (b->sub == 0) b->sub = a->score;
+  3,881,286        .       .            if (b->score - a->score <= tmp && (b->is_alt || !a->is_alt)) ++b->sub_n;
+    217,542        .       .            break;
+          .        .       .          }
+          .        .       .        }
+          .        .       .      }
+          .        .       .
+          .        .       .      // if a is not a subalignment, consider it as a primary alignment
+          .        .       .      // otherwise, the primary of a is z->a[k] (the k-th primary alignment)
+  1,362,020        .       .      if (k == z->n) kv_push(int, *z, i);
+    403,844        .       .  => ???:realloc (2,846x)
+  1,740,336        .       .      else a->secondary = z->a[k]; // in most cases, secondary to 1st hit, i.e. 0
+          .        .       .    }
+     19,634        .       .  }
+          .        .       .
+     70,000        .       .  void mem_mark_primary_se(const mem_opt_t *opt, mem_alnreg_v *regs, int64_t id) {
+    510,005        2       .  => ???:mcount (10,000x)
+          .        .       .
+     20,000        .       .    regs->n_pri = 0;
+     40,183        .       .    if (regs->n == 0) return;
+          .        .       .
+     39,268        .       .    if (bwa_verbose >= 4) {
+          .        .       .      printf("[%s] Before marking\n", __func__);
+          .        .       .      mem_print_regions(NULL, regs);
+          .        .       .    }
+          .        .       .
+          .        .       .    // initiate the default of secondary labels
+          .        .       .    int i;
+  1,754,979        1       .    for (i = regs->n_pri = 0; (unsigned) i < regs->n; ++i) {
+  2,366,870        .       .      mem_alnreg_t *p = regs->a + i;
+  1,420,122        .       .      p->sub = p->alt_sc = 0;
+    473,374        .       .      p->secondary = -1; // secondary to none, means a primary
+    473,374        .       .      p->secondary_all = -1;
+  1,893,496        .       .      p->hash = hash_64(id+i);
+ 22,485,270       12       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.h:hash_64 (236,687x)
+  2,366,870        .       .      if (!p->is_alt) ++regs->n_pri; // each ALT has one primary hit
+          .        .       .    }
+          .        .       .
+          .        .       .    // high score region comes first
+     68,719        .       .    ks_introsort(mem_ars_hash, regs->n, regs->a);
+ 95,013,039      227       .  => lib/aln/mem_alnreg.c:ks_introsort_mem_ars_hash (9,817x)
+          .        .       .
+          .        .       .    /* First Round Marking */
+     29,451        .       .    int_v z = {0,0,0};
+     78,536        .       .    mem_mark_primary_se_core(opt, (int) regs->n, regs, &z);
+ 33,907,473        8       .  => lib/aln/mem_alnreg.c:mem_mark_primary_se_core (9,817x)
+          .        .       .
+     39,268        .       .    if (bwa_verbose >= 4) {
+          .        .       .      printf("[%s] 1st round marking\n", __func__);
+          .        .       .      mem_print_regions(NULL, regs);
+          .        .       .    }
+          .        .       .
+          .        .       .    /* set alt_sc - the score of primary mapping if it's on
+          .        .       .     * an alternative chromosome */
+  1,735,345        1       .    for (i = 0; (unsigned) i < regs->n; ++i) {
+  2,366,870        .       .      mem_alnreg_t *p = regs->a + i;
+    710,061        .       .      p->secondary_all = i; // keep the rank in the first round
+  5,175,771        .       .      if (!p->is_alt && p->secondary >= 0 && regs->a[p->secondary].is_alt)
+          .        .       .        p->alt_sc = regs->a[p->secondary].score;
+          .        .       .    }
+          .        .       .
+          .        .       .    // when there are mapping to primary chromosome and
+          .        .       .    // not all mappings are on primary chromosomes, remark primary mapping
+    107,987        .       .    if (regs->n_pri > 0 && (unsigned) regs->n_pri < regs->n) {
+          .        .       .
+          .        .       .      // double-dip z, expand the memory size to regs->n
+          .        .       .      kv_resize(int, z, regs->n);
+          .        .       .
+          .        .       .      // mapping to primary chromosomes comes first
+          .        .       .      if (regs->n_pri > 0)
+          .        .       .        ks_introsort(mem_ars_hash2, regs->n, regs->a);
+          .        .       .
+-- line 339 ----------------------------------------
+-- line 358 ----------------------------------------
+          .        .       .      if (regs->n_pri > 0) {
+          .        .       .        for (i = 0; (unsigned) i < regs->n_pri; ++i) {
+          .        .       .          regs->a[i].sub = 0;
+          .        .       .          regs->a[i].secondary = -1;
+          .        .       .        }
+          .        .       .        mem_mark_primary_se_core(opt, regs->n_pri, regs, &z);
+          .        .       .      }
+          .        .       .    } else {
+  1,735,345        2       .      for (i = 0; (unsigned) i < regs->n; ++i)
+  4,733,740        .       .        regs->a[i].secondary_all = regs->a[i].secondary;
+          .        .       .    }
+          .        .       .
+          .        .       .
+     39,268        .       .    if (bwa_verbose >= 4) {
+          .        .       .      printf("[%s] 2nd round marking\n", __func__);
+          .        .       .      mem_print_regions(NULL, regs);
+          .        .       .    }
+     39,268        .       .    free(z.a);
+    870,980        .       .  => ???:free (9,817x)
+      9,817        .       .    return;
+     20,000        .       .  }
+          .        .       .
+          .        .       .  /***************
+          .        .       .   * Mate rescue *
+          .        .       .   ***************/
+          .        .       .
+          .        .       .  /* try adding a properly-positioned mate alignment
+          .        .       .   * for a good-enough target alignment.
+          .        .       .   * If success, add to mate alignments.
+-- line 385 ----------------------------------------
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: lib/aln/ksw.c
+--------------------------------------------------------------------------------
+Ir            sysCount sysTime
+
+-- line 373 ----------------------------------------
+            .        .       .   *** SW extension ***
+            .        .       .   ********************/
+            .        .       .
+            .        .       .  typedef struct {
+            .        .       .          int32_t h, e;
+            .        .       .  } eh_t;
+            .        .       .
+            .        .       .  int ksw_extend2(int qlen, const uint8_t *query, int tlen, const uint8_t *target, int m, const int8_t *mat, int o_del, int e_del, int o_ins, int e_ins, int w, int end_bonus, int zdrop, int h0, int *_qle, int *_tle, int *_gtle, int *_gscore, int *_max_off)
+    4,124,240        6       .  {
+   21,033,634       20       .  => ???:mcount (412,424x)
+            .        .       .          eh_t *eh; // score array
+            .        .       .          int8_t *qp; // query profile
+    3,299,392        .       .          int i, j, k, oe_del = o_del + e_del, oe_ins = o_ins + e_ins, beg, end, max, max_i, max_j, max_ins, max_del, max_ie, gscore, max_off;
+      824,848        .       .          assert(h0 > 0);
+            .        .       .          // allocate memory
+    2,886,968        5       .          qp = malloc(qlen * m);
+   82,752,038       35       .  => ???:malloc (412,424x)
+    3,299,392        5       .          eh = calloc(qlen + 1, 8);
+  115,087,098       61       1  => ???:calloc (412,424x)
+            .        .       .          // generate the query profile
+   11,135,448       15       .          for (k = i = 0; k < m; ++k) {
+   12,372,720        .       .                  const int8_t *p = &mat[k * m];
+1,210,860,500      586       2                  for (j = 0; j < qlen; ++j) qp[i++] = p[query[j]];
+            .        .       .          }
+            .        .       .          // fill the first row
+    5,773,936        .       .          eh[0].h = h0; eh[1].h = h0 > oe_ins? h0 - oe_ins : 0;
+   70,162,634       52       .          for (j = 2; j <= qlen && eh[j-1].h > e_ins; ++j)
+   70,543,550        .       .                  eh[j].h = eh[j-1].h - e_ins;
+            .        .       .          // adjust $w if it is too large
+    1,237,272        .       .          k = m * m;
+   43,716,944       99       .          for (i = 0, max = 0; i < k; ++i) // get the max score
+  103,106,000        .       .                  max = max > mat[i]? max : mat[i];
+    5,361,512        .       .          max_ins = (int)((double)(qlen * max + end_bonus - o_ins) / e_ins + 1.);
+    1,649,696        .       .          max_ins = max_ins > 1? max_ins : 1;
+    1,649,696        .       .          w = w < max_ins? w : max_ins;
+    5,361,512        .       .          max_del = (int)((double)(qlen * max + end_bonus - o_del) / e_del + 1.);
+    1,649,696        .       .          max_del = max_del > 1? max_del : 1;
+    1,649,696        .       .          w = w < max_del? w : max_del; // TODO: is this necessary?
+            .        .       .          // DP loop
+    2,886,968        .       .          max = h0, max_i = max_j = -1; max_ie = -1, gscore = -1;
+      412,424        .       .          max_off = 0;
+    1,237,272        .       .          beg = 0, end = qlen;
+   87,411,364      150       .          for (i = 0; LIKELY(i < tlen); ++i) {
+   36,870,444        .       .                  int t, f = 0, h1, m = 0, mj = -1;
+  135,191,628        .       .                  int8_t *q = &qp[target[i] * qlen];
+            .        .       .                  // apply the band and the constraint (if provided)
+   74,801,118        .       .                  if (beg < i - w) beg = i - w;
+   73,740,888        .       .                  if (end > i + w + 1) end = i + w + 1;
+   36,870,444        .       .                  if (end > qlen) end = qlen;
+            .        .       .                  // compute the first column
+   24,580,296        .       .                  if (beg == 0) {
+   48,888,456        .       .                          h1 = h0 - (o_del + e_del * (i + 1));
+   12,249,634        .       .                          if (h1 < 0) h1 = 0;
+    6,179,091        .       .                  } else h1 = 0;
+1,684,820,409    2,232       4                  for (j = beg; LIKELY(j < end); ++j) {
+            .        .       .                          // At the beginning of the loop: eh[j] = { H(i-1,j-1), E(i,j) }, f = F(i,j) and h1 = H(i,j-1)
+            .        .       .                          // Similar to SSE2-SW, cells are computed in the following order:
+            .        .       .                          //   H(i,j)   = max{H(i-1,j-1)+S(i,j), E(i,j), F(i,j)}
+            .        .       .                          //   E(i+1,j) = max{H(i,j)-gapo, E(i,j)} - gape
+            .        .       .                          //   F(i,j+1) = max{H(i,j)-gapo, F(i,j)} - gape
+1,349,322,066        .       .                          eh_t *p = &eh[j];
+1,349,322,066        .       .                          int h, M = p->h, e = p->e; // get H(i-1,j-1) and E(i-1,j)
+  674,661,033        .       .                          p->h = h1;          // set H(i,j-1) for the next row
+2,480,569,404        .       .                          M = M? M + q[j] : 0;// separating H and M to disallow a cigar like "100M3I3D20M"
+  899,548,044        .       .                          h = M > e? M : e;   // e and f are guaranteed to be non-negative, so h>=0 even if M<0
+  899,548,044        .       .                          h = h > f? h : f;
+  449,774,022        .       .                          h1 = h;             // save H(i,j) to h1 for the next column
+1,270,260,385        .       .                          mj = m > h? mj : j; // record the position where max score is achieved
+  899,548,044        .       .                          m = m > h? m : h;   // m is stored at eh[mj+1]
+1,124,435,055        .       .                          t = M - oe_del;
+  899,548,044        .       .                          t = t > 0? t : 0;
+  449,774,022        .       .                          e -= e_del;
+  899,548,044        .       .                          e = e > t? e : t;   // computed E(i+1,j)
+  674,661,033        .       .                          p->e = e;           // save E(i+1,j) for the next row
+1,124,435,055        .       .                          t = M - oe_ins;
+  899,548,044        .       .                          t = t > 0? t : 0;
+  449,774,022        .       .                          f -= e_ins;
+  899,548,044        .       .                          f = f > t? f : t;   // computed F(i,j+1)
+            .        .       .                  }
+  159,771,924        .       .                  eh[end].h = h1; eh[end].e = 0;
+   36,870,444        .       .                  if (j == qlen) {
+   34,680,514        .       .                          max_ie = gscore > h1? max_ie : i;
+   24,728,984        .       .                          gscore = gscore > h1? gscore : h1;
+            .        .       .                  }
+   24,854,448        .       .                  if (m == 0) break;
+   36,047,988        .       .                  if (m > max) {
+    5,014,476        .       .                          max = m, max_i = i, max_j = mj;
+   10,028,952        .       .                          max_off = max_off > abs(mj - i)? max_off : abs(mj - i);
+   22,360,500        .       .                  } else if (zdrop > 0) {
+  111,802,500        .       .                          if (i - max_i > mj - max_j) {
+   88,484,150        .       .                                  if (max - m - ((i - max_i) - (mj - max_j)) * e_del > zdrop) break;
+            .        .       .                          } else {
+  101,580,100        .       .                                  if (max - m - ((mj - max_j) - (i - max_i)) * e_ins > zdrop) break;
+            .        .       .                          }
+            .        .       .                  }
+            .        .       .                  // update beg and end for the next round
+  393,907,722       66       1                  for (j = beg; LIKELY(j < end) && eh[j].h == 0 && eh[j].e == 0; ++j);
+   24,031,992        .       .                  beg = j;
+  568,374,053      172       .                  for (j = end; LIKELY(j >= beg) && eh[j].h == 0 && eh[j].e == 0; --j);
+   72,095,976        .       .                  end = j + 2 < qlen? j + 2 : qlen;
+            .        .       .                  //beg = 0; end = qlen; // uncomment this line for debugging
+            .        .       .          }
+    3,299,392        5       .          free(eh); free(qp);
+   92,314,682       16       .  => ???:free (824,848x)
+    2,474,544        .       .          if (_qle) *_qle = max_j + 1;
+    2,474,544        .       .          if (_tle) *_tle = max_i + 1;
+    2,474,544        .       .          if (_gtle) *_gtle = max_ie + 1;
+    2,062,120        .       .          if (_gscore) *_gscore = gscore;
+    2,062,120        .       .          if (_max_off) *_max_off = max_off;
+      412,424        .       .          return max;
+      824,848        3       .  }
+            .        .       .
+            .        .       .  int ksw_extend(int qlen, const uint8_t *query, int tlen, const uint8_t *target, int m, const int8_t *mat, int gapo, int gape, int w, int end_bonus, int zdrop, int h0, int *qle, int *tle, int *gtle, int *gscore, int *max_off)
+            .        .       .  {
+            .        .       .          return ksw_extend2(qlen, query, tlen, target, m, mat, gapo, gape, gapo, gape, w, end_bonus, zdrop, h0, qle, tle, gtle, gscore, max_off);
+            .        .       .  }
+            .        .       .
+            .        .       .  /********************
+            .        .       .   * Global alignment *
+            .        .       .   ********************/
+            .        .       .
+            .        .       .  #define MINUS_INF -0x40000000
+            .        .       .
+            .        .       .  static inline uint32_t *push_cigar(int *n_cigar, int *m_cigar, uint32_t *cigar, int op, int len)
+    2,746,503        5       .  {
+   15,563,532       16       .  => ???:mcount (305,167x)
+    4,831,504        .       .          if (*n_cigar == 0 || (unsigned) op != (cigar[(*n_cigar) - 1]&0xf)) {
+       55,884        .       .                  if (*n_cigar == *m_cigar) {
+       34,508        .       .                          *m_cigar = *m_cigar? (*m_cigar)<<1 : 4;
+       47,300        .       .                          cigar = realloc(cigar, (*m_cigar) << 2);
+      721,434        .       .  => ???:realloc (4,730x)
+            .        .       .                  }
+      130,396        .       .                  cigar[(*n_cigar)++] = len<<4 | op;
+    5,621,207        .       .          } else cigar[(*n_cigar)-1] += len<<4;
+      305,167        .       .          return cigar;
+      610,334        3       .  }
+            .        .       .
+            .        .       .  int ksw_global2(int qlen, const uint8_t *query, int tlen, const uint8_t *target, int m, const int8_t *mat, int o_del, int e_del, int o_ins, int e_ins, int w, int *n_cigar_, uint32_t **cigar_)
+       42,650        .       .  {
+      217,520        .       .  => ???:mcount (4,265x)
+            .        .       .          eh_t *eh;
+            .        .       .          int8_t *qp; // query profile
+       34,120        .       .          int i, j, k, oe_del = o_del + e_del, oe_ins = o_ins + e_ins, score, n_col;
+            .        .       .          uint8_t *z; // backtrack matrix; in each cell: f<<4|e<<2|h; in principle, we can halve the memory, but backtrack will be a little more complex
+       17,058        .       .          if (n_cigar_) *n_cigar_ = 0;
+            .        .       .          // allocate memory
+       29,855        .       .          n_col = qlen < 2*w+1? qlen : 2*w+1; // maximum #columns of the backtrack matrix
+       59,700        .       .          z = n_cigar_ && cigar_? malloc((long)n_col * tlen) : 0;
+    2,179,735        .       .  => ???:malloc (4,264x)
+       29,855        .       .          qp = malloc(qlen * m);
+    1,241,062        .       .  => ???:malloc (4,265x)
+       34,120        .       .          eh = calloc(qlen + 1, 8);
+    1,556,761        1       .  => ???:calloc (4,265x)
+            .        .       .          // generate the query profile
+      115,155        .       .          for (k = i = 0; k < m; ++k) {
+      127,950        .       .                  const int8_t *p = &mat[k * m];
+   30,298,325       12       .                  for (j = 0; j < qlen; ++j) qp[i++] = p[query[j]];
+            .        .       .          }
+            .        .       .          // fill the first row
+       17,060        .       .          eh[0].h = 0; eh[0].e = MINUS_INF;
+      488,637        1       .          for (j = 1; j <= qlen && j <= w; ++j)
+    1,168,758        .       .                  eh[j].h = -(o_ins + e_ins * j), eh[j].e = MINUS_INF;
+    4,045,822        1       .          for (; j <= qlen; ++j) eh[j].h = eh[j].e = MINUS_INF; // everything is -inf outside the band
+            .        .       .          // DP loop
+    2,152,208        4       .          for (i = 0; LIKELY(i < tlen); ++i) { // target sequence is in the outer loop
+      302,584        .       .                  int32_t f = MINUS_INF, h1, beg, end, t;
+    3,328,424        .       .                  int8_t *q = &qp[target[i] * qlen];
+    2,446,472        .       .                  beg = i > w? i - w : 0;
+    2,420,672        .       .                  end = i + w + 1 < qlen? i + w + 1 : qlen; // only loop through [beg,end) of the query sequence
+    1,487,120        .       .                  h1 = beg == 0? -(o_del + e_del * (i + 1)) : MINUS_INF;
+    1,512,791        .       .                  if (n_cigar_ && cigar_) {
+    2,722,869        .       .                          uint8_t *zi = &z[(long)i * n_col];
+   64,562,619       75       .                          for (j = beg; LIKELY(j < end); ++j) {
+            .        .       .                                  // At the beginning of the loop: eh[j] = { H(i-1,j-1), E(i,j) }, f = F(i,j) and h1 = H(i,j-1)
+            .        .       .                                  // Cells are computed in the following order:
+            .        .       .                                  //   M(i,j)   = H(i-1,j-1) + S(i,j)
+            .        .       .                                  //   H(i,j)   = max{M(i,j), E(i,j), F(i,j)}
+            .        .       .                                  //   E(i+1,j) = max{M(i,j)-gapo, E(i,j)} - gape
+            .        .       .                                  //   F(i,j+1) = max{M(i,j)-gapo, F(i,j)} - gape
+            .        .       .                                  // We have to separate M(i,j); otherwise the direction may not be recorded correctly.
+            .        .       .                                  // However, a CIGAR like "10M3I3D10M" allowed by local() is disallowed by global().
+            .        .       .                                  // Such a CIGAR may occur, in theory, if mismatch_penalty > 2*gap_ext_penalty + 2*gap_open_penalty/k.
+            .        .       .                                  // In practice, this should happen very rarely given a reasonable scoring system.
+   53,005,500        .       .                                  eh_t *p = &eh[j];
+   53,005,500        .       .                                  int32_t h, m = p->h, e = p->e;
+            .        .       .                                  uint8_t d; // direction
+   26,502,750        .       .                                  p->h = h1;
+   61,839,750        .       .                                  m += q[j];
+   35,337,000        .       .                                  d = m >= e? 0 : 1;
+   35,337,000        .       .                                  h = m >= e? m : e;
+   51,075,355        .       .                                  d = h >= f? d : 2;
+   35,337,000        .       .                                  h = h >= f? h : f;
+   17,668,500        .       .                                  h1 = h;
+   44,171,250        .       .                                  t = m - oe_del;
+   17,668,500        .       .                                  e -= e_del;
+   66,236,333        .       .                                  d |= e > t? 1<<2 : 0;
+   35,337,000        .       .                                  e  = e > t? e    : t;
+   26,502,750        .       .                                  p->e = e;
+   44,171,250        .       .                                  t = m - oe_ins;
+   17,668,500        .       .                                  f -= e_ins;
+   66,236,950        .       .                                  d |= f > t? 2<<4 : 0; // if we want to halve the memory, use one bit only, instead of two
+   35,337,000        .       .                                  f  = f > t? f    : t;
+   79,508,250        .       .                                  zi[j - beg] = d; // z[i,j] keeps h for the current cell and e/f for the next cell
+            .        .       .                          }
+            .        .       .                  } else {
+        6,071        .       .                          for (j = beg; LIKELY(j < end); ++j) {
+        4,872        .       .                                  eh_t *p = &eh[j];
+        4,872        .       .                                  int32_t h, m = p->h, e = p->e;
+        2,436        .       .                                  p->h = h1;
+        5,684        .       .                                  m += q[j];
+        3,248        .       .                                  h = m >= e? m : e;
+        3,248        .       .                                  h = h >= f? h : f;
+        1,624        .       .                                  h1 = h;
+        4,060        .       .                                  t = m - oe_del;
+        1,624        .       .                                  e -= e_del;
+        3,248        .       .                                  e  = e > t? e : t;
+        2,436        .       .                                  p->e = e;
+        4,060        .       .                                  t = m - oe_ins;
+        1,624        .       .                                  f -= e_ins;
+        3,248        .       .                                  f  = f > t? f : t;
+            .        .       .                          }
+            .        .       .                  }
+    3,933,592        .       .                  eh[end].h = h1; eh[end].e = MINUS_INF;
+            .        .       .          }
+       29,855        .       .          score = eh[qlen].h;
+       17,058        .       .          if (n_cigar_ && cigar_) { // backtrack
+       12,792        .       .                  int n_cigar = 0, m_cigar = 0, which = 0;
+        4,264        .       .                  uint32_t *cigar = 0, tmp;
+       51,168        .       .                  i = tlen - 1; k = (i + w + 1 < qlen? i + w + 1 : qlen) - 1; // (i,k) points to the last cell
+    1,233,460        5       .                  while (i >= 0 && k >= 0) {
+    8,875,486        .       .                          which = z[(long)i * n_col + (k - (i > w? i - w : 0))] >> (which<<1) & 3;
+    3,902,040        2       .                          if (which == 0)      cigar = push_cigar(&n_cigar, &m_cigar, cigar, 0, 1), --i, --k;
+   30,084,976       24       .  => lib/aln/ksw.c:push_cigar (299,246x)
+       44,792        .       .                          else if (which == 1) cigar = push_cigar(&n_cigar, &m_cigar, cigar, 2, 1), --i;
+      324,327        .       .  => lib/aln/ksw.c:push_cigar (3,295x)
+       23,634        .       .                          else                 cigar = push_cigar(&n_cigar, &m_cigar, cigar, 1, 1), --k;
+      258,466        .       .  => lib/aln/ksw.c:push_cigar (2,626x)
+            .        .       .                  }
+        8,528        .       .                  if (i >= 0) cigar = push_cigar(&n_cigar, &m_cigar, cigar, 2, i + 1);
+        8,528        .       .                  if (k >= 0) cigar = push_cigar(&n_cigar, &m_cigar, cigar, 1, k + 1);
+       38,209        .       .                  for (i = 0; i < n_cigar>>1; ++i) // reverse CIGAR
+       75,750        .       .                          tmp = cigar[i], cigar[i] = cigar[n_cigar-1-i], cigar[n_cigar-1-i] = tmp;
+       25,584        .       .                  *n_cigar_ = n_cigar, *cigar_ = cigar;
+            .        .       .          }
+       51,180        .       .          free(eh); free(qp); free(z);
+    1,686,650        1       .  => ???:free (12,795x)
+        4,265        .       .          return score;
+        8,530        .       .  }
+            .        .       .
+            .        .       .  int ksw_global(int qlen, const uint8_t *query, int tlen, const uint8_t *target, int m, const int8_t *mat, int gapo, int gape, int w, int *n_cigar_, uint32_t **cigar_)
+            .        .       .  {
+            .        .       .          return ksw_global2(qlen, query, tlen, target, m, mat, gapo, gape, gapo, gape, w, n_cigar_, cigar_);
+            .        .       .  }
+            .        .       .
+            .        .       .  /*******************************************
+            .        .       .   * Main function (not compiled by default) *
+-- line 614 ----------------------------------------
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: lib/aln/bntseq.c
+--------------------------------------------------------------------------------
+Ir          sysCount sysTime
+
+-- line 90 ----------------------------------------
+          .        .       .        bntamb1_t *p = bns->ambs + i;
+          .        .       .        err_fprintf(fp, "%lld %d %c\n", (long long)p->offset, p->len, p->amb);
+          .        .       .      }
+          .        .       .      err_fflush(fp);
+          .        .       .      err_fclose(fp);
+          .        .       .    }
+          .        .       .  }
+          .        .       .
+          7        .       .  bntseq_t *bns_restore_core(const char *ann_filename, const char* amb_filename, const char* pac_filename) {
+         56        .       .  => ???:mcount (1x)
+          .        .       .    char str[8192];
+          .        .       .    FILE *fp;
+          .        .       .    const char *fname;
+          .        .       .    bntseq_t *bns;
+          .        .       .    long long xx;
+          .        .       .    int i;
+          .        .       .    int scanres;
+          5        .       .    bns = (bntseq_t*)calloc(1, sizeof(bntseq_t));
+        234        .       .  => ???:calloc (1x)
+          .        .       .    { // read .ann
+          8        .       .      fp = xopen(fname = ann_filename, "r");
+        648        1       1  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_xopen_core (1x)
+         17        .       .      scanres = fscanf(fp, "%lld%d%u", &xx, &bns->n_seqs, &bns->seed);
+      3,795        3       .  => ???:_dl_runtime_resolve_xsave'2 (1x)
+          2        .       .      if (scanres != 3) goto badread;
+          3        .       .      bns->l_pac = xx;
+         10        .       .      bns->anns = (bntann1_t*)calloc(bns->n_seqs, sizeof(bntann1_t));
+        136        .       .  => ???:calloc (1x)
+         11        .       .      for (i = 0; i < bns->n_seqs; ++i) {
+         10        .       .        bntann1_t *p = bns->anns + i;
+          2        .       .        char *q = str;
+          .        .       .        int c;
+          .        .       .        // read gi and sequence name
+          .        .       .
+          .        .       .        /*** bisulfite adaptation ***/
+          .        .       .        /* scanres = fscanf(fp, "%u%s", &p->gi, str); */
+          .        .       .        /* if (scanres != 2) goto badread; */
+         12        .       .        scanres = fscanf(fp, "%u%s", &p->gi, str);
+        941        .       .  => ???:__isoc99_fscanf (1x)
+          2        .       .        if (scanres != 2) goto badread;
+          .        .       .
+         11        .       .        p->name = strdup(str);
+      1,785        .       .  => ???:_dl_runtime_resolve_xsave'2 (1x)
+          .        .       .        // read fasta comments
+        158        .       .        while ((unsigned) (q - str) < sizeof(str) - 1 && (c = fgetc(fp)) != '\n' && c != EOF) *q++ = c;
+      1,544        .       .  => ???:_dl_runtime_resolve_xsave'2 (1x)
+        259        .       .  => ???:getc (7x)
+          3        .       .        while (c != '\n' && c != EOF) c = fgetc(fp);
+          2        .       .        if (c == EOF) {
+          .        .       .          scanres = EOF;
+          .        .       .          goto badread;
+          .        .       .        }
+          2        .       .        *q = 0;
+         13        .       .        if (q - str > 1 && strcmp(str, " (null)") != 0) p->anno = strdup(str + 1); // skip leading space
+         22        .       .  => ???:__strcmp_sse42 (1x)
+          6        .       .        else p->anno = strdup("");
+        244        .       .  => ???:strdup (1x)
+          .        .       .        // read the rest
+         13        .       .        scanres = fscanf(fp, "%lld%d%d", &xx, &p->len, &p->n_ambs);
+      1,815        .       .  => ???:__isoc99_fscanf (1x)
+          2        .       .        if (scanres != 3) goto badread;
+          3        .       .        p->offset = xx;
+          .        .       .      }
+          3        .       .      err_fclose(fp);
+        536        2       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fclose (1x)
+          .        .       .    }
+          .        .       .    { // read .amb
+          .        .       .      int64_t l_pac;
+          .        .       .      int32_t n_seqs;
+          8        .       .      fp = xopen(fname = amb_filename, "r");
+        620        1       1  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_xopen_core (1x)
+         12        .       .      scanres = fscanf(fp, "%lld%d%d", &xx, &n_seqs, &bns->n_holes);
+      2,145        3       .  => ???:__isoc99_fscanf (1x)
+          2        .       .      if (scanres != 3) goto badread;
+          2        .       .      l_pac = xx;
+         13        .       .      xassert(l_pac == bns->l_pac && n_seqs == bns->n_seqs, "inconsistent .ann and .amb files.");
+         14        .       .      bns->ambs = bns->n_holes? (bntamb1_t*)calloc(bns->n_holes, sizeof(bntamb1_t)) : 0;
+        273        .       .  => ???:calloc (1x)
+        121        .       .      for (i = 0; i < bns->n_holes; ++i) {
+        161        .       .        bntamb1_t *p = bns->ambs + i;
+        276        .       .        scanres = fscanf(fp, "%lld%d%s", &xx, &p->len, str);
+     38,499        .       .  => ???:__isoc99_fscanf (23x)
+         46        .       .        if (scanres != 3) goto badread;
+         69        .       .        p->offset = xx;
+         69        .       .        p->amb = str[0];
+          .        .       .      }
+          3        .       .      err_fclose(fp);
+        536        2       1  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_fclose (1x)
+          .        .       .    }
+          .        .       .    { // open .pac
+          7        .       .      bns->fp_pac = xopen(pac_filename, "rb");
+        635        2       1  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/utils.c:err_xopen_core (1x)
+          .        .       .    }
+          2        .       .    return bns;
+          .        .       .
+          .        .       .   badread:
+          .        .       .    if (EOF == scanres) {
+          .        .       .      err_fatal(__func__, "Error reading %s : %s\n", fname, ferror(fp) ? strerror(errno) : "Unexpected end of file");
+          .        .       .    }
+          .        .       .    err_fatal(__func__, "Parse error reading %s\n", fname);
+          2        .       .  }
+          .        .       .
+          6        .       .  bntseq_t *bns_restore(const char *prefix) {
+         56        .       .  => ???:mcount (1x)
+          .        .       .    char ann_filename[1024], amb_filename[1024], pac_filename[1024], alt_filename[1024];
+          .        .       .    FILE *fp;
+          .        .       .    bntseq_t *bns;
+          .        .       .
+          .        .       .    /**** bisulfite adaptation ****/
+          .        .       .    /* strcat(strcpy(ann_filename, prefix), ".ann"); */
+          .        .       .    /* strcat(strcpy(amb_filename, prefix), ".amb"); */
+          .        .       .    /* strcat(strcpy(pac_filename, prefix), ".pac"); */
+         33        .       .    strcat(strcpy(ann_filename, prefix), ".bis.ann");
+         36        .       .  => ???:__strcpy_ssse3 (1x)
+         33        .       .    strcat(strcpy(amb_filename, prefix), ".bis.amb");
+         36        .       .  => ???:__strcpy_ssse3 (1x)
+         33        .       .    strcat(strcpy(pac_filename, prefix), ".bis.pac");
+         36        .       .  => ???:__strcpy_ssse3 (1x)
+          .        .       .
+          7        .       .    bns = bns_restore_core(ann_filename, amb_filename, pac_filename);
+     55,835       14       4  => lib/aln/bntseq.c:bns_restore_core (1x)
+          2        .       .    if (bns == 0) return 0;
+         39        .       .    if ((fp = fopen(strcat(strcpy(alt_filename, prefix), ".alt"), "r")) != 0) { // read .alt file if present
+        887        1       .  => ???:fopen@@GLIBC_2.2.5 (1x)
+         36        .       .  => ???:__strcpy_ssse3 (1x)
+          .        .       .      char str[1024];
+          .        .       .      khash_t(str) *h;
+          .        .       .      int c, i, absent;
+          .        .       .      khint_t k;
+          .        .       .      h = kh_init(str);
+          .        .       .      for (i = 0; i < bns->n_seqs; ++i) {
+          .        .       .        k = kh_put(str, h, bns->anns[i].name, &absent);
+          .        .       .        kh_val(h, k) = i;
+-- line 196 ----------------------------------------
+-- line 206 ----------------------------------------
+          .        .       .          }
+          .        .       .          while (c != '\n' && c != EOF) c = fgetc(fp);
+          .        .       .          i = 0;
+          .        .       .        } else str[i++] = c; // FIXME: potential segfault here
+          .        .       .      }
+          .        .       .      kh_destroy(str, h);
+          .        .       .      fclose(fp);
+          .        .       .    }
+          1        .       .    return bns;
+          4        .       .  }
+          .        .       .
+          5        .       .  void bns_destroy(bntseq_t *bns) {
+         56        .       .  => ???:mcount (1x)
+          2        .       .    if (bns == 0) return;
+          .        .       .    else {
+          .        .       .      int i;
+          4        .       .      if (bns->fp_pac) err_fclose(bns->fp_pac);
+          5        .       .      free(bns->ambs);
+        116        .       .  => ???:free (1x)
+         11        .       .      for (i = 0; i < bns->n_seqs; ++i) {
+         13        .       .        free(bns->anns[i].name);
+         89        .       .  => ???:free (1x)
+         13        .       .        free(bns->anns[i].anno);
+         89        .       .  => ???:free (1x)
+          .        .       .      }
+          5        .       .      free(bns->anns);
+         85        .       .  => ???:free (1x)
+          4        .       .      free(bns);
+         85        .       .  => ???:free (1x)
+          .        .       .    }
+          2        .       .  }
+          .        .       .
+          .        .       .  #define _set_pac(pac, l, c) ((pac)[(l)>>2] |= (c)<<((~(l)&3)<<1))
+          .        .       .  #define _get_pac(pac, l) ((pac)[(l)>>2]>>((~(l)&3)<<1)&3)
+          .        .       .
+          .        .       .  static uint8_t *add1(const kseq_t *seq, bntseq_t *bns, uint8_t *pac, int64_t *m_pac, int *m_seqs, int *m_holes, bntamb1_t **q) {
+          .        .       .    bntann1_t *p;
+          .        .       .    int lasts;
+          .        .       .    uint32_t i;
+-- line 238 ----------------------------------------
+-- line 350 ----------------------------------------
+          .        .       .      return 1;
+          .        .       .    }
+          .        .       .    fp = xzopen(argv[optind], "r");
+          .        .       .    bns_fasta2bntseq(fp, (optind+1 < argc)? argv[optind+1] : argv[optind], for_only);
+          .        .       .    err_gzclose(fp);
+          .        .       .    return 0;
+          .        .       .  }
+          .        .       .
+ 12,233,082       19       .  int bns_pos2rid(const bntseq_t *bns, int64_t pos_f) {
+103,981,217       68       .  => ???:mcount (2,038,847x)
+          .        .       .    int left, mid, right;
+  8,155,388        .       .    if (pos_f >= bns->l_pac) return -1;
+ 10,194,235        .       .    left = 0; mid = 0; right = bns->n_seqs;
+  8,155,388       32       .    while (left < right) { // binary search
+ 10,194,235        .       .      mid = (left + right) >> 1;
+ 24,466,164        .       .      if (pos_f >= bns->anns[mid].offset) {
+ 12,233,082        .       .        if (mid == bns->n_seqs - 1) break;
+          .        .       .        if (pos_f < bns->anns[mid+1].offset) break; // bracketed
+          .        .       .        left = mid + 1;
+          .        .       .      } else right = mid;
+          .        .       .    }
+  2,038,847        .       .    return mid;
+  4,077,694       23       .  }
+          .        .       .
+  5,216,295       12       .  int bns_intv2rid(const bntseq_t *bns, int64_t rb, int64_t re) {
+ 38,004,440       29       .  => ???:mcount (745,185x)
+          .        .       .    int is_rev, rid_b, rid_e;
+  4,462,004        .       .    if (rb < bns->l_pac && re > bns->l_pac) return -2;
+  2,235,555        .       .    assert(rb <= re);
+  8,942,220       11       .    rid_b = bns_pos2rid(bns, bns_depos(bns, rb, &is_rev));
+ 71,537,765       39       .  => lib/aln/bntseq.c:bns_pos2rid (745,185x)
+ 55,527,670       33       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bntseq.h:bns_depos (745,185x)
+ 12,668,145       23       .    rid_e = rb < re? bns_pos2rid(bns, bns_depos(bns, re - 1, &is_rev)) : rid_b;
+ 71,537,765       60       .  => lib/aln/bntseq.c:bns_pos2rid (745,185x)
+ 55,527,670       42       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bntseq.h:bns_depos (745,185x)
+  3,725,925        .       .    return rid_b == rid_e? rid_b : -1;
+  1,490,370       11       .  }
+          .        .       .
+          .        .       .  int bns_cnt_ambi(const bntseq_t *bns, int64_t pos_f, int len, int *ref_id) {
+          .        .       .    int left, mid, right, nn;
+          .        .       .    if (ref_id) *ref_id = bns_pos2rid(bns, pos_f);
+          .        .       .    left = 0; right = bns->n_holes; nn = 0;
+          .        .       .    while (left < right) {
+          .        .       .      mid = (left + right) >> 1;
+          .        .       .      if (pos_f >= bns->ambs[mid].offset + bns->ambs[mid].len) left = mid + 1;
+-- line 388 ----------------------------------------
+-- line 396 ----------------------------------------
+          .        .       .            bns->ambs[mid].len : len - (bns->ambs[mid].offset - pos_f);
+          .        .       .        }
+          .        .       .        break;
+          .        .       .      }
+          .        .       .    }
+          .        .       .    return nn;
+          .        .       .  }
+          .        .       .
+  4,936,302        2       .  uint8_t *bns_get_seq(int64_t l_pac, const uint8_t *pac, int64_t beg, int64_t end, int64_t *len) {
+ 27,972,388       18       .  => ???:mcount (548,478x)
+    548,478        .       .    uint8_t *seq = 0;
+  1,645,434        .       .    if (end < beg) end ^= beg, beg ^= end, end ^= beg; // if end is smaller, swap
+  2,193,912        .       .    if (end > l_pac<<1) end = l_pac<<1;
+  1,096,956        .       .    if (beg < 0) beg = 0;
+  3,014,952        .       .    if (beg >= l_pac || end <= l_pac) {
+    548,478        .       .      int64_t k, l = 0;
+  2,742,390        .       .      *len = end - beg;
+  4,387,824        4       .      seq = malloc(end - beg);
+101,278,119       64       .  => ???:malloc (548,478x)
+  1,645,434        .       .      if (beg >= l_pac) { // reverse strand
+  1,373,990        .       .        int64_t beg_f = (l_pac<<1) - 1 - end;
+  1,373,990        .       .        int64_t end_f = (l_pac<<1) - 1 - beg;
+133,899,950      347       .        for (k = end_f; k > beg_f; --k)
+758,864,093        .       .          seq[l++] = 3 - _get_pac(pac, k);
+          .        .       .      } else { // forward strand
+132,991,672      335       2        for (k = beg; k < end; ++k)
+722,422,756        .       .          seq[l++] = _get_pac(pac, k);
+          .        .       .      }
+          .        .       .    } else *len = 0; // if bridging the forward-reverse boundary, return nothing
+    548,478        .       .    return seq;
+  1,096,956        3       .  }
+          .        .       .
+          .        .       .  /*****
+          .        .       .   * @param bns, pac, beg, mid, end
+          .        .       .   * @return rid, seq
+          .        .       .   */
+  5,426,230        7       .  uint8_t *bns_fetch_seq(const bntseq_t *bns, const uint8_t *pac, int64_t *beg, int64_t mid, int64_t *end, int *rid) {
+ 27,673,778       21       .  => ???:mcount (542,623x)
+          .        .       .    int64_t far_beg, far_end, len;
+          .        .       .    int is_rev;
+          .        .       .    uint8_t *seq;
+          .        .       .
+  3,255,738        .       .    if (*end < *beg) *end ^= *beg, *beg ^= *end, *end ^= *beg; // if end is smaller, swap
+  4,340,984        .       .    assert(*beg <= mid && mid < *end);
+  7,054,099        6       .    *rid = bns_pos2rid(bns, bns_depos(bns, mid, &is_rev));
+ 52,091,813       43       .  => lib/aln/bntseq.c:bns_pos2rid (542,623x)
+ 40,428,056       37       .  => /mnt/isilon/zhoulab/labprojects/20200218_biscuit_development_Ethan/zhou-biscuit-ethan/biscuit-release/lib/aln/bntseq.h:bns_depos (542,623x)
+  6,511,476        .       .    far_beg = bns->anns[*rid].offset;
+  8,139,345        .       .    far_end = far_beg + bns->anns[*rid].len;
+  1,627,869        .       .    if (is_rev) { // flip to the reverse strand
+    543,678        .       .      int64_t tmp = far_beg;
+  1,359,195        .       .      far_beg = (bns->l_pac<<1) - far_end;
+  1,359,195        .       .      far_end = (bns->l_pac<<1) - tmp;
+          .        .       .    }
+  3,798,361        .       .    *beg = *beg > far_beg? *beg : far_beg;
+  3,798,361        .       .    *end = *end < far_end? *end : far_end;
+  6,511,476        5       .    seq = bns_get_seq(bns->l_pac, pac, *beg, *end, &len);
+1,893,034,560      780       2  => lib/aln/bntseq.c:bns_get_seq (542,623x)
+  5,426,230        .       .    if (seq == 0 || *end - *beg != len) {
+          .        .       .      fprintf(stderr, "[E::%s] begin=%ld, mid=%ld, end=%ld, len=%ld, seq=%p, rid=%d, far_beg=%ld, far_end=%ld\n",
+          .        .       .              __func__, (long)*beg, (long)mid, (long)*end, (long)len, seq, *rid, (long)far_beg, (long)far_end);
+          .        .       .    }
+  5,426,230        .       .    assert(seq && *end - *beg == len); // assertion failure should never happen
+    542,623        .       .    return seq;
+  1,085,246        6       .  }
+          .        .       .
+          .        .       .  /* bisulfite adaptation */
+          .        .       .
+          .        .       .  #define bsC2T(x) ((x)==1?3:(x))
+          .        .       .  #define bsG2A(x) ((x)==2?0:(x))
+          .        .       .
+          .        .       .  static uint8_t *bis_add1(const kseq_t *seq, bntseq_t *bns, uint8_t *pac, int64_t *m_pac, int *m_seqs, int *m_holes, bntamb1_t **q) {
+          .        .       .    bntann1_t *p;
+-- line 462 ----------------------------------------
+
+--------------------------------------------------------------------------------
+-- Auto-annotated source: lib/aln/bntseq.h
+--------------------------------------------------------------------------------
+Ir         sysCount sysTime
+
+-- line 83 ----------------------------------------
+         .        .       .    /* WZBS */
+         .        .       .    int64_t dump_forward_pac(gzFile fp_fa, const char *prefix);
+         .        .       .    int64_t bis_bns_fasta2bntseq(gzFile fp_fa, const char *prefix, uint8_t parent);
+         .        .       .
+         .        .       .  #ifdef __cplusplus
+         .        .       .  }
+         .        .       .  #endif
+         .        .       .
+14,271,929       16       .  static inline int64_t bns_depos(const bntseq_t *bns, int64_t pos, int *is_rev) {
+103,981,217       74       .  => ???:mcount (2,038,847x)
+29,588,839        .       .    return (*is_rev = (pos >= bns->l_pac))? (bns->l_pac<<1) - 1 - pos : pos;
+ 4,077,694       22       .  }
+         .        .       .
+         .        .       .  #endif
+
+--------------------------------------------------------------------------------
+Ir             sysCount sysTime
+--------------------------------------------------------------------------------
+54,668,535,793   16,206  11,572  events annotated

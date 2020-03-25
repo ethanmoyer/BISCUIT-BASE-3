@@ -120,7 +120,9 @@ extern "C" {
 #endif
 
 	void bwt_dump_bwt(const char *fn, const bwt_t *bwt);
+    void bwt_dump_bwt_new(const char *fn, const bwt_t *bwt);
 	void bwt_dump_sa(const char *fn, const bwt_t *bwt);
+    void bwt_dump_sa_new(const char *fn, const bwt_t *bwt);
 
 	bwt_t *bwt_restore_bwt(const char *fn);
     bwt_t *bwt_restore_bwt_new(const char *fn);
@@ -135,8 +137,8 @@ extern "C" {
 
 	void bwt_bwtupdate_core(bwt_t *bwt, int index);
 
-	bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c);
-	void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4]);
+	//bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c);
+	//void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4]);
 	bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k, uint8_t parent);
 
 	// more efficient version of bwt_occ/bwt_occ4 for retrieving two close Occ values

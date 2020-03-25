@@ -43,45 +43,67 @@
 // This function is called to get the counts for the first k nucleotides. Here k is accepted as positioning starting at
 // 1.
 bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uint8_t parent) {
+    if (k > 64)
+        k = 64;
+    if (k == 0) // How can we remove this...
+        return 0;
     int shift = 64 - k;
-
     if (parent) {
         switch(c) { // G>A
+            case 2:
+                return 0;
             case 0:
                 return __builtin_popcountll(~seq1 >> shift); //A
             case 1:
                 return __builtin_popcountll(seq0 >> shift & seq1 >> shift); //C
-            case 3:
-                return __builtin_popcountll(~(seq0 >> shift) & seq1 >> shift); //T
         }
+        return __builtin_popcountll(~seq0 >> shift); //T
     } else {
         switch(c) { // C>T
+            case 1:
+                return 0;
             case 0:
                 return __builtin_popcountll(seq0 >> shift); //A
             case 2:
                 return __builtin_popcountll(~seq0 >> shift & ~seq1 >> shift); //G
-            case 3:
-                return __builtin_popcountll(seq1 >> shift); //T
         }
+        return __builtin_popcountll(seq1 >> shift); //T
     }
-
     return 0;
 }
-// This is the bwt_occ equivalent for gathering counts when a position isn't divisible by 128.
 
 bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) {
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
     k -= (k >= bwt->primary);
     uint32_t index = k/128 * 8;
     int k_mod_128 = k & 127;
-
     k++;
 
     bwtint_t count = 0;
     if (k / 128)
         count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
 
-    if ((k & 127) == 0) return count; //% only works here?
+    count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
+    if ((k & 127) > 64)
+        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
+
+    return count;
+}
+
+// Do we even need to add this function?
+void bwt2_occ4_new_index(const bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t cntk[4], bwtint_t cntl[4], uint8_t parent)    // bwt starts indexing at 0, so calculations involving k are handled accordingly.
+{
+    k -= (k >= bwt->primary);
+    uint32_t index = k/128 * 8;
+    int k_mod_128 = k & 127;
+    int c = 0;
+    k++;
+
+    bwtint_t count = 0;
+    if (k / 128)
+        count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
+
+    //if ((k & 127) == 0) return count; //% only works here?
     /* possible solution but doesnt work lol
     count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
     if (k & 127 > 64)
@@ -92,16 +114,16 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
         // wont work here?
     } else {
         count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
-        if ((k & 63) == 0) return count;
+        //if ((k & 63) == 0) return count;
         count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
     }
 
-    return count;
 }
 
 // Retrieves the base at a specific position with the least amount of operations as possible (or the least
 // to my knowledge). There may be room for improvement.
-int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
+
+int nucAtBWTinv_new(bwt_t *bwt, bwtint_t k, ubyte_t parent) {
     bwtint_t top = (63 - k & 63);
     bwtint_t bottom = top;
     uint32_t index = k / 128 * 8;
@@ -112,6 +134,49 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
         top = (bwt->bwt_new[index + 5] >> top) & 1;
         bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
     }
+
+    if (parent) { // G>A
+        if (~bottom & 1)
+            return 0;
+        else if (~top & 1)
+            return 3;
+        else
+            return 1;
+    } else { // C>T
+        if (top)
+            return 0;
+        else if (bottom)
+            return 3;
+        else
+            return 2;
+    }
+    /* Possible solution?
+
+    int p, q = 0;
+    for (int i = 0; i != 4; i++) {
+        p = bwt_occ_new_index(bwt, k, i, parent);
+        fprintf(stderr, "p: %llu\n", p);
+        q = bwt_occ_new_index(bwt, k + 1, i, parent);
+        fprintf(stderr, "q: %llu\n", q);
+        if (p != q)
+            return i;
+    }
+     */
+}
+
+int nucAtBWTinv(bwt_t *bwt, bwtint_t k, ubyte_t parent) {
+
+    bwtint_t top = (63 - k & 63);
+    bwtint_t bottom = top;
+    uint32_t index = k / 128 * 8;
+    if ((k & 127) < 64) {
+        top = (bwt->bwt_new[index + 4] >> top) & 1;
+        bottom = (bwt->bwt_new[index + 6] >> bottom) & 1;
+    } else {
+        top = (bwt->bwt_new[index + 5] >> top) & 1;
+        bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
+    }
+
     bwtint_t p = top | bottom;
     if (p == 0)
         return 2; //return G
@@ -125,7 +190,12 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k) {
 // compute inverse CSA
 static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     bwtint_t x = k - (k > bwt->primary);
-    x = nucAtBWTinv(bwt, x);
+   // int i = nucAtBWTinv_new(bwt, x, !parent);
+    //x = nucAtBWTinv(bwt, x, !parent);
+    x = nucAtBWTinv_new(bwt, x, !parent);
+    //fprintf(stderr, "x: %llu i: %llu \n", x, i);
+    //if (x != i)
+    //    exit(0);
     x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, !parent);
     return k == bwt->primary ? 0 : x;
 }
