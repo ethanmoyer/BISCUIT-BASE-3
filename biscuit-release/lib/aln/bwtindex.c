@@ -102,9 +102,23 @@ bwt_t *bwt_pac2bwt(const char *fn_pac, int use_is)
     bwt->bwt = (u_int32_t*)calloc(bwt->bwt_size, 4);
     for (i = 0; i < bwt->seq_len; ++i)
         bwt->bwt[i>>4] |= buf[i] << ((15 - (i&15)) << 1);
-
+/*
+    int k = 32;
+    fprintf(stderr, "k: %d\n", k);
+    int index = ((k)>>7<<5) + sizeof(bwtint_t) + (((k)&0x7f)>>5);
+    fprintf(stderr, "index: %d\n", index);
+    fprintf(stderr, "bwt at index: %llu\n", bwt->bwt[index]);
+    fprintf(stderr, "bwt at index: %llu\n", bwt_bwt(bwt, k));
+    double shift = ((~(k)&0xf)<<1)&3;
+    fprintf(stderr, "odd == 2/even == 0: %llu\n", ((~(k)&0xf)<<1)&3);
+    fprintf(stderr, "bwt at index shifted: %llu\n", bwt_bwt(bwt, k));
+    fprintf(stderr, "test: %lu\n", (~(k)&0xf)<<1);
+    fprintf(stderr, "bwt at index shifted: %llu\n", (bwt_bwt(bwt, k)>>30)&3);
+    fprintf(stderr, "bwt0: %llu\n", bwt_B0(bwt, k));
+*/
     free(buf);
-
+    // 10100000101000001010111100000000
+    // 10100000101000001
     return bwt;
 }
 
@@ -160,6 +174,13 @@ void bwt_bwtupdate_core(bwt_t *bwt, int index) {
     bwtint_t n = bwt->seq_len / 128 + 1; //1400 --> 700
     bwtint_t k = 8;
     for (bwtint_t i = 0; i < n - 1; i++) {
+
+        //fprintf(stderr, "bwt0 \t %llu \t %s\n", bwt->bwt_new[i * k + 4], "0011111101001000011100010011000011100111110000001111111001111111");
+        //fprintf(stderr, "bwt1 \t %llu \t %s\n", bwt->bwt_new[i * k + 6], "1100000010110111100011100000001100000000001111110000000000000000");
+
+        //fprintf(stderr, "%d", i);
+        //fprintf(stderr, "%d", i/128);
+        //exit(0);
 
         //A
         bwt->bwt_new[i * k + 0] =

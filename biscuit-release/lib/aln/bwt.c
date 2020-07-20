@@ -127,12 +127,26 @@ int nucAtBWTinv_new(bwt_t *bwt, bwtint_t k, ubyte_t parent) {
     bwtint_t top = (63 - k & 63);
     bwtint_t bottom = top;
     uint32_t index = k / 128 * 8;
+
     if ((k & 127) < 64) {
         top = (bwt->bwt_new[index + 4] >> top) & 1;
         bottom = (bwt->bwt_new[index + 6] >> bottom) & 1;
+        //fprintf(stderr, "index1: %d index2: %d\n", index + 4, index + 6);
+        //fprintf(stderr, "bwt0: %llu\n", bwt->bwt_new[index + 4]);
+        //fprintf(stderr, "bwt1: %llu\n", bwt->bwt_new[index + 6]);
+
+        //fprintf(stderr, "top: %d\n", top);
+        //fprintf(stderr, "bottom: %d\n", bottom);
+
     } else {
         top = (bwt->bwt_new[index + 5] >> top) & 1;
         bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
+        //fprintf(stderr, "index1: %d index2: %d\n", index + 5, index + 7);
+        //fprintf(stderr, "bwt0: %llu\n", bwt->bwt_new[index + 5]);
+        //fprintf(stderr, "bwt1: %llu\n", bwt->bwt_new[index + 7]);
+
+        //fprintf(stderr, "top: %d\n", top);
+        //fprintf(stderr, "bottom: %d\n", bottom);
     }
 
     if (parent) { // G>A
@@ -187,10 +201,9 @@ int nucAtBWTinv(bwt_t *bwt, bwtint_t k, ubyte_t parent) {
     return p; //return C
 }
 
-// compute inverse CSA
-static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
+static inline bwtint_t bwt_invPsi0(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     bwtint_t x = k - (k > bwt->primary);
-   // int i = nucAtBWTinv_new(bwt, x, !parent);
+    // int i = nucAtBWTinv_new(bwt, x, !parent);
     //x = nucAtBWTinv(bwt, x, !parent);
     x = nucAtBWTinv_new(bwt, x, !parent);
     //fprintf(stderr, "x: %llu i: %llu \n", x, i);
@@ -199,6 +212,44 @@ static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, !parent);
     return k == bwt->primary ? 0 : x;
 }
+
+// compute inverse CSA
+static inline bwtint_t bwt_invPsi(bwt_t *bwt, bwtint_t k, uint8_t parent) {
+    bwtint_t x = k - (k > bwt->primary);
+    int t = x;
+    //fprintf(stderr, "k: %d\n", k);
+    //x = nucAtBWTinv_new(bwt, x, !parent);
+    //fprintf(stderr, "x: %d\n", x);
+    int i = 8 * (t/128) + 4 + ((t & 127) >= 64);
+    //fprintf(stderr, "index1: %d index2: %d\n", i, i + 2);
+
+    //bwtint_t bwt0 = bwt->bwt_new[i];
+    //bwtint_t bwt1 = bwt->bwt_new[i + 2];
+
+    //fprintf(stderr, "bwt0 \t %llu \t %s\n", bwt0, "1111111111111100000011001100111111111100000001101110000000011000");
+    //fprintf(stderr, "bwt1 \t %llu \t %s\n", bwt1, "0001100111111000000011110000100000000011110000000000111100100001");
+
+    // 111001100000000000000000 0011011011111100001111110011000000000000
+    // 000110011111100000001111 0000100000000011110000000000111100100001
+    int w = (~(t)&0x3f);
+    //fprintf(stderr, "w: %d\n", w);
+    int y = (bwt->bwt_new[i]>>w)&1 ^ 1;
+    int z = (bwt->bwt_new[i + 2]>>w)&1 & 1;
+
+    //fprintf(stderr, "y: %d\n", y);
+    //fprintf(stderr, "z: %d\n", z);
+    int q = (y << 1) | z;
+    //fprintf(stderr, "q: %d\n\n", q);
+    //if (x != q) {
+    //    fprintf(stderr, "ERROR\n");
+    //    exit(0);
+    //}
+
+    x = q;
+    x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, !parent);
+    return k == bwt->primary ? 0 : x;
+}
+
 
 void bwt_cal_sa(bwt_t *bwt, int intv, uint8_t parent)
 {

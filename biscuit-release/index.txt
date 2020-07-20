@@ -1,3 +1,7 @@
+11110000000000001100111100111111
+10100000101000001010111100000000
+
+----
 A(00) == 10
 T(11) == 01
 G(10) == 00
@@ -5,7 +9,7 @@ C(01) == 11
 
 ssh moyerej@respublica-an01.research.chop.edu
 
-./biscuit align -k 10 in.fa in.fastq
+./biscuit index in.fa
 ./biscuit align -v 8 -k 5 -1 TAGGATCTGAGTGCCCTTTTTTTACGTTCTTTAAATTATCTGTATGTGGCTTTTTTTT in.fa
 
 git fetch --all; git reset --hard origin/master; make purge; make

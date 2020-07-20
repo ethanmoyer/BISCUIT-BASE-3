@@ -11,19 +11,17 @@
   <component name="ChangeListManager">
     <list default="true" id="f85f291a-baf0-45e1-945e-39169af0d690" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs00000005c425fc3f00000da9" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000061317c74e000131bb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000061317c74f000131bc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000064e2a440700000da8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000065740347a00000a49" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs000000066588252100000a3d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.nfs00000006748e1eaa000131c0" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/biscuit" beforeDir="false" afterPath="$PROJECT_DIR$/biscuit" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/in.fa" beforeDir="false" afterPath="$PROJECT_DIR$/in.fa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.txt" beforeDir="false" afterPath="$PROJECT_DIR$/index.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/align.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/align.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/bwa.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwa.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/bwa.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwa.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/bwamem.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwamem.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/aln/bwt.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwt.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/bwt.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwt.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/aln/bwtindex.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwtindex.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/libaln.a" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/libaln.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/memchain.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/memchain.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/htslib/test/.ce#large_seq.sam.icloud" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,6 +123,8 @@
       <workItem from="1574208895096" duration="27385000" />
       <workItem from="1581083812194" duration="16304000" />
       <workItem from="1581171823513" duration="92000" />
+      <workItem from="1595195021334" duration="2831000" />
+      <workItem from="1595202377834" duration="8416000" />
     </task>
     <servers />
   </component>
@@ -132,9 +132,9 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="0" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581087942346">
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup" timestamp="1595209062858">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
-    <state x="0" y="123" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.877@0.23.1440.877" timestamp="1581087942346" />
+    <state x="385" y="213" width="670" height="676" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1595209062858" />
   </component>
 </project>
