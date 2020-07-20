@@ -11,17 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f85f291a-baf0-45e1-945e-39169af0d690" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs00000005c425fc3f00000da9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs000000061317c74e000131bb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs000000061317c74f000131bc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs000000064e2a440700000da8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs000000065740347a00000a49" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs000000066588252100000a3d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.nfs00000006748e1eaa000131c0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/biscuit" beforeDir="false" afterPath="$PROJECT_DIR$/biscuit" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.txt" beforeDir="false" afterPath="$PROJECT_DIR$/index.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/bwt.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwt.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/aln/bwtindex.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/aln/bwtindex.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +113,8 @@
       <workItem from="1581083812194" duration="16304000" />
       <workItem from="1581171823513" duration="92000" />
       <workItem from="1595195021334" duration="2831000" />
-      <workItem from="1595202377834" duration="8416000" />
+      <workItem from="1595202377834" duration="9042000" />
+      <workItem from="1595243822607" duration="978000" />
     </task>
     <servers />
   </component>

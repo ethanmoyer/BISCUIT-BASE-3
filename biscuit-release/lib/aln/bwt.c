@@ -74,6 +74,8 @@ bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uin
 
 bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) {
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
+    if (k == bwt->seq_len) return bwt->L2[c+1] - bwt->L2[c];
+    if (k == (bwtint_t)(-1)) return 0;
     k -= (k >= bwt->primary);
     uint32_t index = k/128 * 8;
     int k_mod_128 = k & 127;
