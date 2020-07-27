@@ -43,10 +43,10 @@
 // This function is called to get the counts for the first k nucleotides. Here k is accepted as positioning starting at
 // 1.
 bwtint_t builtin_popcountll(uint64_t seq0, uint64_t seq1, int c, bwtint_t k, uint8_t parent) {
-    if (k > 64)
-        k = 64;
     if (k == 0) // How can we remove this...
         return 0;
+    if (k > 64)
+        k = 64;
     int shift = 64 - k;
     if (parent) {
         switch(c) { // G>A
@@ -76,143 +76,22 @@ bwtint_t bwt_occ_new_index(const bwt_t *bwt, bwtint_t k, int c, uint8_t parent) 
     // bwt starts indexing at 0, so calculations involving k are handled accordingly.
     if (k == bwt->seq_len) return bwt->L2[c+1] - bwt->L2[c];
     if (k == (bwtint_t)(-1)) return 0;
+
     k -= (k >= bwt->primary);
     uint32_t index = k/128 * 8;
-    int k_mod_128 = k & 127;
     k++;
 
     bwtint_t count = 0;
     if (k / 128)
         count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
+    if (k & 127 == 0)
+        return count;
 
     count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
     if ((k & 127) > 64)
         count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
 
     return count;
-}
-
-// Do we even need to add this function?
-void bwt2_occ4_new_index(const bwt_t *bwt, bwtint_t k, bwtint_t l, bwtint_t cntk[4], bwtint_t cntl[4], uint8_t parent)    // bwt starts indexing at 0, so calculations involving k are handled accordingly.
-{
-    k -= (k >= bwt->primary);
-    uint32_t index = k/128 * 8;
-    int k_mod_128 = k & 127;
-    int c = 0;
-    k++;
-
-    bwtint_t count = 0;
-    if (k / 128)
-        count = bwt->bwt_new[(k / 128 - 1) * 8 + c];
-
-    //if ((k & 127) == 0) return count; //% only works here?
-    /* possible solution but doesnt work lol
-    count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent);
-    if (k & 127 > 64)
-        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
-    */
-    if (k_mod_128 < 64) {
-        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, k & 127, parent); //k_mod_128
-        // wont work here?
-    } else {
-        count += builtin_popcountll(bwt->bwt_new[index + 4], bwt->bwt_new[index + 6], c, 64, parent);
-        //if ((k & 63) == 0) return count;
-        count += builtin_popcountll(bwt->bwt_new[index + 5], bwt->bwt_new[index + 7], c, k & 63, parent);
-    }
-
-}
-
-// Retrieves the base at a specific position with the least amount of operations as possible (or the least
-// to my knowledge). There may be room for improvement.
-
-int nucAtBWTinv_new(bwt_t *bwt, bwtint_t k, ubyte_t parent) {
-    bwtint_t top = (63 - k & 63);
-    bwtint_t bottom = top;
-    uint32_t index = k / 128 * 8;
-
-    if ((k & 127) < 64) {
-        top = (bwt->bwt_new[index + 4] >> top) & 1;
-        bottom = (bwt->bwt_new[index + 6] >> bottom) & 1;
-        //fprintf(stderr, "index1: %d index2: %d\n", index + 4, index + 6);
-        //fprintf(stderr, "bwt0: %llu\n", bwt->bwt_new[index + 4]);
-        //fprintf(stderr, "bwt1: %llu\n", bwt->bwt_new[index + 6]);
-
-        //fprintf(stderr, "top: %d\n", top);
-        //fprintf(stderr, "bottom: %d\n", bottom);
-
-    } else {
-        top = (bwt->bwt_new[index + 5] >> top) & 1;
-        bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
-        //fprintf(stderr, "index1: %d index2: %d\n", index + 5, index + 7);
-        //fprintf(stderr, "bwt0: %llu\n", bwt->bwt_new[index + 5]);
-        //fprintf(stderr, "bwt1: %llu\n", bwt->bwt_new[index + 7]);
-
-        //fprintf(stderr, "top: %d\n", top);
-        //fprintf(stderr, "bottom: %d\n", bottom);
-    }
-
-    if (parent) { // G>A
-        if (~bottom & 1)
-            return 0;
-        else if (~top & 1)
-            return 3;
-        else
-            return 1;
-    } else { // C>T
-        if (top)
-            return 0;
-        else if (bottom)
-            return 3;
-        else
-            return 2;
-    }
-    /* Possible solution?
-
-    int p, q = 0;
-    for (int i = 0; i != 4; i++) {
-        p = bwt_occ_new_index(bwt, k, i, parent);
-        fprintf(stderr, "p: %llu\n", p);
-        q = bwt_occ_new_index(bwt, k + 1, i, parent);
-        fprintf(stderr, "q: %llu\n", q);
-        if (p != q)
-            return i;
-    }
-     */
-}
-
-int nucAtBWTinv(bwt_t *bwt, bwtint_t k, ubyte_t parent) {
-
-    bwtint_t top = (63 - k & 63);
-    bwtint_t bottom = top;
-    uint32_t index = k / 128 * 8;
-    if ((k & 127) < 64) {
-        top = (bwt->bwt_new[index + 4] >> top) & 1;
-        bottom = (bwt->bwt_new[index + 6] >> bottom) & 1;
-    } else {
-        top = (bwt->bwt_new[index + 5] >> top) & 1;
-        bottom = (bwt->bwt_new[index + 7] >> bottom) & 1;
-    }
-
-    bwtint_t p = top | bottom;
-    if (p == 0)
-        return 2; //return G
-    else if (~top & bottom)
-        return 3; //return T
-    else if (top & ~bottom)
-        return 0; //return A
-    return p; //return C
-}
-
-static inline bwtint_t bwt_invPsi0(bwt_t *bwt, bwtint_t k, uint8_t parent) {
-    bwtint_t x = k - (k > bwt->primary);
-    // int i = nucAtBWTinv_new(bwt, x, !parent);
-    //x = nucAtBWTinv(bwt, x, !parent);
-    x = nucAtBWTinv_new(bwt, x, !parent);
-    //fprintf(stderr, "x: %llu i: %llu \n", x, i);
-    //if (x != i)
-    //    exit(0);
-    x = bwt->L2[x] + bwt_occ_new_index(bwt, k, x, !parent);
-    return k == bwt->primary ? 0 : x;
 }
 
 // compute inverse CSA
@@ -292,144 +171,6 @@ bwtint_t bwt_sa(bwt_t *bwt, bwtint_t k, uint8_t parent) {
     /* without setting bwt->sa[0] = -1, the following line should be
        changed to (sa + bwt->sa[k/bwt->sa_intv]) % (bwt->seq_len + 1) */
     return sa + bwt->sa[k/bwt->sa_intv];
-}
-
-void bwt_gen_cnt_table(bwt_t *bwt) {
-    int i, j;
-    for (i = 0; i != 256; ++i) {
-        uint32_t x = 0;
-        for (j = 0; j != 4; ++j)
-            x |= (((i&3) == j) + ((i>>2&3) == j) + ((i>>4&3) == j) + (i>>6 == j)) << (j<<3);
-        bwt->cnt_table[i] = x;
-    }
-}
-
-static inline int occ_aux(uint64_t y, int c)
-{
-    // reduce nucleotide counting to bits counting
-    y = ((c&2)? y : ~y) >> 1 & ((c&1)? y : ~y) & 0x5555555555555555ull;
-    // count the number of 1s in y
-    y = (y & 0x3333333333333333ull) + (y >> 2 & 0x3333333333333333ull);
-    return ((y + (y >> 4)) & 0xf0f0f0f0f0f0f0full) * 0x101010101010101ull >> 56;
-}
-
-bwtint_t bwt_occ(const bwt_t *bwt, bwtint_t k, int c)
-{
-    bwtint_t n;
-    uint32_t *p, *end;
-    if (k == bwt->seq_len) return bwt->L2[c+1] - bwt->L2[c];
-    if (k == (bwtint_t)(-1)) return 0;
-    k -= (k >= bwt->primary); // because $ is not in bwt
-
-    // retrieve Occ at k/OCC_INTERVAL
-    n = ((bwtint_t*)(p = bwt_occ_intv(bwt, k)))[c];
-    p += sizeof(bwtint_t); // jump to the start of the first BWT cell
-
-    // calculate Occ up to the last k/32
-    end = p + (((k>>5) - ((k&~OCC_INTV_MASK)>>5))<<1);
-    for (; p < end; p += 2) n += occ_aux((uint64_t)p[0]<<32 | p[1], c);
-
-    // calculate Occ
-    n += occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~k&31)<<1)) - 1), c);
-    if (c == 0) n -= ~k&31; // corrected for the masked bits
-
-    return n;
-}
-
-// an analogy to bwt_occ() but more efficient, requiring k <= l
-void bwt_2occ(const bwt_t *bwt, bwtint_t k, bwtint_t l, ubyte_t c, bwtint_t *ok, bwtint_t *ol)
-{
-    bwtint_t _k, _l;
-    _k = (k >= bwt->primary)? k-1 : k;
-    _l = (l >= bwt->primary)? l-1 : l;
-    if (_l/OCC_INTERVAL != _k/OCC_INTERVAL || k == (bwtint_t)(-1) || l == (bwtint_t)(-1)) {
-        *ok = bwt_occ(bwt, k, c);
-        *ol = bwt_occ(bwt, l, c);
-    } else {
-        bwtint_t m, n, i, j;
-        uint32_t *p;
-        if (k >= bwt->primary) --k;
-        if (l >= bwt->primary) --l;
-        n = ((bwtint_t*)(p = bwt_occ_intv(bwt, k)))[c];
-        p += sizeof(bwtint_t);
-        // calculate *ok
-        j = k >> 5 << 5;
-        for (i = k/OCC_INTERVAL*OCC_INTERVAL; i < j; i += 32, p += 2)
-            n += occ_aux((uint64_t)p[0]<<32 | p[1], c);
-        m = n;
-        n += occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~k&31)<<1)) - 1), c);
-        if (c == 0) n -= ~k&31; // corrected for the masked bits
-        *ok = n;
-        // calculate *ol
-        j = l >> 5 << 5;
-        for (; i < j; i += 32, p += 2)
-            m += occ_aux((uint64_t)p[0]<<32 | p[1], c);
-        m += occ_aux(((uint64_t)p[0]<<32 | p[1]) & ~((1ull<<((~l&31)<<1)) - 1), c);
-        if (c == 0) m -= ~l&31; // corrected for the masked bits
-        *ol = m;
-    }
-}
-
-#define occ_aux4(bwt, b)											\
-	((bwt)->cnt_table[(b)&0xff] + (bwt)->cnt_table[(b)>>8&0xff]		\
-	 + (bwt)->cnt_table[(b)>>16&0xff] + (bwt)->cnt_table[(b)>>24])
-
-//return four
-// and here is how to find the occurrence of k not divisable by 128.
-
-void bwt_occ4(const bwt_t *bwt, bwtint_t k, bwtint_t cnt[4])
-{
-	bwtint_t x;
-	uint32_t *p, tmp, *end;
-	if (k == (bwtint_t)(-1)) {
-		memset(cnt, 0, 4 * sizeof(bwtint_t));
-		return;
-	}
-	k -= (k >= bwt->primary); // because $ is not in bwt
-	p = bwt_occ_intv(bwt, k);
-	memcpy(cnt, p, 4 * sizeof(bwtint_t));
-	p += sizeof(bwtint_t); // sizeof(bwtint_t) = 4*(sizeof(bwtint_t)/sizeof(uint32_t))
-	end = p + ((k>>4) - ((k&~OCC_INTV_MASK)>>4)); // this is the end point of the following loop
-	for (x = 0; p < end; ++p) x += occ_aux4(bwt, *p);
-	tmp = *p & ~((1U<<((~k&15)<<1)) - 1);
-	x += occ_aux4(bwt, tmp) - (~k&15);
-	cnt[0] += x&0xff; cnt[1] += x>>8&0xff; cnt[2] += x>>16&0xff; cnt[3] += x>>24;
-}
-
-int bwt_match_exact(const bwt_t *bwt, int len, const ubyte_t *str, bwtint_t *sa_begin, bwtint_t *sa_end)
-{
-    bwtint_t k, l, ok, ol;
-    int i;
-    k = 0; l = bwt->seq_len;
-    for (i = len - 1; i >= 0; --i) {
-        ubyte_t c = str[i];
-        if (c > 3) return 0; // no match
-        bwt_2occ(bwt, k - 1, l, c, &ok, &ol);
-        k = bwt->L2[c] + ok + 1;
-        l = bwt->L2[c] + ol;
-        if (k > l) break; // no match
-    }
-    if (k > l) return 0; // no match
-    if (sa_begin) *sa_begin = k;
-    if (sa_end)   *sa_end = l;
-    return l - k + 1;
-}
-
-int bwt_match_exact_alt(const bwt_t *bwt, int len, const ubyte_t *str, bwtint_t *k0, bwtint_t *l0)
-{
-    int i;
-    bwtint_t k, l, ok, ol;
-    k = *k0; l = *l0;
-    for (i = len - 1; i >= 0; --i) {
-        ubyte_t c = str[i];
-        if (c > 3) return 0; // there is an N here. no match
-        bwt_2occ(bwt, k - 1, l, c, &ok, &ol);
-        k = bwt->L2[c] + ok + 1;
-        l = bwt->L2[c] + ol;
-        if (k > l) return 0; // no match
-    }
-    *k0 = k; *l0 = l;
-    return l - k + 1;
 }
 
 /*********************

@@ -1,6 +1,27 @@
 11110000000000001100111100111111
 10100000101000001010111100000000
 
+
+#include <stdio.h> - online C compilerx
+//typedef uint64_t bwtint_t;
+int main()
+{
+    unsigned long long ull;
+    for (int i = 32; i < 33; i++) {
+        int x = 8 * (i/128) + 4 + ((i % 128) > 64);
+        unsigned long long bwt0 = 16573246864883658752;
+        unsigned long long bwt1 = 1871262172269514529;
+        int y = (~(i)&0x3f);
+        printf("%d : %d : %d\n", i, x, y);
+        printf("%llu\n", (bwt0>>y)&1 ^ 1);
+        printf("%llu\n", (bwt1>>y)&1 & 1);
+        printf("%d\n", (0 << 1) | 0);
+    }
+    //bwtint_t = 1;
+    //printf("%d", sizeof(bwtint_t));
+
+}
+
 ----
 A(00) == 10
 T(11) == 01
