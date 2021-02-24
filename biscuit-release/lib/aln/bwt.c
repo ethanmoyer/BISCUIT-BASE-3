@@ -210,6 +210,10 @@ void bwt_extend_debug(const bwt_t *bwt, bwtintv_t *ik, bwtintv_t *ok, int is_bac
 
 int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, int x, int min_intv, uint64_t max_intv, bwtintv_v *mem, bwtintv_v *tmpvec[2], uint8_t parent) {
 
+    printf(stderr, "[bwt_snem1a] Start\n");
+    double t_real;
+    t_real = realtime();
+
     int i, j, c, ret;
     bwtintv_t ik, ok[4];
     bwtintv_v a[2], *prev, *curr, *swap;
@@ -272,6 +276,9 @@ int bwt_smem1a(const bwt_t *bwt, const bwt_t *bwtc, int len, const uint8_t *q, i
 
     if (tmpvec == 0 || tmpvec[0] == 0) free(a[0].a);
     if (tmpvec == 0 || tmpvec[1] == 0) free(a[1].a);
+
+    fprintf(stderr, "\n[bwt_snem1a] Real time: %.3f sec\n", realtime()-t_real);
+
     return ret;
 }
 // this copy of bwt_extend works with bwt_smem1a
